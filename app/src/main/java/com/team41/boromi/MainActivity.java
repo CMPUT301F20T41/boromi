@@ -33,22 +33,4 @@ public class MainActivity extends AppCompatActivity {
       ft.add(R.id.auth_fragment, welcomeFragment).commit();
     }
   }
-
-  public void onClickLogin(View view) {
-    Fragment loginFragment = new LoginFragment();
-    ft = manager.beginTransaction();
-    ft.replace(R.id.auth_fragment, loginFragment).addToBackStack("login").commit();
-  }
-
-  public void onClickSignup(View view) {
-    Fragment signupFragment = new SignupFragment();
-    ft = manager.beginTransaction();
-    ft.replace(R.id.auth_fragment, signupFragment).addToBackStack("signup").commit();
-  }
-
-  public void onForgotPassword(View view) {
-    Fragment recoverPasswordFragment = new RecoverPassword();
-    ft = manager.beginTransaction();
-    ft.replace(R.id.auth_fragment, recoverPasswordFragment).addToBackStack("recover").commit();
-  }
 }
