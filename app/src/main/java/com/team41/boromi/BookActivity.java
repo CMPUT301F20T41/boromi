@@ -5,10 +5,11 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.team41.boromi.book.OwnedBooks.OwnedFragment;
+import com.team41.boromi.book.OwnedFragment;
 import com.team41.boromi.book.BorrowedFragment;
 import com.team41.boromi.book.MapFragment;
 import com.team41.boromi.book.SearchFragment;
@@ -84,5 +85,20 @@ public class BookActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        for (Fragment fragment : manager.getFragments()) {
+            if (fragment.isVisible()) {
+                FragmentManager childManager = fragment.getChildFragmentManager();
+                if (childManager.getBackStackEntryCount() > 0) {
+                    childManager.popBackStack();
+                    return;
+                }
+
+            }
+        }
+        super.onBackPressed();
     }
 }

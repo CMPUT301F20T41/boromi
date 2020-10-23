@@ -72,7 +72,7 @@ public class LoginFragment extends Fragment {
         recoverPasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment recoverPasswordFragment = new RecoverPassword();
+                Fragment recoverPasswordFragment = new RecoverPasswordFragment();
                 FragmentManager manager = getFragmentManager();
                 FragmentTransaction ft = manager.beginTransaction();
                 ft.replace(R.id.auth_fragment, recoverPasswordFragment).addToBackStack("recover").commit();

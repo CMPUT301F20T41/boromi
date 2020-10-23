@@ -1,4 +1,4 @@
-package com.team41.boromi.book.OwnedBooks;
+package com.team41.boromi.book;
 
 import android.os.Bundle;
 
@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.team41.boromi.R;
-import com.team41.boromi.auth.WelcomeFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,6 +31,7 @@ public class OwnedFragment extends Fragment {
 
     private FragmentManager manager = null;
     FragmentTransaction ft;
+    GenericListFragment activeFragment;
 
     public OwnedFragment() {
         // Required empty public constructor
@@ -74,47 +74,58 @@ public class OwnedFragment extends Fragment {
         Button acceptedButton = (Button) view.findViewById(R.id.book_accepted_tab);
         Button lentButton = (Button) view.findViewById(R.id.book_lent_tab);
 
+        // set default fragment
         if (manager == null) {
             manager = getChildFragmentManager();
         }
         if (manager.findFragmentById(R.id.owned_fragment) == null) {
-            OwnedAvailableFragment ownedAvailableFragment = new OwnedAvailableFragment();
+            GenericListFragment ownedAvailableFragment = GenericListFragment.newInstance("This is owned available books");
             ft = manager.beginTransaction();
-            ft.add(R.id.owned_fragment, ownedAvailableFragment).commit();
+            ft.add(R.id.owned_fragment, ownedAvailableFragment, "available").commit();
+            activeFragment = ownedAvailableFragment;
         }
 
         availableButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                OwnedAvailableFragment ownedAvailableFragment = new OwnedAvailableFragment();
-                ft = manager.beginTransaction();
-                ft.replace(R.id.owned_fragment, ownedAvailableFragment).addToBackStack("available").commit();
+                createFragment("available", "This is owned available books");
             }
         });
         requestsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                OwnedRequestsFragment ownedRequestsFragment = new OwnedRequestsFragment();
-                ft = manager.beginTransaction();
-                ft.replace(R.id.owned_fragment, ownedRequestsFragment).addToBackStack("requests").commit();
+                createFragment("requests", "This is owned requests books");
             }
         });
         acceptedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                OwnedAcceptedFragment ownedAcceptedFragment = new OwnedAcceptedFragment();
-                ft = manager.beginTransaction();
-                ft.replace(R.id.owned_fragment, ownedAcceptedFragment).addToBackStack("accepted").commit();
+                createFragment("accepted", "This is owned accepted books");
             }
         });
         lentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                OwnedLentFragment ownedLentFragment = new OwnedLentFragment();
-                ft = manager.beginTransaction();
-                ft.replace(R.id.owned_fragment, ownedLentFragment).addToBackStack("lent").commit();
+                createFragment("lent", "This is owned lent books");
             }
         });
         return view;
+    }
+
+    private void createFragment(String tag, String message) {
+        // Check if fragment already exists
+        GenericListFragment genericListFragment = (GenericListFragment) manager.findFragmentByTag(tag);
+        if (genericListFragment == activeFragment) { // return if fragment is currently active
+            return;
+        }
+        ft = manager.beginTransaction();
+        if (genericListFragment != null) {  // if fragment exists, show it and hide the previous fragment
+            ft.show(genericListFragment).hide(activeFragment).addToBackStack(null).commit();
+            activeFragment = genericListFragment;
+        } else { // create new fragment
+            genericListFragment = GenericListFragment.newInstance(message);
+            ft.add(R.id.owned_fragment, genericListFragment, tag).hide(activeFragment).addToBackStack(null).commit();
+        }
+        activeFragment = genericListFragment;   // set fragment as active
     }
 }

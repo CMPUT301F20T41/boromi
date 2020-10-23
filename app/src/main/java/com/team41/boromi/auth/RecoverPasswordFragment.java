@@ -1,4 +1,4 @@
-package com.team41.boromi.book.OwnedBooks;
+package com.team41.boromi.auth;
 
 import android.os.Bundle;
 
@@ -12,10 +12,10 @@ import com.team41.boromi.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link OwnedRequestsFragment#newInstance} factory method to
+ * Use the {@link RecoverPasswordFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class OwnedRequestsFragment extends Fragment {
+public class RecoverPasswordFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +26,7 @@ public class OwnedRequestsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public OwnedRequestsFragment() {
+    public RecoverPasswordFragment() {
         // Required empty public constructor
     }
 
@@ -36,11 +36,11 @@ public class OwnedRequestsFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment OwnedRequestsFragment.
+     * @return A new instance of fragment RecoverPassword.
      */
     // TODO: Rename and change types and number of parameters
-    public static OwnedRequestsFragment newInstance(String param1, String param2) {
-        OwnedRequestsFragment fragment = new OwnedRequestsFragment();
+    public static RecoverPasswordFragment newInstance(String param1, String param2) {
+        RecoverPasswordFragment fragment = new RecoverPasswordFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,6 +61,6 @@ public class OwnedRequestsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_owned_requests, container, false);
+        return inflater.inflate(R.layout.fragment_recover_password, container, false);
     }
 }

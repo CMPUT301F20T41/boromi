@@ -1,16 +1,11 @@
 package com.team41.boromi;
 
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.team41.boromi.auth.LoginFragment;
-import com.team41.boromi.auth.RecoverPassword;
-import com.team41.boromi.auth.SignupFragment;
 import com.team41.boromi.auth.WelcomeFragment;
 
 public class MainActivity extends AppCompatActivity {
