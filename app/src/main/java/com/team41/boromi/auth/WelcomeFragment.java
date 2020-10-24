@@ -71,6 +71,7 @@ public class WelcomeFragment extends Fragment {
       public void onClick(View view) {
         Fragment loginFragment = new LoginFragment();
         FragmentManager manager = getFragmentManager();
+        assert manager != null;
         FragmentTransaction ft = manager.beginTransaction();
         ft.replace(R.id.auth_fragment, loginFragment).addToBackStack("login").commit();
       }
@@ -80,6 +81,7 @@ public class WelcomeFragment extends Fragment {
       public void onClick(View view) {
         Fragment signupFragment = new SignupFragment();
         FragmentManager manager = getFragmentManager();
+        assert manager != null;
         FragmentTransaction ft = manager.beginTransaction();
         ft.replace(R.id.auth_fragment, signupFragment).addToBackStack("signup").commit();
       }
