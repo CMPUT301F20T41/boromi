@@ -1,3 +1,5 @@
 package com.team41.boromi.models;
 
-public interface OwnerInterface {}
+public interface OwnerInterface {
+
+}

@@ -1,16 +1,22 @@
 package com.team41.boromi.models;
 
 import androidx.annotation.NonNull;
-
 import java.util.Date;
 import java.util.UUID;
 
-/** Class representing a request made for a book. */
+/**
+ * Class representing a request made for a book.
+ */
 public class BookRequest {
-  @NonNull private UUID requestId;
-  @NonNull private String requestor;
-  @NonNull private UUID bookId;
-  @NonNull private Date requestDate;
+
+  @NonNull
+  private final UUID requestId;
+  @NonNull
+  private final String requestor;
+  @NonNull
+  private final UUID bookId;
+  @NonNull
+  private Date requestDate;
 
   // TODO
   // Again I did not include the status to allow the person implementing to make the choice
@@ -20,7 +26,7 @@ public class BookRequest {
    * Constructor given requestor and book ID, randomizing UUID and date.
    *
    * @param requestor username of the requestor
-   * @param bookId bookUuid
+   * @param bookId    bookUuid
    */
   public BookRequest(String requestor, UUID bookId) {
     this.requestor = requestor;
@@ -34,7 +40,7 @@ public class BookRequest {
    *
    * @param requestId uuid for request
    * @param requestor username
-   * @param bookId bookUuid
+   * @param bookId    bookUuid
    */
   public BookRequest(UUID requestId, String requestor, UUID bookId) {
     this.requestor = requestor;

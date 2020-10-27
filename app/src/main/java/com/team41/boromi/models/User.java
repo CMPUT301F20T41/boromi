@@ -2,19 +2,17 @@ package com.team41.boromi.models;
 
 import androidx.annotation.NonNull;
 
-/** A user class. Each user class must have a username assigned */
+/**
+ * A user class. Each user class must have a username assigned
+ */
 public class User implements OwnerInterface, BorrowerInterface {
-  @NonNull private String username;
-  private String email;
 
-  /**
-   * constructor
-   *
-   * @param username
-   */
-  public User(String username) {
-    this.username = username;
-  }
+  @NonNull
+  private final String username;
+  @NonNull
+  private final String email;
+  @NonNull
+  private final String UUID;
 
   /**
    * constructor
@@ -22,21 +20,26 @@ public class User implements OwnerInterface, BorrowerInterface {
    * @param username
    * @param email
    */
-  public User(String username, String email) {
+  public User(String UUID, String username, String email) {
+    this.UUID = UUID;
     this.username = username;
     this.email = email;
   }
 
+
+  // getter start
   @NonNull
   public String getUsername() {
     return username;
   }
 
+  @NonNull
   public String getEmail() {
     return email;
   }
 
-  public void setEmail(String email) {
-    this.email = email;
+  @NonNull
+  public String getUUID() {
+    return UUID;
   }
 }

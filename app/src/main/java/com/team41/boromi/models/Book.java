@@ -1,17 +1,21 @@
 package com.team41.boromi.models;
 
-import androidx.annotation.NonNull;
-
-import java.io.Serializable;
-import java.util.UUID;
-
 import static com.team41.boromi.constants.CommonConstants.BookStatus;
 import static com.team41.boromi.constants.CommonConstants.BookWorkflowStage;
 
-/** A model class storing an information on the book And on which stage the book is currently in */
+import androidx.annotation.NonNull;
+import java.io.Serializable;
+import java.util.UUID;
+
+/**
+ * A model class storing an information on the book And on which stage the book is currently in
+ */
 public class Book implements Serializable {
-  @NonNull private UUID bookId;
-  @NonNull private String owner;
+
+  @NonNull
+  private final UUID bookId;
+  @NonNull
+  private final String owner;
   private String ISBN;
   private String author;
   private String desc;
