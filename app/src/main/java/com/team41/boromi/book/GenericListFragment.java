@@ -32,15 +32,12 @@ public class GenericListFragment extends Fragment {
    * Use this factory method to create a new instance of this fragment using the provided
    * parameters.
    *
-   * @param param1 Parameter 1..
    * @return A new instance of fragment OwnedAcceptedFragment.
    */
   // TODO: Rename and change types and number of parameters
-  public static GenericListFragment newInstance(String param1) {
+  public static GenericListFragment newInstance(Bundle bundle) {
     GenericListFragment fragment = new GenericListFragment();
-    Bundle args = new Bundle();
-    args.putString(ARG_PARAM1, param1);
-    fragment.setArguments(args);
+    fragment.setArguments(bundle);
     return fragment;
   }
 

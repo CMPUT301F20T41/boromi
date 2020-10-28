@@ -6,46 +6,48 @@
     android:layout_height="match_parent"
     tools:context=".book.OwnedFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+    <com.google.android.material.tabs.TabLayout
+      android:id="@+id/tabs_sub_owned"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/book_available_tab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Available" />
+        <com.google.android.material.tabs.TabItem
+          android:id="@+id/tabs_sub_owned_available"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Available" />
 
-        <Button
-            android:id="@+id/book_requests_tab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Requests" />
+        <com.google.android.material.tabs.TabItem
+          android:id="@+id/tabs_sub_owned_requests"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Requests" />
 
-        <Button
-            android:id="@+id/book_accepted_tab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Accepted" />
+        <com.google.android.material.tabs.TabItem
+          android:id="@+id/tabs_sub_owned_accepted"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Accepted" />
 
-        <Button
-            android:id="@+id/book_lent_tab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Lent" />
-    </LinearLayout>
+        <com.google.android.material.tabs.TabItem
+          android:id="@+id/tabs_sub_owned_lent"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Lent" />
 
-    <FrameLayout
-        android:id="@+id/owned_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout" />
+    </com.google.android.material.tabs.TabLayout>
+
+
+    <androidx.viewpager2.widget.ViewPager2
+      android:id="@+id/view_pager_owned"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/tabs_sub_owned" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
