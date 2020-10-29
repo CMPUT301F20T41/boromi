@@ -1,0 +1,14 @@
+package com.team41.boromi.dagger;
+
+import dagger.Component;
+import javax.inject.Singleton;
+
+/**
+ * Hold a graph of all objects that will exist in memory for the lifecycle of app
+ */
+@Singleton
+@Component(modules = {BoromiModule.class, FirestoreModule.class})
+public interface AppComponent {
+
+  AuthenticationComponent getAuthenticationComponent();
+}
