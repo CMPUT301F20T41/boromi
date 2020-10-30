@@ -1,11 +1,10 @@
 package com.team41.boromi;
 
 import android.os.Bundle;
-
+import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
 import com.team41.boromi.auth.WelcomeFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,5 +26,9 @@ public class MainActivity extends AppCompatActivity {
       ft = manager.beginTransaction();
       ft.add(R.id.auth_fragment, welcomeFragment).commit();
     }
+  }
+
+  public void customBack(View view) {
+    super.onBackPressed();
   }
 }

@@ -22,6 +22,10 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
+      android:background="@color/colorPrimary"
+      app:tabSelectedTextColor="@color/colorSecondary"
+      app:tabIndicatorColor="@color/colorSecondary"
+      app:tabTextColor="@color/colorTextLight"
       android:layout_width="match_parent"
       android:layout_height="0dp">
 
@@ -29,19 +33,19 @@
           android:id="@+id/tabs_sub_borrowed_borrowed"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="Borrowed" />
+          android:text="@string/borrowed_borrowed" />
 
         <com.google.android.material.tabs.TabItem
           android:id="@+id/tabs_sub_borrowed_requested"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="Requested" />
+          android:text="@string/borrowed_requested" />
 
         <com.google.android.material.tabs.TabItem
           android:id="@+id/tabs_sub_borrowed_accepted"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="Accepted" />
+          android:text="@string/borrowed_accepted" />
 
 
     </com.google.android.material.tabs.TabLayout>

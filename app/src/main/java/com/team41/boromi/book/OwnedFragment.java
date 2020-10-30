@@ -1,24 +1,18 @@
 package com.team41.boromi.book;
 
 import android.os.Bundle;
-
 import android.util.Pair;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
 import com.google.android.material.tabs.TabLayout.Tab;
-import com.team41.boromi.adapters.PagerAdapter;
 import com.team41.boromi.R;
-import java.util.ArrayList;
+import com.team41.boromi.adapters.PagerAdapter;
 
 /**
  * A simple {@link Fragment} subclass. Use the {@link OwnedFragment#newInstance} factory method to
@@ -70,16 +64,20 @@ public class OwnedFragment extends Fragment {
     pagerAdapter = new PagerAdapter(getChildFragmentManager(), getLifecycle());
     Bundle bundle = new Bundle();
     bundle.putString("msg", "Available");
-    pagerAdapter.addFragment(new Pair<Class<? extends Fragment>,Bundle>(GenericListFragment.class, bundle));
+    pagerAdapter.addFragment(
+        new Pair<Class<? extends Fragment>, Bundle>(GenericListFragment.class, bundle));
     bundle = new Bundle();
     bundle.putString("msg", "Requests");
-    pagerAdapter.addFragment(new Pair<Class<? extends Fragment>,Bundle>(GenericListFragment.class, bundle));
+    pagerAdapter.addFragment(
+        new Pair<Class<? extends Fragment>, Bundle>(GenericListFragment.class, bundle));
     bundle = new Bundle();
     bundle.putString("msg", "Accepted");
-    pagerAdapter.addFragment(new Pair<Class<? extends Fragment>,Bundle>(GenericListFragment.class, bundle));
+    pagerAdapter.addFragment(
+        new Pair<Class<? extends Fragment>, Bundle>(GenericListFragment.class, bundle));
     bundle = new Bundle();
     bundle.putString("msg", "Lent");
-    pagerAdapter.addFragment(new Pair<Class<? extends Fragment>,Bundle>(GenericListFragment.class, bundle));
+    pagerAdapter.addFragment(
+        new Pair<Class<? extends Fragment>, Bundle>(GenericListFragment.class, bundle));
 
     // Configure viewpager2 options and initialize page adapter
     viewPager2.setUserInputEnabled(false);

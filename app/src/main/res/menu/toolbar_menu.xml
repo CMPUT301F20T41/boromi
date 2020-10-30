@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  tools:context=".BookActivity">
+
+
+  <item
+    android:id="@+id/toolbar_add"
+    android:icon="@drawable/add_icon"
+    android:orderInCategory="300"
+    android:title="Add"
+    app:showAsAction="ifRoom" />
+  <item
+    android:id="@+id/toolbar_scan"
+    android:icon="@drawable/barcode_scan_icon"
+    android:orderInCategory="300"
+    android:title="Scan"
+    app:showAsAction="ifRoom" />
+
+
+</menu>
