@@ -6,6 +6,39 @@
   android:layout_height="match_parent"
   tools:context=".auth.LoginFragment">
 
+    <Button
+      android:id="@+id/login_login"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:background="@color/colorPrimary"
+      android:text="@string/login_page_login"
+      android:textColor="@color/colorTextLight"
+      android:textSize="20sp"
+      app:layout_constraintEnd_toStartOf="@+id/login_guideline_left"
+      app:layout_constraintStart_toStartOf="@+id/login_guideline_right"
+      app:layout_constraintTop_toBottomOf="@+id/login_password_holder" />
+    <Button
+      android:id="@+id/button_loginBack"
+      android:layout_width="24dp"
+      android:layout_height="24dp"
+      android:layout_marginTop="32dp"
+
+      android:background="@drawable/arrow_back_icon"
+      android:onClick="customBack"
+      app:layout_constraintStart_toStartOf="@+id/login_guideline_right"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+      android:id="@+id/login_loading"
+      style="?android:attr/progressBarStyle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.5"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
       android:id="@+id/login_header"
       android:layout_width="wrap_content"
@@ -18,7 +51,6 @@
       app:layout_constraintHorizontal_bias="0.5"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
       android:id="@+id/login_subheader"
       android:layout_width="0dp"
@@ -30,6 +62,19 @@
       app:layout_constraintEnd_toStartOf="@+id/login_guideline_left"
       app:layout_constraintStart_toStartOf="@+id/login_guideline_right"
       app:layout_constraintTop_toBottomOf="@+id/login_header" />
+    <TextView
+      android:id="@+id/login_recoverPassword"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:clickable="true"
+      android:text="@string/login_page_forgot"
+      android:textAlignment="center"
+      android:textColor="@color/colorPrimary"
+      android:textSize="16sp"
+      app:layout_constraintEnd_toStartOf="@+id/login_guideline_left"
+      app:layout_constraintStart_toStartOf="@+id/login_guideline_right"
+      app:layout_constraintTop_toBottomOf="@+id/login_login" />
     <androidx.constraintlayout.widget.Guideline
       android:id="@+id/login_guideline_left"
       android:layout_width="wrap_content"
@@ -42,12 +87,14 @@
       android:layout_height="wrap_content"
       android:orientation="horizontal"
       app:layout_constraintGuide_begin="308dp" />
+
     <androidx.constraintlayout.widget.Guideline
       android:id="@+id/login_guideline_right"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
       app:layout_constraintGuide_begin="50dp" />
+
     <com.google.android.material.textfield.TextInputLayout
       android:id="@+id/login_email_holder"
       android:layout_width="0dp"
@@ -85,42 +132,6 @@
           app:layout_constraintHorizontal_bias="0.5"
           app:layout_constraintTop_toTopOf="parent" />
     </com.google.android.material.textfield.TextInputLayout>
-
-    <Button
-      android:id="@+id/login_login"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:background="@color/colorPrimary"
-      android:text="@string/login_page_login"
-      android:textColor="@color/colorTextLight"
-      android:textSize="20sp"
-      app:layout_constraintEnd_toStartOf="@+id/login_guideline_left"
-      app:layout_constraintStart_toStartOf="@+id/login_guideline_right"
-      app:layout_constraintTop_toBottomOf="@+id/login_password_holder" />
-
-    <TextView
-      android:id="@+id/login_recoverPassword"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="16dp"
-      android:clickable="true"
-      android:text="@string/login_page_forgot"
-      android:textAlignment="center"
-      android:textColor="@color/colorPrimary"
-      android:textSize="16sp"
-      app:layout_constraintEnd_toStartOf="@+id/login_guideline_left"
-      app:layout_constraintStart_toStartOf="@+id/login_guideline_right"
-      app:layout_constraintTop_toBottomOf="@+id/login_login" />
-    <Button
-      android:id="@+id/button_loginBack"
-      android:layout_width="24dp"
-      android:layout_height="24dp"
-      android:layout_marginTop="32dp"
-
-      android:background="@drawable/arrow_back_icon"
-      android:onClick="customBack"
-      app:layout_constraintStart_toStartOf="@+id/login_guideline_right"
-      app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

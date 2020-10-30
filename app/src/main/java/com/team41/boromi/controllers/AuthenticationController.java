@@ -66,6 +66,7 @@ public class AuthenticationController {
    * Makes a request to sign a user up. Fails on certain conditions such as the user already has an
    * account and request sign up. More details can be found https://firebase.google.com/docs/reference/js/firebase.auth.Auth#createuserwithemailandpassword
    * This needs to be run in executor because getting the user is synchronous.
+   *
    * @param email
    * @param password
    * @return a user object if successful

@@ -6,9 +6,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import com.team41.boromi.auth.WelcomeFragment;
+import com.team41.boromi.controllers.AuthenticationController;
+import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity {
 
+  @Inject
+  AuthenticationController authController;
 
   private FragmentManager manager = null;
   FragmentTransaction ft;
@@ -17,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    ((BoromiApp) getApplicationContext()).appComponent.getAuthenticationComponent().inject(this);
 
     if (manager == null) {
       manager = getSupportFragmentManager();
@@ -31,4 +36,9 @@ public class MainActivity extends AppCompatActivity {
   public void customBack(View view) {
     super.onBackPressed();
   }
+
+  public AuthenticationController getAuthController() {
+    return authController;
+  }
+
 }

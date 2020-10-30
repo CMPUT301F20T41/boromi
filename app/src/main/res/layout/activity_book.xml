@@ -30,14 +30,12 @@
       android:id="@+id/tabs_main"
       android:layout_width="match_parent"
       android:layout_height="0dp"
-      android:layout_marginEnd="1dp"
       android:background="@color/colorPrimary"
-      app:tabSelectedTextColor="@color/colorSecondary"
-      app:tabIndicatorColor="@color/colorSecondary"
-      app:tabTextColor="@color/colorTextLight"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintEnd_toStartOf="parent">
+      app:tabIndicatorColor="@color/colorSecondary"
+      app:tabSelectedTextColor="@color/colorSecondary"
+      app:tabTextColor="@color/colorTextLight">
 
         <com.google.android.material.tabs.TabItem
           android:id="@+id/tab_owned_books"
@@ -49,7 +47,7 @@
           android:id="@+id/tab_borrowed_books"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:icon="@drawable/outgoing_icon"/>
+          android:icon="@drawable/outgoing_icon" />
 
         <com.google.android.material.tabs.TabItem
           android:id="@+id/tab_search"

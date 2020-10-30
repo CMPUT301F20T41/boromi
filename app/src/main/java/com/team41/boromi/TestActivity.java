@@ -21,18 +21,19 @@ public class TestActivity extends AppCompatActivity {
 
     ((BoromiApp) getApplicationContext()).appComponent.getAuthenticationComponent().inject(this);
 
-    authController.makeSignUpRequest("Brock", "bchelle@ualberta.ca", "CMPUT301", new AuthCallback() {
-      @Override
-      public void onSuccess(AuthResult authResult) {
-        Log.d(TAG, "LOGIN GOOD");
-      }
+    authController
+        .makeSignUpRequest("Brock", "bchelle@ualberta.ca", "CMPUT301", new AuthCallback() {
+          @Override
+          public void onSuccess(AuthResult authResult) {
+            Log.d(TAG, "LOGIN GOOD");
+          }
 
-      @Override
-      public void onFailure(Exception e) {
-        Log.d(TAG, "UNABLE TO LOGIN");
-        Log.w(TAG, e.getCause());
-      }
-    });
+          @Override
+          public void onFailure(Exception e) {
+            Log.d(TAG, "UNABLE TO LOGIN");
+            Log.w(TAG, e.getCause());
+          }
+        });
 
   }
 }
