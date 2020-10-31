@@ -21,7 +21,7 @@
   <string name="recover_page_recover_message">Enter your email address and we will send you a link to reset your password</string>
 
   <!--welcome-->
-  <string name="welcome_page_welcome">Welcome</string>
+  <string name="welcome_page_welcome">Welcome to</string>
   <string name="welcome_page_welcome_message">You are only a couple of steps away from joining a network of bookworms just like yourself</string>
   <string name="welcome_create_account">CREATE AN ACCOUNT</string>
   <string name="welcome_login">ALREADY SIGNED UP? LOGIN</string>

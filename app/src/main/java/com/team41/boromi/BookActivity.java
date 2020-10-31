@@ -50,7 +50,9 @@ public class BookActivity extends AppCompatActivity {
         .addFragment(new Pair<Class<? extends Fragment>, Bundle>(BorrowedFragment.class, null));
     pagerAdapter
         .addFragment(new Pair<Class<? extends Fragment>, Bundle>(SearchFragment.class, null));
-    pagerAdapter.addFragment(new Pair<Class<? extends Fragment>, Bundle>(MapFragment.class, null));
+    Bundle bundle = new Bundle();
+    bundle.putInt("Mode", 1);
+    pagerAdapter.addFragment(new Pair<Class<? extends Fragment>, Bundle>(MapFragment.class, bundle));
     pagerAdapter
         .addFragment(new Pair<Class<? extends Fragment>, Bundle>(SettingsFragment.class, null));
 

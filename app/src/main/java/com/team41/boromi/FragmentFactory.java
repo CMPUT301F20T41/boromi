@@ -3,6 +3,7 @@ package com.team41.boromi;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import com.team41.boromi.book.GenericListFragment;
+import com.team41.boromi.book.MapFragment;
 
 public class FragmentFactory {
 
@@ -11,6 +12,8 @@ public class FragmentFactory {
     switch (c.getSimpleName()) {
       case ("GenericListFragment"):
         return GenericListFragment.newInstance(bundle);
+      case ("MapFragment"):
+        return MapFragment.newInstance(bundle);
       default:
         return c.newInstance();
       // TODO change to dagger
