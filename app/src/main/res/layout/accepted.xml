@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    android:clipToPadding="false"
+    android:paddingVertical="25dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cardshape"
+        android:elevation="10dp"
+        android:orientation="horizontal"
+        android:paddingVertical="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="5dp">
+
+            <ImageButton
+                android:id="@+id/bookImage"
+                android:layout_width="42dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/camera_circle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/add_photo_icon" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="210dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="The Hobbit"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textSize="20sp"></TextView>
+
+            <TextView
+                android:id="@+id/Author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="J.R.R. Tolkein"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textSize="12sp"></TextView>
+
+            <LinearLayout
+                android:id="@+id/lent_to"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Giving to: "
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textSize="10sp"></TextView>
+
+                <TextView
+                    android:id="@+id/user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="benlala8"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#2196F3"
+                    android:textSize="10sp"></TextView>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/ISBN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ISBN: #1234567890123"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textSize="10sp"></TextView>
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingRight="5dp">
+
+            <ImageButton
+                android:id="@+id/rightButton"
+                android:layout_width="31dp"
+                android:layout_height="29dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:backgroundTint="#FFFFFF"
+                android:tint="@color/colorIconDark"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/more_horizontal_icon"
+                tools:srcCompat="@drawable/more_horizontal_icon" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
