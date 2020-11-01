@@ -22,6 +22,7 @@ public class Book implements Serializable {
   private String desc;
   private BookStatus status;
   private BookWorkflowStage workflow;
+  private String borrower;
 
   // TODO
   // I didn't include logic for the requesters/borrowers/img/location
@@ -103,5 +104,13 @@ public class Book implements Serializable {
 
   public void setWorkflow(BookWorkflowStage workflow) {
     this.workflow = workflow;
+  }
+
+  public String getBorrower() {
+    return borrower;
+  }
+
+  public void setBorrower(String borrower) {
+    this.borrower = borrower;
   }
 }

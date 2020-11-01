@@ -1,5 +1,7 @@
 package com.team41.boromi.dagger;
 
+import com.team41.boromi.TestRequestBookActivity;
+
 import dagger.Component;
 import javax.inject.Singleton;
 
@@ -11,4 +13,7 @@ import javax.inject.Singleton;
 public interface AppComponent {
 
   AuthenticationComponent getAuthenticationComponent();
+
+  void inject(TestRequestBookActivity testActivityRequestBook);
+
 }

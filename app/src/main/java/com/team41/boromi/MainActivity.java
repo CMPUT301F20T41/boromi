@@ -1,5 +1,6 @@
 package com.team41.boromi;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +19,9 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
+    // TODO REMOVE THIS SO IT DOESN'T REDIRECT TO TEST ACTIVITY
+    startActivity(new Intent(this, TestActivity.class));
 
     if (manager == null) {
       manager = getSupportFragmentManager();

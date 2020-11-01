@@ -57,8 +57,6 @@ public class UserDB {
    * async pushes a user to a db merges data only in case of conflicts
    */
   public void pushUser(User user) {
-    Gson gson = new Gson();
-    gson.toJson(user);
     usersRef.document(user.getUUID()).set(user, SetOptions.merge());
   }
 

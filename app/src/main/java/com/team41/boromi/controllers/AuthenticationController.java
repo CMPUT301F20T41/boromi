@@ -33,9 +33,6 @@ public class AuthenticationController {
     this.executor = executor;
   }
 
-  // TODO
-  // IMPLEMENTATION OF LOGIN WITH USERNAME
-
   /**
    * Makes a request for user login. Mandatory callback to return changes to main thread.
    *
@@ -98,6 +95,7 @@ public class AuthenticationController {
     FirebaseUser fUser = auth.getCurrentUser();
     User user = new User(fUser.getUid(), fUser.getEmail(), username);
     userDB.pushUser(user);
+    BoromiModule.user = user;   // set user in signup process
   }
 
 
