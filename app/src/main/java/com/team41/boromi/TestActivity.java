@@ -38,6 +38,8 @@ public class TestActivity extends AppCompatActivity {
         Log.w(TAG, e.getCause());
       }
     });
+    
+    authController.resetPassword("mingyaang@gmail.com");
   }
 
   // START OF BOOK REQUESTING SAMPLE LOGIC
