@@ -102,4 +102,16 @@ public class AuthenticationController {
   }
 
 
+  public void resetPassword(String email) {
+    auth.sendPasswordResetEmail(email)
+        .addOnCompleteListener(executor, new OnCompleteListener<Void>() {
+          @Override
+          public void onComplete(@NonNull Task<Void> task) {
+            if (task.isSuccessful()) {
+              Log.d(TAG, "Email sent.");
+            }
+          }
+        });
+  }
+
 }

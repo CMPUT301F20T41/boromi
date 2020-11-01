@@ -35,5 +35,6 @@ public class TestActivity extends AppCompatActivity {
           }
         });
 
+    authController.resetPassword("mingyaang@gmail.com");
   }
 }
