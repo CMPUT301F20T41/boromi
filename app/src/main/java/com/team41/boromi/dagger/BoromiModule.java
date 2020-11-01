@@ -30,8 +30,8 @@ public class BoromiModule {
   Executor provideExecutor() {
     int NUM_THREADS = Runtime.getRuntime().availableProcessors();
     return new ThreadPoolExecutor(
-        2,
-        4,  // prevent tasks from being rejected
+        NUM_THREADS + 2,
+        NUM_THREADS + 6,  // prevent tasks from being rejected
         1,
         TimeUnit.SECONDS,
         new LinkedBlockingQueue<Runnable>()
