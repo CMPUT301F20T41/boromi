@@ -1,12 +1,10 @@
 package com.team41.boromi.models;
 
-import androidx.annotation.NonNull;
+import static com.team41.boromi.constants.CommonConstants.BookStatus;
+import static com.team41.boromi.constants.CommonConstants.BookWorkflowStage;
 
 import java.io.Serializable;
 import java.util.UUID;
-
-import static com.team41.boromi.constants.CommonConstants.BookStatus;
-import static com.team41.boromi.constants.CommonConstants.BookWorkflowStage;
 
 /**
  * A model class storing an information on the book And on which stage the book is currently in
@@ -18,12 +16,13 @@ public class Book implements Serializable {
 
   private String bookId;
   private String owner;
+  private String borrower;
   private String ISBN;
+  private String title;
   private String author;
   private String desc;
   private BookStatus status;
   private BookWorkflowStage workflow;
-  private String borrower;
 
   // TODO
   // I didn't include logic for the requesters/borrowers/img/location
@@ -36,6 +35,39 @@ public class Book implements Serializable {
    * A no-argument constructor required by firestore to serialize data
    */
   public Book() {
+  }
+
+  public Book(String owner, String title, String author, String ISBN) {
+    this.owner = owner;
+    this.title = title;
+    this.author = author;
+    this.ISBN = ISBN;
+
+    this.borrower = null;
+    this.status = BookStatus.AVAILABLE;
+    this.workflow = BookWorkflowStage.AVAILABLE;
+  }
+
+  public Book(String owner, String title, String author, String ISBN, BookStatus status) {
+    this.owner = owner;
+    this.title = title;
+    this.author = author;
+    this.ISBN = ISBN;
+    this.status = status;
+
+    this.borrower = null;
+    this.workflow = BookWorkflowStage.AVAILABLE;
+  }
+
+  public Book(String owner, String title, String author, String ISBN, BookWorkflowStage workflow) {
+    this.owner = owner;
+    this.title = title;
+    this.author = author;
+    this.ISBN = ISBN;
+    this.workflow = workflow;
+
+    this.borrower = null;
+    this.status = BookStatus.AVAILABLE;
   }
 
   /**
@@ -54,18 +86,97 @@ public class Book implements Serializable {
     this.bookId = bookId;
     this.owner = owner;
     this.status = BookStatus.AVAILABLE;
+  }
+
+  public Book(
+          String owner,
+          String title,
+          String author,
+          String ISBN,
+          BookStatus status,
+          BookWorkflowStage workflow
+  ) {
+    this.owner = owner;
+    this.title = title;
+    this.author = author;
+    this.ISBN = ISBN;
+    this.status = status;
+    this.workflow = workflow;
+
+    this.borrower = null;
+  }
+
+  public Book(
+          String owner,
+          String title,
+          String author,
+          String ISBN,
+          BookStatus status,
+          String borrower
+  ) {
+    this.owner = owner;
+    this.borrower = borrower;
+    this.title = title;
+    this.author = author;
+    this.ISBN = ISBN;
+    this.status = status;
+
     this.workflow = BookWorkflowStage.AVAILABLE;
   }
 
+  public Book(
+          String owner,
+          String title,
+          String author,
+          String ISBN,
+          BookWorkflowStage workflow,
+          String borrower
+  ) {
+    this.owner = owner;
+    this.borrower = borrower;
+    this.title = title;
+    this.author = author;
+    this.ISBN = ISBN;
+    this.workflow = workflow;
+
+    this.status = BookStatus.AVAILABLE;
+  }
+
+  public Book(
+          String owner,
+          String title,
+          String author,
+          String ISBN,
+          BookStatus status,
+          BookWorkflowStage workflow,
+          String borrower
+  ) {
+    this.owner = owner;
+    this.borrower = borrower;
+    this.title = title;
+    this.author = author;
+    this.ISBN = ISBN;
+    this.workflow = workflow;
+    this.status = status;
+
+  }
+
   // Setters / Getters Start
-  @NonNull
   public String getBookId() {
     return bookId;
   }
 
-  @NonNull
   public String getOwner() {
     return owner;
+  }
+
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   public String getISBN() {

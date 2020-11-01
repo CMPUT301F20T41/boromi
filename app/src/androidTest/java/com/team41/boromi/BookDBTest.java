@@ -27,25 +27,29 @@ public class BookDBTest {
 		// This assumes correct functionality of the pushBook method but
 		// I didn't know a better way to automate the process of setting up
 		// A consistent testing environment
-		testBooks.add(bookDB.pushBook(new Book("testuser1")));
+		testBooks.add(bookDB.pushBook(new Book(
+				"testuser1",
+				"The Hobbit",
+				"JK Rowling",
+				"123456789012"
+		)));
 	}
 
-//	@After
-//	public void tearDown() {
-//		// Deletes all the test books from firestore to rollback the changes made during the test
-//		// This assumes correct functionality of the deleteBook method but
-//		// I didn't know a better way to automate the process of setting up
-//		// A consistent testing environment
-//		for (Book book : testBooks)
-//			bookDB.deleteBook(book.getBookId());
-//
-//		testBooks.clear();
-//	}
+	@After
+	public void tearDown() {
+		// Deletes all the test books from firestore to rollback the changes made during the test
+		// This assumes correct functionality of the deleteBook method but
+		// I didn't know a better way to automate the process of setting up
+		// A consistent testing environment
+		for (Book book : testBooks)
+			bookDB.deleteBook(book.getBookId());
+
+		testBooks.clear();
+	}
 
 	@Test
 	public void testPushBook() {
-		Book book = new Book("testuser1");
-
+		Book book = new Book("testuser1","The Hobbit","JK Rowling","123456789012");
 		Book resultBook = bookDB.pushBook(book);
 		testBooks.add(resultBook);
 
@@ -84,7 +88,7 @@ public class BookDBTest {
 		assertEquals("testuser1", book.getOwner());
 
 		// Edit the author of the book push the change to firebase
-		book.setAuthor("JK Rowling");
+		book.setAuthor("Brock Chelle");
 		bookDB.pushBook(book);
 
 		// Gets the modified book from firestore
@@ -93,10 +97,15 @@ public class BookDBTest {
 
 		// Asserts that the edit was successful
 		book = ownedBooks.get(0);
-		assertEquals("JK Rowling", book.getAuthor());
+		assertEquals("Brock Chelle", book.getAuthor());
 
 		// Pushes a new book to firestore
-		testBooks.add(bookDB.pushBook(new Book("testuser1")));
+		testBooks.add(bookDB.pushBook(new Book(
+				"testuser1",
+				"Harry Potter",
+				"J.R.R. Tolkien",
+				"8167893451982"
+		)));
 
 		// Gets the new books from firestore to ensure the count was incremented
 		ownedBooks = bookDB.getUsersOwnedBooks("testuser1");

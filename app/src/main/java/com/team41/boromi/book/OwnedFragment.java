@@ -5,10 +5,8 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
-
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
@@ -51,31 +49,35 @@ public class OwnedFragment extends Fragment {
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                           Bundle savedInstanceState) {
+      Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_owned, container, false);
 
-    tabLayout = view.findViewById(R.id.tabs_sub_owned);
+    tabLayout = (TabLayout) view.findViewById(R.id.tabs_sub_owned);
     viewPager2 = view.findViewById(R.id.view_pager_owned);
-    TabItem availableTab = view.findViewById(R.id.tabs_sub_owned_available);
-    TabItem requestsTab = view.findViewById(R.id.tabs_sub_owned_requests);
-    TabItem acceptedTab = view.findViewById(R.id.tabs_sub_owned_accepted);
-    TabItem lentTab = view.findViewById(R.id.tabs_sub_owned_lent);
+    TabItem availableTab = (TabItem) view.findViewById(R.id.tabs_sub_owned_available);
+    TabItem requestsTab = (TabItem) view.findViewById(R.id.tabs_sub_owned_requests);
+    TabItem acceptedTab = (TabItem) view.findViewById(R.id.tabs_sub_owned_accepted);
+    TabItem lentTab = (TabItem) view.findViewById(R.id.tabs_sub_owned_lent);
 
     // add fragments to tabs
     pagerAdapter = new PagerAdapter(getChildFragmentManager(), getLifecycle());
     Bundle bundle = new Bundle();
     bundle.putString("msg", "Available");
-    pagerAdapter.addFragment(new Pair<Class<? extends Fragment>, Bundle>(GenericListFragment.class, bundle));
+    pagerAdapter.addFragment(
+        new Pair<Class<? extends Fragment>, Bundle>(GenericListFragment.class, bundle));
     bundle = new Bundle();
     bundle.putString("msg", "Requests");
-    pagerAdapter.addFragment(new Pair<Class<? extends Fragment>, Bundle>(GenericListFragment.class, bundle));
+    pagerAdapter.addFragment(
+        new Pair<Class<? extends Fragment>, Bundle>(GenericListFragment.class, bundle));
     bundle = new Bundle();
     bundle.putString("msg", "Accepted");
-    pagerAdapter.addFragment(new Pair<Class<? extends Fragment>, Bundle>(GenericListFragment.class, bundle));
+    pagerAdapter.addFragment(
+        new Pair<Class<? extends Fragment>, Bundle>(GenericListFragment.class, bundle));
     bundle = new Bundle();
     bundle.putString("msg", "Lent");
-    pagerAdapter.addFragment(new Pair<Class<? extends Fragment>, Bundle>(GenericListFragment.class, bundle));
+    pagerAdapter.addFragment(
+        new Pair<Class<? extends Fragment>, Bundle>(GenericListFragment.class, bundle));
 
     // Configure viewpager2 options and initialize page adapter
     viewPager2.setUserInputEnabled(false);

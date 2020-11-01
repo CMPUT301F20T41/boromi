@@ -10,6 +10,10 @@
       android:id="@+id/tabs_sub_owned"
       android:layout_width="match_parent"
       android:layout_height="0dp"
+      android:background="@color/colorPrimary"
+      app:tabSelectedTextColor="@color/colorSecondary"
+      app:tabIndicatorColor="@color/colorSecondary"
+      app:tabTextColor="@color/colorTextLight"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent">
@@ -18,25 +22,25 @@
           android:id="@+id/tabs_sub_owned_available"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="Available" />
+          android:text="@string/owned_available" />
 
         <com.google.android.material.tabs.TabItem
           android:id="@+id/tabs_sub_owned_requests"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="Requests" />
+          android:text="@string/owned_requests" />
 
         <com.google.android.material.tabs.TabItem
           android:id="@+id/tabs_sub_owned_accepted"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="Accepted" />
+          android:text="@string/owned_accepted" />
 
         <com.google.android.material.tabs.TabItem
           android:id="@+id/tabs_sub_owned_lent"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="Lent" />
+          android:text="@string/owned_lent" />
 
     </com.google.android.material.tabs.TabLayout>
 

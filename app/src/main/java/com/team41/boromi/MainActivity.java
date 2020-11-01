@@ -2,15 +2,18 @@ package com.team41.boromi;
 
 import android.content.Intent;
 import android.os.Bundle;
-
+import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
 import com.team41.boromi.auth.WelcomeFragment;
+import com.team41.boromi.controllers.AuthenticationController;
+import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity {
 
+  @Inject
+  AuthenticationController authController;
 
   FragmentTransaction ft;
   private FragmentManager manager = null;
@@ -19,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    ((BoromiApp) getApplicationContext()).appComponent.getAuthenticationComponent().inject(this);
 
     // TODO REMOVE THIS SO IT DOESN'T REDIRECT TO TEST ACTIVITY
     startActivity(new Intent(this, TestActivity.class));
@@ -32,4 +36,13 @@ public class MainActivity extends AppCompatActivity {
       ft.add(R.id.auth_fragment, welcomeFragment).commit();
     }
   }
+
+  public void customBack(View view) {
+    super.onBackPressed();
+  }
+
+  public AuthenticationController getAuthController() {
+    return authController;
+  }
+
 }

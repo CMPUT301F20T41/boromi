@@ -1,5 +1,6 @@
 package com.team41.boromi.dagger;
 
+import com.team41.boromi.MainActivity;
 import com.team41.boromi.TestActivity;
 
 import dagger.Subcomponent;
@@ -12,4 +13,6 @@ import dagger.Subcomponent;
 public interface AuthenticationComponent {
 
   void inject(TestActivity testActivity);
+
+  void inject(MainActivity mainActivity);
 }
