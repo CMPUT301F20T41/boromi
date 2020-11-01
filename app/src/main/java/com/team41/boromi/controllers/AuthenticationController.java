@@ -103,5 +103,20 @@ public class AuthenticationController {
     BoromiModule.user = user;   // set user in signup process
   }
 
+  /**
+   * Sends an email to reset password
+   * Firebase handlees all that logic :)
+   *
+   * @param email
+   */
+  public void requestPasswordReset(String email) {
+    auth.sendPasswordResetEmail(email)
+        .addOnCompleteListener(executor, task -> {
+          if (task.isSuccessful()) {
+            Log.d(TAG, "Email sent.");
+          }
+        });
+  }
+
 
 }
