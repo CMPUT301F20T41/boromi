@@ -1,9 +1,9 @@
 package com.team41.boromi;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.Log;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.team41.boromi.callbacks.BookRequestCallback;
 import com.team41.boromi.controllers.BookRequestController;
@@ -55,7 +55,7 @@ public class TestRequestBookActivity extends AppCompatActivity {
     bookRequestController.getRequestedBooks(new BookRequestCallback() {
       @Override
       public void onComplete(List<BookRequest> bookRequests, Map<String, Book> bookMap) {
-        for(BookRequest br : bookRequests) {
+        for (BookRequest br : bookRequests) {
           Log.d(TAG, br.getRequestId());
           Log.d(TAG, bookMap.get(br.getBookId()).getBookId());
         }

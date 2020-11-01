@@ -2,8 +2,9 @@ package com.team41.boromi.dagger;
 
 import com.team41.boromi.TestRequestBookActivity;
 
-import dagger.Component;
 import javax.inject.Singleton;
+
+import dagger.Component;
 
 /**
  * Hold a graph of all objects that will exist in memory for the lifecycle of app

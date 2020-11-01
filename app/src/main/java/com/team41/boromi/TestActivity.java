@@ -3,11 +3,12 @@ package com.team41.boromi;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.auth.AuthResult;
 import com.team41.boromi.callbacks.AuthCallback;
 import com.team41.boromi.controllers.AuthenticationController;
-import com.team41.boromi.controllers.BookRequestController;
 
 import javax.inject.Inject;
 

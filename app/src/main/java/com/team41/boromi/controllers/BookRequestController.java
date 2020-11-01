@@ -1,7 +1,5 @@
 package com.team41.boromi.controllers;
 
-import android.util.Log;
-
 import com.team41.boromi.callbacks.BookRequestCallback;
 import com.team41.boromi.constants.CommonConstants;
 import com.team41.boromi.dbs.BookDB;
@@ -10,11 +8,8 @@ import com.team41.boromi.models.Book;
 import com.team41.boromi.models.BookRequest;
 import com.team41.boromi.models.User;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
@@ -54,6 +49,7 @@ public class BookRequestController {
   /**
    * Makes a request on a book
    * Async completes the request
+   *
    * @param book
    */
   public void makeRequestOnBook(Book book) {

@@ -1,13 +1,16 @@
 package com.team41.boromi.dagger;
 
 import com.team41.boromi.models.User;
-import dagger.Module;
-import dagger.Provides;
+
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
 import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.Provides;
 
 /**
  * A dagger module to describe modules associated with the app

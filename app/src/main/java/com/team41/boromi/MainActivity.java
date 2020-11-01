@@ -12,8 +12,8 @@ import com.team41.boromi.auth.WelcomeFragment;
 public class MainActivity extends AppCompatActivity {
 
 
-  private FragmentManager manager = null;
   FragmentTransaction ft;
+  private FragmentManager manager = null;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

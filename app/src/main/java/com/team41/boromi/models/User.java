@@ -1,10 +1,7 @@
 package com.team41.boromi.models;
 
-import androidx.annotation.NonNull;
-
 import java.io.Serializable;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+
 import javax.inject.Singleton;
 
 /**
@@ -32,10 +29,11 @@ public class User implements OwnerInterface, BorrowerInterface, Serializable {
     this.email = email;
   }
 
-  /** for serializer
-   *
+  /**
+   * for serializer
    */
-  public User() {}
+  public User() {
+  }
 
 
   // getter start

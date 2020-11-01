@@ -1,7 +1,5 @@
 package com.team41.boromi.models;
 
-import androidx.annotation.NonNull;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
@@ -23,7 +21,8 @@ public class BookRequest implements Serializable {
 
   /**
    * Constructor given requestor and book ID, randomizing UUID and date.
-   *  @param requestor username of the requestor
+   *
+   * @param requestor username of the requestor
    * @param bookId    bookUuid
    */
   public BookRequest(String requestor, String bookId, String owner) {
@@ -49,7 +48,8 @@ public class BookRequest implements Serializable {
     this.owner = owner;
   }
 
-  public BookRequest() {}
+  public BookRequest() {
+  }
 
   // Getter / Setter start
   public String getRequestId() {
@@ -68,9 +68,11 @@ public class BookRequest implements Serializable {
     return requestDate;
   }
 
-  public String getOwner() {return owner;}
-
   public void setRequestDate(Date requestDate) {
     this.requestDate = requestDate;
+  }
+
+  public String getOwner() {
+    return owner;
   }
 }

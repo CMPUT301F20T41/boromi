@@ -1,11 +1,12 @@
 package com.team41.boromi.models;
 
-import static com.team41.boromi.constants.CommonConstants.BookStatus;
-import static com.team41.boromi.constants.CommonConstants.BookWorkflowStage;
-
 import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.UUID;
+
+import static com.team41.boromi.constants.CommonConstants.BookStatus;
+import static com.team41.boromi.constants.CommonConstants.BookWorkflowStage;
 
 /**
  * A model class storing an information on the book And on which stage the book is currently in
@@ -34,7 +35,8 @@ public class Book implements Serializable {
   /**
    * A no-argument constructor required by firestore to serialize data
    */
-  public Book() {}
+  public Book() {
+  }
 
   /**
    * When UUID not specified, we generate a random UUID to identify the book
