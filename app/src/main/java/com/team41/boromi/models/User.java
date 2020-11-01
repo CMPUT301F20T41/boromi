@@ -18,6 +18,11 @@ public class User implements OwnerInterface, BorrowerInterface, Serializable {
   private String uuid;
 
   /**
+   * A no-argument constructor required by firebase in order to deserialize
+   */
+  public User() {}
+
+  /**
    * constructor
    *
    * @param username
@@ -29,14 +34,7 @@ public class User implements OwnerInterface, BorrowerInterface, Serializable {
     this.email = email;
   }
 
-  /**
-   * for serializer
-   */
-  public User() {
-  }
-
-
-  // getter start
+  // Getters Start
   public String getUsername() {
     return username;
   }
@@ -48,4 +46,5 @@ public class User implements OwnerInterface, BorrowerInterface, Serializable {
   public String getUUID() {
     return uuid;
   }
+
 }
