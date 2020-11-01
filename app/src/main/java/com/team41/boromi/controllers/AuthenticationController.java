@@ -1,7 +1,9 @@
 package com.team41.boromi.controllers;
 
 import android.util.Log;
+
 import androidx.annotation.NonNull;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -12,7 +14,9 @@ import com.team41.boromi.dagger.ActivityScope;
 import com.team41.boromi.dagger.BoromiModule;
 import com.team41.boromi.dbs.UserDB;
 import com.team41.boromi.models.User;
+
 import java.util.concurrent.Executor;
+
 import javax.inject.Inject;
 
 /**
@@ -32,9 +36,6 @@ public class AuthenticationController {
     this.auth = auth;
     this.executor = executor;
   }
-
-  // TODO
-  // IMPLEMENTATION OF LOGIN WITH USERNAME
 
   /**
    * Makes a request for user login. Mandatory callback to return changes to main thread.
@@ -72,7 +73,7 @@ public class AuthenticationController {
    * @return a user object if successful
    */
   public void makeSignUpRequest(final String username, String email, String password,
-      final AuthCallback authCallback) {
+                                final AuthCallback authCallback) {
     auth.createUserWithEmailAndPassword(email, password)
         .addOnCompleteListener(executor, new OnCompleteListener<AuthResult>() {
           public void onComplete(@NonNull Task<AuthResult> task) {
@@ -99,6 +100,7 @@ public class AuthenticationController {
     FirebaseUser fUser = auth.getCurrentUser();
     User user = new User(fUser.getUid(), fUser.getEmail(), username);
     userDB.pushUser(user);
+    BoromiModule.user = user;   // set user in signup process
   }
 
 

@@ -1,5 +1,6 @@
 package com.team41.boromi;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,8 +15,8 @@ public class MainActivity extends AppCompatActivity {
   @Inject
   AuthenticationController authController;
 
-  private FragmentManager manager = null;
   FragmentTransaction ft;
+  private FragmentManager manager = null;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

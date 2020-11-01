@@ -1,23 +1,20 @@
 package com.team41.boromi.models;
 
-import androidx.annotation.NonNull;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
 /**
  * Class representing a request made for a book.
  */
-public class BookRequest {
+public class BookRequest implements Serializable {
+  private static final long serialVersionUID = 8005430L; // bookReq lookin ish haha
 
-  @NonNull
-  private final UUID requestId;
-  @NonNull
-  private final String requestor;
-  @NonNull
-  private final UUID bookId;
-  @NonNull
+  private String requestId;
+  private String requestor;
+  private String bookId;
   private Date requestDate;
-
+  private String owner;
   // TODO
   // Again I did not include the status to allow the person implementing to make the choice
   // on the logic
@@ -28,10 +25,11 @@ public class BookRequest {
    * @param requestor username of the requestor
    * @param bookId    bookUuid
    */
-  public BookRequest(String requestor, UUID bookId) {
+  public BookRequest(String requestor, String bookId, String owner) {
     this.requestor = requestor;
     this.bookId = bookId;
-    this.requestId = UUID.randomUUID();
+    this.owner = owner;
+    this.requestId = UUID.randomUUID().toString();
     this.requestDate = new Date();
   }
 
@@ -42,35 +40,39 @@ public class BookRequest {
    * @param requestor username
    * @param bookId    bookUuid
    */
-  public BookRequest(UUID requestId, String requestor, UUID bookId) {
+  public BookRequest(String requestId, String requestor, String bookId, String owner) {
     this.requestor = requestor;
     this.bookId = bookId;
     this.requestId = requestId;
     this.requestDate = new Date();
+    this.owner = owner;
+  }
+
+  public BookRequest() {
   }
 
   // Getter / Setter start
-  @NonNull
-  public UUID getRequestId() {
+  public String getRequestId() {
     return requestId;
   }
 
-  @NonNull
   public String getRequestor() {
     return requestor;
   }
 
-  @NonNull
-  public UUID getBookId() {
+  public String getBookId() {
     return bookId;
   }
 
-  @NonNull
   public Date getRequestDate() {
     return requestDate;
   }
 
-  public void setRequestDate(@NonNull Date requestDate) {
+  public void setRequestDate(Date requestDate) {
     this.requestDate = requestDate;
+  }
+
+  public String getOwner() {
+    return owner;
   }
 }
