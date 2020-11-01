@@ -44,15 +44,11 @@ public class BookActivity extends AppCompatActivity {
 
     // Add fragments for each tab
     pagerAdapter = new PagerAdapter(getSupportFragmentManager(), getLifecycle());
-    pagerAdapter
-        .addFragment(new Pair<Class<? extends Fragment>, Bundle>(OwnedFragment.class, null));
-    pagerAdapter
-        .addFragment(new Pair<Class<? extends Fragment>, Bundle>(BorrowedFragment.class, null));
-    pagerAdapter
-        .addFragment(new Pair<Class<? extends Fragment>, Bundle>(SearchFragment.class, null));
+    pagerAdapter.addFragment(new Pair<Class<? extends Fragment>, Bundle>(OwnedFragment.class, null));
+    pagerAdapter.addFragment(new Pair<Class<? extends Fragment>, Bundle>(BorrowedFragment.class, null));
+    pagerAdapter.addFragment(new Pair<Class<? extends Fragment>, Bundle>(SearchFragment.class, null));
     pagerAdapter.addFragment(new Pair<Class<? extends Fragment>, Bundle>(MapFragment.class, null));
-    pagerAdapter
-        .addFragment(new Pair<Class<? extends Fragment>, Bundle>(SettingsFragment.class, null));
+    pagerAdapter.addFragment(new Pair<Class<? extends Fragment>, Bundle>(SettingsFragment.class, null));
 
     // configure viewpager2 and initialize page adapter
     viewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);

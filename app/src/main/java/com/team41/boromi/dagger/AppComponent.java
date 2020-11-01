@@ -1,7 +1,10 @@
 package com.team41.boromi.dagger;
 
-import dagger.Component;
+import com.team41.boromi.TestRequestBookActivity;
+
 import javax.inject.Singleton;
+
+import dagger.Component;
 
 /**
  * Hold a graph of all objects that will exist in memory for the lifecycle of app
@@ -11,4 +14,7 @@ import javax.inject.Singleton;
 public interface AppComponent {
 
   AuthenticationComponent getAuthenticationComponent();
+
+  void inject(TestRequestBookActivity testActivityRequestBook);
+
 }

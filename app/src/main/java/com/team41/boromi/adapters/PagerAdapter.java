@@ -3,20 +3,23 @@ package com.team41.boromi.adapters;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
+
 import com.team41.boromi.FragmentFactory;
+
 import java.util.ArrayList;
 
 public class PagerAdapter extends FragmentStateAdapter {
 
-  private ArrayList<Pair<Class<? extends Fragment>, Bundle>> fragmentClasses;
+  private final ArrayList<Pair<Class<? extends Fragment>, Bundle>> fragmentClasses;
 
   public PagerAdapter(@NonNull FragmentManager fragmentManager,
-      @NonNull Lifecycle lifecycle) {
+                      @NonNull Lifecycle lifecycle) {
     super(fragmentManager, lifecycle);
     fragmentClasses = new ArrayList<>();
   }
