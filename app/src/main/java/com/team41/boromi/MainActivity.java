@@ -24,9 +24,6 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
     ((BoromiApp) getApplicationContext()).appComponent.getAuthenticationComponent().inject(this);
 
-    // TODO REMOVE THIS SO IT DOESN'T REDIRECT TO TEST ACTIVITY
-    startActivity(new Intent(this, TestActivity.class));
-
     if (manager == null) {
       manager = getSupportFragmentManager();
     }
