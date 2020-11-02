@@ -7,5 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface BookRequestCallback {
-  void onComplete(List<BookRequest> bookRequests, Map<String, Book> bookMap);
+  // map of book with arraylist of bookRequests on that book
+  void onComplete(Map<Book, List<BookRequest>> bookWithRequests);
 }

@@ -10,8 +10,9 @@ import java.util.UUID;
 public class BookRequest implements Serializable {
   private static final long serialVersionUID = 8005430L; // bookReq lookin ish haha
 
-  private String requestId;
+  private String requestId = UUID.randomUUID().toString();
   private String requestor;
+  private String requestorName;
   private String bookId;
   private Date requestDate;
   private String owner;
@@ -19,31 +20,17 @@ public class BookRequest implements Serializable {
   // Again I did not include the status to allow the person implementing to make the choice
   // on the logic
 
-  /**
-   * Constructor given requestor and book ID, randomizing UUID and date.
-   *
-   * @param requestor username of the requestor
-   * @param bookId    bookUuid
-   */
-  public BookRequest(String requestor, String bookId, String owner) {
-    this.requestor = requestor;
-    this.bookId = bookId;
-    this.owner = owner;
-    this.requestId = UUID.randomUUID().toString();
-    this.requestDate = new Date();
-  }
 
   /**
-   * Constructor with deterministic requestId.
+   * Constructor with requestorNamee requestId.
    *
-   * @param requestId uuid for request
    * @param requestor username
    * @param bookId    bookUuid
    */
-  public BookRequest(String requestId, String requestor, String bookId, String owner) {
+  public BookRequest(String requestorName, String requestor, String bookId, String owner) {
+    this.requestorName = requestorName;
     this.requestor = requestor;
     this.bookId = bookId;
-    this.requestId = requestId;
     this.requestDate = new Date();
     this.owner = owner;
   }
@@ -74,5 +61,13 @@ public class BookRequest implements Serializable {
 
   public String getOwner() {
     return owner;
+  }
+
+  public String getRequestorName() {
+    return requestorName;
+  }
+
+  public void setRequestorName(String requestorName) {
+    this.requestorName = requestorName;
   }
 }

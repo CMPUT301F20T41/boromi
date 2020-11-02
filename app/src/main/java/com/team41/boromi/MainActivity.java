@@ -1,6 +1,5 @@
 package com.team41.boromi;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,8 +21,6 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     ((BoromiApp) getApplicationContext()).appComponent.getAuthenticationComponent().inject(this);
-
-    startActivity(new Intent(this, TestActivity.class));
 
     if (manager == null) {
       manager = getSupportFragmentManager();
