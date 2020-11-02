@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.team41.boromi.callbacks.BookCallback;
 import com.team41.boromi.constants.CommonConstants.BookWorkflowStage;
 import com.team41.boromi.dbs.BookDB;
@@ -53,6 +55,32 @@ public class BookController {
   public void addBook(String owner, String author, String ISBN, String title, final BookCallback bookCallback) {
     if (isNotNullOrEmpty(author) && isNotNullOrEmpty(ISBN) && isNotNullOrEmpty(title)) {
       Book addingBook = new Book(owner, title, author, ISBN);
+      addingBook.setStatus(status.AVAILABLE);
+      addingBook.setWorkflow(workflow.AVAILABLE);
+      executor.execute(() -> {
+        ArrayList<Book> addedBook = new ArrayList<>();
+        addedBook.add(bookDB.pushBook(addingBook));
+        if (addedBook != null) {
+          Log.d(TAG, " book add success");
+          bookCallback.onSuccess(addedBook);
+        } else {
+          Log.d(TAG, " book add error");
+          bookCallback.onFailure(new IllegalArgumentException());
+        }
+      });
+    } else {
+      Log.d(TAG, " Error in one of the columns");
+      bookCallback.onFailure(new IllegalArgumentException());
+    }
+  }
+
+  /**
+   * same add function as above, but this time owner is set automatically by whoever is logged in
+   * Just some polymorphism to have less UI handling logic
+   */
+  public void addBook(String author, String ISBN, String title, final BookCallback bookCallback) {
+    if(isNotNullOrEmpty(author) && isNotNullOrEmpty(ISBN) && isNotNullOrEmpty(title)) {
+      Book addingBook = new Book(user.getUUID(), title, author, ISBN);
       addingBook.setStatus(status.AVAILABLE);
       addingBook.setWorkflow(workflow.AVAILABLE);
       executor.execute(() -> {
@@ -294,6 +322,21 @@ public class BookController {
       bookCallback.onFailure(new IllegalArgumentException());
     }
   }
+
+    /**
+     * A function that confirms a book has been borrowed and not just "accepted"
+     * dont pass a null book here
+     */
+    public void confirmBookReceived(@NonNull Book book) {
+        if(book.getBorrower() == user.getUUID()) {
+            book.setStatus(BookStatus.BORROWED);
+            bookDB.pushBook(book);
+        } else {
+            Log.d(TAG, "Bad Request on" + book.getBookId());
+            Log.d(TAG, "This should never happen, confirmed book that wasn't your borrowed");
+            throw new RuntimeException("Confirmed you received a book that isn't yours");
+        }
+    }
 
   /**
    * this is a synchronous task except for the pushing to db portion
