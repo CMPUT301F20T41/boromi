@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.util.Log;
 
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.team41.boromi.callbacks.BookCallback;
 import com.team41.boromi.constants.CommonConstants.BookWorkflowStage;
 import com.team41.boromi.dbs.BookDB;
@@ -336,7 +335,14 @@ public class BookController {
     return BitmapFactory.decodeStream(byteArrayInputStream);
   }
 
+  /***
+   * just sets a book img to null, but actually you still need to update the book somehow
+   * @param book
+   */
   public void deleteBookImage(Book book) {
-      book.setImg64(null);
+    book.setImg64(null);
+    executor.execute(() -> {
+      bookDB.pushBook(book);
+    });
   }
 }
