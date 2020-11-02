@@ -30,15 +30,14 @@ public class BookController {
     protected BookWorkflowStage workflow;
     protected Executor executor;
 
-    FirebaseFirestore db;
     BookDB bookDB;
     User user;
 
     @Inject
-    public BookController(BookDB bookDB, Executor executor, FirebaseFirestore, User user){
+    public BookController(BookDB bookDB, Executor executor, User user){
         this.bookDB = bookDB;
         this.executor = executor;
-        this.db = db;
+        this.user = user;
     }
 
     /**
