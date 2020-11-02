@@ -6,6 +6,7 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.gson.Gson;
 import com.team41.boromi.models.User;
@@ -22,14 +23,12 @@ public class UserDB {
 
   private final static String TAG = "UserDB";
   private final String DB_COLLECTION = "users";
-  private final FirebaseFirestore db;
   private final CollectionReference usersRef;
 
   private final Gson gson = new Gson();
 
   @Inject
   public UserDB(FirebaseFirestore db) {
-    this.db = db;
     usersRef = db.collection(DB_COLLECTION);
   }
 
@@ -55,12 +54,54 @@ public class UserDB {
     }
   }
 
+  /**
+   * Attempts to find a user by their username
+   * @param username The username to look for
+   * @return null if no user was found, otherwise returns the found user
+   */
+  public User getUserByUsername(String username) {
+    QuerySnapshot res;
+
+    // Queries firestore for the username
+    try {
+      res = Tasks.await(
+              usersRef.whereEqualTo("username", username).get(),
+              DB_TIMEOUT,
+              TimeUnit.MILLISECONDS
+      );
+    } catch (Exception e) { // Request failed
+      Log.w(TAG, e.getCause());
+      return null;
+    }
+
+    if (res.isEmpty()) { // No user found
+      return null;
+    } else if (res.size() > 1) { // This shouldn't happen but is a good check
+      Log.e(TAG, "Data Inconsistency: 2 or more users have the same username");
+      return res.getDocuments().get(0).toObject(User.class);
+    } else { // Exactly 1 user found
+      return res.getDocuments().get(0).toObject(User.class);
+    }
+
+  }
+
 
   /**
    * async pushes a user to a db merges data only in case of conflicts
    */
-  public void pushUser(User user) {
-    usersRef.document(user.getUUID()).set(user, SetOptions.merge());
+  public User pushUser(User user) {
+    gson.toJson(user);
+
+    try {
+      Tasks.await(
+              usersRef.document(user.getUUID()).set(user, SetOptions.merge()),
+              DB_TIMEOUT,
+              TimeUnit.MILLISECONDS);
+      return user;
+    } catch (Exception e) {
+      Log.w(TAG, e.getCause());
+      return null;
+    }
   }
 
 }

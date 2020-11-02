@@ -54,7 +54,7 @@ public class BookRequestController {
    * @param book
    */
   public void makeRequestOnBook(Book book) {
-    BookRequest request = new BookRequest(user.getUUID(), book.getBookId(), book.getOwner());
+    BookRequest request = new BookRequest(user.getUsername(), user.getUUID(), book.getBookId(), book.getOwner());
     executor.execute(() -> {
       brDB.pushBookRequest(request);
     });
@@ -81,9 +81,10 @@ public class BookRequestController {
   }
 
   // TODO : NOTIFY USER THEIR BOOK REQUEST WAS CANCELLED
+  // can also be used to "cancel" bookRequests
   public void declineBookRequest(BookRequest bookRequest) {
     executor.execute(() -> {
-      brDB.deleteBookRequest(bookRequest.getBookId());
+      brDB.deleteBookRequest(bookRequest.getRequestId());
     });
   }
 }
