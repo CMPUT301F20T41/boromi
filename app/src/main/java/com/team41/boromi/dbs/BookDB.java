@@ -13,8 +13,10 @@ import com.team41.boromi.models.BookRequest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -126,22 +128,25 @@ public class BookDB {
   }
 
   /**
-   * gets books by a request list
+   * returns book and the bookrequest accompanying it
    *
    * @param BookRequestList
    * @return
    */
-  public Map<String, Book> getBooksByBookRequestList(List<BookRequest> BookRequestList) {
-    Map<String, Book> bookMap = new HashMap<>();
+  public Map<Book, List<BookRequest>> getBooksWithRequestList(List<BookRequest> BookRequestList) {
+    Map<Book, List<BookRequest>> bookMap = new HashMap<>();
     for (BookRequest br : BookRequestList) {
-      if (bookMap.containsKey(br.getBookId()))
+      if (bookMap.containsKey(br.getBookId())) {
+        bookMap.get(br.getBookId()).add(br);
         continue;
+      }
+
       Book b = getBookById(br.getBookId());
       if (b == null) {
         Log.w(TAG, "book: " + b.getBookId() + " doesn't exists but it was requested");
         continue;
       }
-      bookMap.put(b.getBookId(), b);
+      bookMap.put(b, new ArrayList<>());
     }
 
     return bookMap;

@@ -1,5 +1,7 @@
 package com.team41.boromi.models;
 
+import androidx.annotation.Nullable;
+
 import static com.team41.boromi.constants.CommonConstants.BookStatus;
 import static com.team41.boromi.constants.CommonConstants.BookWorkflowStage;
 
@@ -170,7 +172,6 @@ public class Book implements Serializable {
     return owner;
   }
 
-
   public String getTitle() {
     return title;
   }
@@ -225,5 +226,19 @@ public class Book implements Serializable {
 
   public void setBorrower(String borrower) {
     this.borrower = borrower;
+  }
+
+  @Override
+  public boolean equals(@Nullable Object obj) {
+    if(obj instanceof String) {
+      if(bookId.compareTo((String) obj) == 0) {
+        return true;
+      }
+    } else if (obj instanceof Book) {
+      if(bookId.compareTo(((Book) obj).getBookId()) == 0) {
+        return true;
+      }
+    }
+    return false;
   }
 }

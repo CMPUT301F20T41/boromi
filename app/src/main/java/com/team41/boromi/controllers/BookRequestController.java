@@ -10,6 +10,7 @@ import com.team41.boromi.models.User;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
@@ -41,8 +42,8 @@ public class BookRequestController {
   public void getRequestedBooks(final BookRequestCallback bookRequestCallback) {
     executor.execute(() -> {
       List<BookRequest> bookRequestsFromUser = brDB.getBookRequests(user.getUUID());
-      Map<String, Book> requestedBooks = bookDB.getBooksByBookRequestList(bookRequestsFromUser);
-      bookRequestCallback.onComplete(bookRequestsFromUser, requestedBooks);
+      Map<Book, List<BookRequest>> booksWithRequestList = bookDB.getBooksWithRequestList(bookRequestsFromUser);
+      bookRequestCallback.onComplete(booksWithRequestList);
     });
   }
 
@@ -61,9 +62,9 @@ public class BookRequestController {
 
   public void getRequestOnOwnedBooks(final BookRequestCallback bookRequestCallback) {
     executor.execute(() -> {
-      List<BookRequest> bookRequests = brDB.getBookRequestsForOwner(user.getUUID());
-      Map<String, Book> requestedBooks = bookDB.getBooksByBookRequestList(bookRequests);
-      bookRequestCallback.onComplete(bookRequests, requestedBooks);
+      List<BookRequest> bookRequestsFromUser = brDB.getBookRequestsForOwner(user.getUUID());
+      Map<Book, List<BookRequest>> booksWithRequestList = bookDB.getBooksWithRequestList(bookRequestsFromUser);
+      bookRequestCallback.onComplete(booksWithRequestList);
     });
   }
 
