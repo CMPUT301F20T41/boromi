@@ -54,7 +54,9 @@ public class BookRequestController {
    */
   public void makeRequestOnBook(Book book) {
     BookRequest request = new BookRequest(user.getUUID(), book.getBookId(), book.getOwner());
+    book.setStatus(CommonConstants.BookStatus.REQUESTED);
     executor.execute(() -> {
+      bookDB.pushBook(book);    // update the books status
       brDB.pushBookRequest(request);
     });
   }
@@ -73,7 +75,7 @@ public class BookRequestController {
     executor.execute(() -> {
       brDB.deleteRequestsForBook(bookRequest.getBookId());
       Book acceptedBook = bookDB.getBookById(bookRequest.getBookId());
-      acceptedBook.setWorkflow(CommonConstants.BookWorkflowStage.BORROWED);
+      acceptedBook.setStatus(CommonConstants.BookStatus.ACCEPTED);      // sets the book to accepted
       acceptedBook.setBorrower(bookRequest.getRequestor());
       bookDB.pushBook(acceptedBook);
     });
