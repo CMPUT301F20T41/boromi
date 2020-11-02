@@ -21,5 +21,8 @@ public class CommonConstants {
     PENDINGRETURN
   }
 
+  public static final int REQUEST_IMAGE_CAPTURE = 1;
+
+
 
 }
