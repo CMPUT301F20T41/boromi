@@ -1,23 +1,21 @@
 package com.team41.boromi.models;
 
-import androidx.annotation.NonNull;
-
+import com.google.type.LatLng;
+import java.io.Serializable;
 import java.util.Date;
-import java.util.UUID;
 
 /**
  * A class showing intent to return book
  */
-public class BookReturn {
+public class BookReturn implements Serializable {
 
-  @NonNull
-  private final UUID returnId;
-  @NonNull
-  private final String returnee;
-  @NonNull
-  private final UUID bookId;
-  @NonNull
-  private final Date returnDate;
+  private static final long serialVersionUID = 8003437042L;
+
+  private String returnee;
+  private String owner;
+  private String bookId;
+  private Date returnDate;
+  private LatLng location;
 
   /**
    * Constructor that generates random returnId
@@ -25,24 +23,52 @@ public class BookReturn {
    * @param returnee
    * @param bookId
    */
-  public BookReturn(@NonNull String returnee, @NonNull UUID bookId) {
+  public BookReturn(String bookId, String owner, String returnee, Date returnDate,
+      LatLng location) {
     this.returnee = returnee;
     this.bookId = bookId;
-    this.returnId = UUID.randomUUID();
+    this.owner = owner;
+    // TODO change to date of meetup
     this.returnDate = new Date();
+    // TODO change to actual location later
+    this.location = null;
   }
 
-  /**
-   * Deterministic returnId
-   *
-   * @param returnId uuid of return id
-   * @param returnee username
-   * @param bookId   bookuuid
-   */
-  public BookReturn(@NonNull UUID returnId, @NonNull String returnee, @NonNull UUID bookId) {
-    this.returnId = returnId;
+  public BookReturn(Book book, String returnee, Date returnDate, LatLng location) {
+    this.bookId = book.getBookId();
+    this.owner = book.getOwner();
     this.returnee = returnee;
-    this.bookId = bookId;
+    // TODO change to date of meetup
     this.returnDate = new Date();
+    // TODO change to actual location later
+    this.location = null;
   }
+
+  public BookReturn() {
+  }
+
+  public static long getSerialVersionUID() {
+    return serialVersionUID;
+  }
+
+  public String getReturnee() {
+    return returnee;
+  }
+
+  public String getOwner() {
+    return owner;
+  }
+
+  public String getBookId() {
+    return bookId;
+  }
+
+  public Date getReturnDate() {
+    return returnDate;
+  }
+
+  public LatLng getLocation() {
+    return location;
+  }
+
 }

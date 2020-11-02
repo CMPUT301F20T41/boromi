@@ -42,7 +42,7 @@ public class Book implements Serializable {
     this.title = title;
     this.author = author;
     this.ISBN = ISBN;
-
+    this.bookId = UUID.randomUUID().toString();
     this.borrower = null;
     this.status = BookStatus.AVAILABLE;
     this.workflow = BookWorkflowStage.AVAILABLE;
@@ -54,7 +54,7 @@ public class Book implements Serializable {
     this.author = author;
     this.ISBN = ISBN;
     this.status = status;
-
+    this.bookId = UUID.randomUUID().toString();
     this.borrower = null;
     this.workflow = BookWorkflowStage.AVAILABLE;
   }
@@ -65,7 +65,7 @@ public class Book implements Serializable {
     this.author = author;
     this.ISBN = ISBN;
     this.workflow = workflow;
-
+    this.bookId = UUID.randomUUID().toString();
     this.borrower = null;
     this.status = BookStatus.AVAILABLE;
   }
@@ -102,7 +102,7 @@ public class Book implements Serializable {
     this.ISBN = ISBN;
     this.status = status;
     this.workflow = workflow;
-
+    this.bookId = UUID.randomUUID().toString();
     this.borrower = null;
   }
 
@@ -120,7 +120,7 @@ public class Book implements Serializable {
     this.author = author;
     this.ISBN = ISBN;
     this.status = status;
-
+    this.bookId = UUID.randomUUID().toString();
     this.workflow = BookWorkflowStage.AVAILABLE;
   }
 
@@ -138,7 +138,7 @@ public class Book implements Serializable {
     this.author = author;
     this.ISBN = ISBN;
     this.workflow = workflow;
-
+    this.bookId = UUID.randomUUID().toString();
     this.status = BookStatus.AVAILABLE;
   }
 
@@ -158,7 +158,7 @@ public class Book implements Serializable {
     this.ISBN = ISBN;
     this.workflow = workflow;
     this.status = status;
-
+    this.bookId = UUID.randomUUID().toString();
   }
 
   // Setters / Getters Start

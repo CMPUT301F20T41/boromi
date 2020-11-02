@@ -1,6 +1,7 @@
 package com.team41.boromi;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,9 +20,16 @@ import com.team41.boromi.book.MapFragment;
 import com.team41.boromi.book.OwnedFragment;
 import com.team41.boromi.book.SearchFragment;
 import com.team41.boromi.book.SettingsFragment;
+import com.team41.boromi.callbacks.ReturnCallback;
+import com.team41.boromi.controllers.BookReturnController;
+import java.util.Date;
+import javax.inject.Inject;
 
 public class BookActivity extends AppCompatActivity {
 
+  private final String TAG = "BOOK ACTIVITY";
+  @Inject
+  BookReturnController bookReturnController;
   private ViewPager2 viewPager2;
   private PagerAdapter pagerAdapter;
   private TabLayout tabLayout;
@@ -30,6 +38,7 @@ public class BookActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_book);
+    ((BoromiApp) getApplicationContext()).appComponent.inject(this);
 
     Toolbar toolbar = (Toolbar) findViewById(R.id.book_toolbar);
     setSupportActionBar(toolbar);
