@@ -6,4 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".TestRequestBookActivity">
 
+    <ImageView
+        android:id="@+id/testImageView"
+        android:layout_width="141dp"
+        android:layout_height="152dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.133"
+        tools:srcCompat="@tools:sample/avatars" />
 </androidx.constraintlayout.widget.ConstraintLayout>

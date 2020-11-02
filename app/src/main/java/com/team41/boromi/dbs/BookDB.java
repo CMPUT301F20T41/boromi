@@ -7,6 +7,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.gson.Gson;
 import com.team41.boromi.models.Book;
 import com.team41.boromi.models.BookRequest;
@@ -95,7 +96,7 @@ public class BookDB {
 	public Book pushBook(Book book) {
 
 		try {
-			booksRef.document(book.getBookId()).set(book);
+			booksRef.document(book.getBookId()).set(book, SetOptions.merge());
 			return book;
 		} catch (Exception e) {
 			Log.w(TAG, e.getCause());
