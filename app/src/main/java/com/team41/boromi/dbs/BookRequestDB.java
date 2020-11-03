@@ -1,7 +1,8 @@
 package com.team41.boromi.dbs;
 
-import android.util.Log;
+import static com.team41.boromi.constants.CommonConstants.DB_TIMEOUT;
 
+import android.util.Log;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -10,15 +11,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.gson.Gson;
 import com.team41.boromi.models.BookRequest;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import static com.team41.boromi.constants.CommonConstants.DB_TIMEOUT;
 
 @Singleton
 public class BookRequestDB {
@@ -59,8 +56,9 @@ public class BookRequestDB {
       return null;
     }
 
-    for (DocumentSnapshot document : res.getDocuments())
+    for (DocumentSnapshot document : res.getDocuments()) {
       bookRequests.add(document.toObject(BookRequest.class));
+    }
 
     return bookRequests;
   }
@@ -88,16 +86,16 @@ public class BookRequestDB {
       return null;
     }
 
-    for (DocumentSnapshot document : res.getDocuments())
+    for (DocumentSnapshot document : res.getDocuments()) {
       bookRequests.add(document.toObject(BookRequest.class));
+    }
 
     return bookRequests;
   }
 
 
   /**
-   * Removes requests from library that have bookId
-   * sync grabs bookid, but async delete them
+   * Removes requests from library that have bookId sync grabs bookid, but async delete them
    */
   public void deleteRequestsForBook(String bid) {
     QuerySnapshot res;
@@ -109,8 +107,9 @@ public class BookRequestDB {
           TimeUnit.MILLISECONDS
       );
 
-      for (DocumentSnapshot document : res.getDocuments())
+      for (DocumentSnapshot document : res.getDocuments()) {
         bookRequestsRef.document(document.getId()).delete();
+      }
 
     } catch (Exception e) { // failed
       Log.w(TAG, e.getCause());

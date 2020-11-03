@@ -1,7 +1,6 @@
 package com.team41.boromi.models;
 
 import java.io.Serializable;
-
 import javax.inject.Singleton;
 
 /**
@@ -20,7 +19,8 @@ public class User implements OwnerInterface, BorrowerInterface, Serializable {
   /**
    * A no-argument constructor required by firebase in order to deserialize
    */
-  public User() {}
+  public User() {
+  }
 
   /**
    * constructor

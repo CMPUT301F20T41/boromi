@@ -1,33 +1,23 @@
 package com.team41.boromi;
 
+import static com.team41.boromi.constants.CommonConstants.REQUEST_IMAGE_CAPTURE;
+
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.widget.ImageView;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.team41.boromi.callbacks.BookCallback;
-import com.team41.boromi.callbacks.BookRequestCallback;
 import com.team41.boromi.controllers.BookController;
 import com.team41.boromi.controllers.BookRequestController;
 import com.team41.boromi.models.Book;
-import com.team41.boromi.models.BookRequest;
-
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import javax.inject.Inject;
 
-import static com.team41.boromi.constants.CommonConstants.DB_TIMEOUT;
-import static com.team41.boromi.constants.CommonConstants.REQUEST_IMAGE_CAPTURE;
-
 public class TestRequestBookActivity extends AppCompatActivity {
+
   private static final String TAG = "TestRequestBookActivity";
 
   ImageView testImgView;
@@ -100,7 +90,7 @@ public class TestRequestBookActivity extends AppCompatActivity {
 
 
   private void dispatchTakePictureIntent() {
-    if(selectedBook == null) {
+    if (selectedBook == null) {
       // user MUST have selected book first.
       throw new RuntimeException("nope no book selected");
     }

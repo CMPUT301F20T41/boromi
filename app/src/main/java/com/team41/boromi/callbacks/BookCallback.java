@@ -2,7 +2,6 @@ package com.team41.boromi.callbacks;
 
 
 import com.team41.boromi.models.Book;
-
 import java.util.ArrayList;
 
 /**
@@ -10,8 +9,8 @@ import java.util.ArrayList;
  */
 public interface BookCallback {
 
-    void onSuccess(ArrayList<Book> books);
+  void onSuccess(ArrayList<Book> books);
 
-    void onFailure(Exception e);
+  void onFailure(Exception e);
 
 }

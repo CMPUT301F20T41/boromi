@@ -1,7 +1,8 @@
 package com.team41.boromi.dbs;
 
-import android.util.Log;
+import static com.team41.boromi.constants.CommonConstants.DB_TIMEOUT;
 
+import android.util.Log;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -9,286 +10,294 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.gson.Gson;
+import com.team41.boromi.constants.CommonConstants.BookStatus;
 import com.team41.boromi.models.Book;
 import com.team41.boromi.models.BookRequest;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import static com.team41.boromi.constants.CommonConstants.DB_TIMEOUT;
-import com.team41.boromi.constants.CommonConstants.BookStatus;
 
 @Singleton
 public class BookDB {
 
-	private final static String TAG = "BookDB";
-	private final String DB_COLLECTION = "books";
-	private final FirebaseFirestore db;
-	private final CollectionReference booksRef;
-	protected BookStatus status;
+  private final static String TAG = "BookDB";
+  private final String DB_COLLECTION = "books";
+  private final FirebaseFirestore db;
+  private final CollectionReference booksRef;
+  private final Gson gson = new Gson();
+  protected BookStatus status;
 
-	private final Gson gson = new Gson();
+  @Inject
+  public BookDB(FirebaseFirestore db) {
+    this.db = db;
+    booksRef = db.collection(DB_COLLECTION);
+  }
 
-	@Inject
-	public BookDB(FirebaseFirestore db) {
-		this.db = db;
-		booksRef = db.collection(DB_COLLECTION);
-	}
+  /**
+   * Attempts to get all books owned by the user
+   *
+   * @param username The username of the authenticated username
+   * @return A list of all the books owned by the user
+   */
+  public ArrayList<Book> getUsersOwnedBooks(String username) {
+    final ArrayList<Book> ownedBooks = new ArrayList<>();
 
-	/**
-	 * Attempts to get all books owned by the user
-	 * @param username The username of the authenticated username
-	 * @return A list of all the books owned by the user
-	 */
-	public ArrayList<Book> getUsersOwnedBooks(String username) {
-		final ArrayList<Book> ownedBooks = new ArrayList<>();
+    QuerySnapshot res;
 
-		QuerySnapshot res;
+    // Gets all books with the owner field equal to the uuid
+    try {
+      res = Tasks.await(
+          booksRef.whereEqualTo("owner", username).get(),
+          DB_TIMEOUT,
+          TimeUnit.MILLISECONDS
+      );
+    } catch (Exception e) { // failed
+      Log.w(TAG, e.getCause());
+      return null;
+    }
 
-		// Gets all books with the owner field equal to the uuid
-		try {
-			res = Tasks.await(
-					booksRef.whereEqualTo("owner", username).get(),
-					DB_TIMEOUT,
-					TimeUnit.MILLISECONDS
-			);
-		} catch (Exception e) { // failed
-			Log.w(TAG, e.getCause());
-			return null;
-		}
+    for (DocumentSnapshot document : res.getDocuments()) {
+      ownedBooks.add(document.toObject(Book.class));
+    }
 
-		for (DocumentSnapshot document : res.getDocuments())
-			ownedBooks.add(document.toObject(Book.class));
+    return ownedBooks;
+  }
 
-		return ownedBooks;
-	}
+  /**
+   * Attempts to delete a book
+   *
+   * @param bookId The uuid of the book in firestore.
+   * @return True if the delete was successful, false otherwise
+   */
+  public boolean deleteBook(String bookId) {
+    try {
+      Tasks.await(
+          booksRef.document(bookId).delete(),
+          DB_TIMEOUT,
+          TimeUnit.MILLISECONDS
+      );
+      return true;
+    } catch (Exception e) {
+      Log.w(TAG, e.getCause());
+      return false;
+    }
+  }
 
-	/**
-	 * Attempts to delete a book
-	 * @param bookId The uuid of the book in firestore.
-	 * @return True if the delete was successful, false otherwise
-	 */
-	public boolean deleteBook(String bookId) {
-		try {
-			Tasks.await(
-					booksRef.document(bookId).delete(),
-					DB_TIMEOUT,
-					TimeUnit.MILLISECONDS
-			);
-			return true;
-		} catch (Exception e) {
-			Log.w(TAG, e.getCause());
-			return false;
-		}
-	}
+  /**
+   * Attempts to push a book to the database
+   *
+   * @param book The book object the push
+   * @return Null if the push fails, otherwise returns the book object
+   */
+  public Book pushBook(Book book) {
 
-	/**
-	 * Attempts to push a book to the database
-	 * @param book The book object the push
-	 * @return Null if the push fails, otherwise returns the book object
-	 */
-	public Book pushBook(Book book) {
+    try {
+      booksRef.document(book.getBookId()).set(book, SetOptions.merge());
+      return book;
+    } catch (Exception e) {
+      Log.w(TAG, e.getCause());
+      return null;
+    }
+  }
 
-		try {
-			booksRef.document(book.getBookId()).set(book, SetOptions.merge());
-			return book;
-		} catch (Exception e) {
-			Log.w(TAG, e.getCause());
-			return null;
-		}
-	}
+  /**
+   * Searches book by querying keywords
+   *
+   * @param keywords
+   * @return
+   */
+  public ArrayList<Book> findBooks(String keywords) {
+    final ArrayList<Book> foundBooks = new ArrayList<>();
 
-	/**
-	 * Searches book by querying keywords
-	 * @param keywords
-	 * @return
-	 */
-	public ArrayList<Book> findBooks(String keywords) {
-		final ArrayList<Book> foundBooks = new ArrayList<>();
+    QuerySnapshot res;
 
-		QuerySnapshot res;
+    try {
+      res = Tasks.await(
+          booksRef.startAt(keywords).endAt(keywords + "\uf8ff").get(),
+          DB_TIMEOUT,
+          TimeUnit.MILLISECONDS);
+    } catch (Exception e) {
+      Log.w(TAG, e.getCause());
+      return null;
+    }
 
-		try {
-			res = Tasks.await(
-					booksRef.startAt(keywords).endAt(keywords+"\uf8ff").get(),
-					DB_TIMEOUT,
-					TimeUnit.MILLISECONDS);
-		} catch (Exception e) {
-			Log.w(TAG, e.getCause());
-			return null;
-		}
+    for (DocumentSnapshot document : res.getDocuments()) {
+      foundBooks.add(document.toObject(Book.class));
+    }
 
-		for (DocumentSnapshot document : res.getDocuments())
-			foundBooks.add(document.toObject(Book.class));
+    return foundBooks;
+  }
 
-		return foundBooks;
-	}
+  /**
+   * Get Book using BookID
+   *
+   * @param bookID
+   * @return book
+   */
+  public Book getBook(String bookID) {
+    DocumentSnapshot res;
 
-	/**
-	 * Get Book using BookID
-	 * @param bookID
-	 * @return book
-	 */
-	public Book getBook(String bookID) {
-		DocumentSnapshot res;
+    try {
+      res = Tasks.await(
+          booksRef.document(bookID).get(),
+          DB_TIMEOUT,
+          TimeUnit.MILLISECONDS);
+    } catch (Exception e) {
+      Log.w(TAG, e.getCause());
+      return null;
+    }
 
-		try {
-			res = Tasks.await(
-					booksRef.document(bookID).get(),
-					DB_TIMEOUT,
-					TimeUnit.MILLISECONDS);
-		} catch (Exception e) {
-			Log.w(TAG, e.getCause());
-			return null;
-		}
+    Book getBook = res.toObject(Book.class);
 
-		Book getBook = res.toObject(Book.class);
-
-		return getBook;
-	}
+    return getBook;
+  }
 
 
-	/**
-	 * gets all books from the DB
-	 * @return
-	 */
-	public ArrayList<Book> getAllBooks(){
-		ArrayList<Book> bookList = new ArrayList<>();
+  /**
+   * gets all books from the DB
+   *
+   * @return
+   */
+  public ArrayList<Book> getAllBooks() {
+    ArrayList<Book> bookList = new ArrayList<>();
 
-		QuerySnapshot res;
+    QuerySnapshot res;
 
-		try {
-			res = Tasks.await(
-					booksRef.get(),
-					DB_TIMEOUT,
-					TimeUnit.MILLISECONDS
-			);
+    try {
+      res = Tasks.await(
+          booksRef.get(),
+          DB_TIMEOUT,
+          TimeUnit.MILLISECONDS
+      );
 
-		} catch (Exception e){
-			Log.w(TAG, e.getCause());
-			return null;
-		}
+    } catch (Exception e) {
+      Log.w(TAG, e.getCause());
+      return null;
+    }
 
-		for (DocumentSnapshot document : res.getDocuments())
-			bookList.add(document.toObject(Book.class));
+    for (DocumentSnapshot document : res.getDocuments()) {
+      bookList.add(document.toObject(Book.class));
+    }
 
-		return bookList;
-	}
+    return bookList;
+  }
 
-	public ArrayList<Book> getOwnerRequestedBooks(String owner) {
-		final ArrayList<Book> requestedBooks = new ArrayList<>();
+  public ArrayList<Book> getOwnerRequestedBooks(String owner) {
+    final ArrayList<Book> requestedBooks = new ArrayList<>();
 
-		QuerySnapshot res;
+    QuerySnapshot res;
 
-		// Gets all books with the owner field equal to the uuid
-		try {
-			res = Tasks.await(
-					booksRef.whereEqualTo("owner", owner).whereEqualTo("status", status.REQUESTED).get(),
-					DB_TIMEOUT,
-					TimeUnit.MILLISECONDS
-			);
-		} catch (Exception e) { // failed
-			Log.w(TAG, e.getCause());
-			return null;
-		}
+    // Gets all books with the owner field equal to the uuid
+    try {
+      res = Tasks.await(
+          booksRef.whereEqualTo("owner", owner).whereEqualTo("status", status.REQUESTED).get(),
+          DB_TIMEOUT,
+          TimeUnit.MILLISECONDS
+      );
+    } catch (Exception e) { // failed
+      Log.w(TAG, e.getCause());
+      return null;
+    }
 
-		for (DocumentSnapshot document : res.getDocuments())
-			requestedBooks.add(document.toObject(Book.class));
+    for (DocumentSnapshot document : res.getDocuments()) {
+      requestedBooks.add(document.toObject(Book.class));
+    }
 
-		return requestedBooks;
-	}
+    return requestedBooks;
+  }
 
-	public ArrayList<Book> getOwnerBorrowedBooks(String owner) {
-		final ArrayList<Book> borrowedBooks = new ArrayList<>();
+  public ArrayList<Book> getOwnerBorrowedBooks(String owner) {
+    final ArrayList<Book> borrowedBooks = new ArrayList<>();
 
-		QuerySnapshot res;
+    QuerySnapshot res;
 
-		// Gets all books with the owner field equal to the uuid
-		try {
-			res = Tasks.await(
-					booksRef.whereEqualTo("owner", owner).whereEqualTo("status", status.BORROWED).get(),
-					DB_TIMEOUT,
-					TimeUnit.MILLISECONDS
-			);
-		} catch (Exception e) { // failed
-			Log.w(TAG, e.getCause());
-			return null;
-		}
+    // Gets all books with the owner field equal to the uuid
+    try {
+      res = Tasks.await(
+          booksRef.whereEqualTo("owner", owner).whereEqualTo("status", status.BORROWED).get(),
+          DB_TIMEOUT,
+          TimeUnit.MILLISECONDS
+      );
+    } catch (Exception e) { // failed
+      Log.w(TAG, e.getCause());
+      return null;
+    }
 
-		for (DocumentSnapshot document : res.getDocuments())
-			borrowedBooks.add(document.toObject(Book.class));
+    for (DocumentSnapshot document : res.getDocuments()) {
+      borrowedBooks.add(document.toObject(Book.class));
+    }
 
-		return borrowedBooks;
-	}
+    return borrowedBooks;
+  }
 
-	public ArrayList<Book> getOwnerAcceptedBooks(String owner) {
-		final ArrayList<Book> acceptedBooks = new ArrayList<>();
+  public ArrayList<Book> getOwnerAcceptedBooks(String owner) {
+    final ArrayList<Book> acceptedBooks = new ArrayList<>();
 
-		QuerySnapshot res;
+    QuerySnapshot res;
 
-		// Gets all books with the owner field equal to the uuid
-		try {
-			res = Tasks.await(
-					booksRef.whereEqualTo("owner", owner).whereEqualTo("status", status.ACCEPTED).get(),
-					DB_TIMEOUT,
-					TimeUnit.MILLISECONDS
-			);
-		} catch (Exception e) { // failed
-			Log.w(TAG, e.getCause());
-			return null;
-		}
+    // Gets all books with the owner field equal to the uuid
+    try {
+      res = Tasks.await(
+          booksRef.whereEqualTo("owner", owner).whereEqualTo("status", status.ACCEPTED).get(),
+          DB_TIMEOUT,
+          TimeUnit.MILLISECONDS
+      );
+    } catch (Exception e) { // failed
+      Log.w(TAG, e.getCause());
+      return null;
+    }
 
-		for (DocumentSnapshot document : res.getDocuments())
-			acceptedBooks.add(document.toObject(Book.class));
+    for (DocumentSnapshot document : res.getDocuments()) {
+      acceptedBooks.add(document.toObject(Book.class));
+    }
 
-		return acceptedBooks;
-	}
+    return acceptedBooks;
+  }
 
-	public ArrayList<Book> getOwnerAvailableBooks(String owner) {
-		final ArrayList<Book> availableBooks = new ArrayList<>();
+  public ArrayList<Book> getOwnerAvailableBooks(String owner) {
+    final ArrayList<Book> availableBooks = new ArrayList<>();
 
-		QuerySnapshot res;
+    QuerySnapshot res;
 
-		// Gets all books with the owner field equal to the uuid
-		try {
-			res = Tasks.await(
-					booksRef.whereEqualTo("owner", owner).whereEqualTo("status", status.AVAILABLE).get(),
-					DB_TIMEOUT,
-					TimeUnit.MILLISECONDS
-			);
-		} catch (Exception e) { // failed
-			Log.w(TAG, e.getCause());
-			return null;
-		}
+    // Gets all books with the owner field equal to the uuid
+    try {
+      res = Tasks.await(
+          booksRef.whereEqualTo("owner", owner).whereEqualTo("status", status.AVAILABLE).get(),
+          DB_TIMEOUT,
+          TimeUnit.MILLISECONDS
+      );
+    } catch (Exception e) { // failed
+      Log.w(TAG, e.getCause());
+      return null;
+    }
 
-		for (DocumentSnapshot document : res.getDocuments())
-			availableBooks.add(document.toObject(Book.class));
+    for (DocumentSnapshot document : res.getDocuments()) {
+      availableBooks.add(document.toObject(Book.class));
+    }
 
-		return availableBooks;
-	}
+    return availableBooks;
+  }
 
-	public Book getBookById(String bid) {
-		DocumentSnapshot res;
+  public Book getBookById(String bid) {
+    DocumentSnapshot res;
 
-		try {
-		  res = Tasks.await(booksRef.document(bid).get(), DB_TIMEOUT, TimeUnit.MILLISECONDS);
-		} catch (Exception e) { // failed
-		  Log.w(TAG, e.getCause());
-		  return null;
-		}
+    try {
+      res = Tasks.await(booksRef.document(bid).get(), DB_TIMEOUT, TimeUnit.MILLISECONDS);
+    } catch (Exception e) { // failed
+      Log.w(TAG, e.getCause());
+      return null;
+    }
 
-		if (res.exists()) {    // if user exists
-		  return res.toObject(Book.class);
-		} else {              // if user fails
-		  return null;
-		}
-	}
+    if (res.exists()) {    // if user exists
+      return res.toObject(Book.class);
+    } else {              // if user fails
+      return null;
+    }
+  }
 
   /**
    * returns book and the bookrequest accompanying it
@@ -298,9 +307,11 @@ public class BookDB {
    */
   public Map<Book, List<BookRequest>> getBooksWithRequestList(List<BookRequest> BookRequestList) {
     Map<Book, List<BookRequest>> bookMap = new HashMap<>();
+    Book mockCompareBook = new Book();
     for (BookRequest br : BookRequestList) {
-      if (bookMap.containsKey(br.getBookId())) {
-        bookMap.get(br.getBookId()).add(br);
+      mockCompareBook.setBookId(br.getBookId());
+      if (bookMap.containsKey(mockCompareBook)) {
+        bookMap.get(mockCompareBook).add(br);
         continue;
       }
 
@@ -310,12 +321,13 @@ public class BookDB {
         continue;
       }
       bookMap.put(b, new ArrayList<>());
+      bookMap.get(b).add(br);
     }
 
-	return bookMap;
-	}
+    return bookMap;
+  }
 
-	// TODO:
-	// Add a method to query for all the books a user has
-	// requested, borrowed, or been accepted to be borrowed
+  // TODO:
+  // Add a method to query for all the books a user has
+  // requested, borrowed, or been accepted to be borrowed
 }

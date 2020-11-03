@@ -11,8 +11,18 @@ import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
 import com.google.android.material.tabs.TabLayout.Tab;
+import com.team41.boromi.BookActivity;
 import com.team41.boromi.R;
 import com.team41.boromi.adapters.PagerAdapter;
+import com.team41.boromi.callbacks.BookCallback;
+import com.team41.boromi.callbacks.BookRequestCallback;
+import com.team41.boromi.constants.CommonConstants.BookWorkflowStage;
+import com.team41.boromi.models.Book;
+import com.team41.boromi.models.BookRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * A simple {@link Fragment} subclass. Use the {@link OwnedFragment#newInstance} factory method to
@@ -23,6 +33,8 @@ public class OwnedFragment extends Fragment {
   private TabLayout tabLayout;
   private ViewPager2 viewPager2;
   private PagerAdapter pagerAdapter;
+  private BookActivity bookActivity;
+  private String parent = "Owned";
 
   public OwnedFragment() {
     // Required empty public constructor
@@ -52,7 +64,7 @@ public class OwnedFragment extends Fragment {
       Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_owned, container, false);
-
+    bookActivity = (BookActivity) getActivity();
     tabLayout = (TabLayout) view.findViewById(R.id.tabs_sub_owned);
     viewPager2 = view.findViewById(R.id.view_pager_owned);
     TabItem availableTab = (TabItem) view.findViewById(R.id.tabs_sub_owned_available);
@@ -62,20 +74,27 @@ public class OwnedFragment extends Fragment {
 
     // add fragments to tabs
     pagerAdapter = new PagerAdapter(getChildFragmentManager(), getLifecycle());
-    Bundle bundle = new Bundle();
-    bundle.putString("msg", "Available");
+
+    Bundle bundle;
+    bundle = bookActivity.setupBundle(R.layout.available, new ArrayList<>(),
+        "These are all the books that you own that are available for other people to borrow",
+        parent, "Available");
     pagerAdapter.addFragment(
         new Pair<Class<? extends Fragment>, Bundle>(GenericListFragment.class, bundle));
-    bundle = new Bundle();
-    bundle.putString("msg", "Requests");
+
+    bundle = bookActivity.setupBundle(R.layout.reqom, new ArrayList<>(),
+        "These are all the books you own that other people have requested to borrow", parent,
+        "Requested");
     pagerAdapter.addFragment(
         new Pair<Class<? extends Fragment>, Bundle>(GenericListFragment.class, bundle));
-    bundle = new Bundle();
-    bundle.putString("msg", "Accepted");
+
+    bundle = bookActivity.setupBundle(R.layout.accepted, new ArrayList<>(),
+        "These are all the book requests that you have accepted", parent, "Accepted");
     pagerAdapter.addFragment(
         new Pair<Class<? extends Fragment>, Bundle>(GenericListFragment.class, bundle));
-    bundle = new Bundle();
-    bundle.putString("msg", "Lent");
+
+    bundle = bookActivity.setupBundle(R.layout.lent, new ArrayList<>(),
+        "These are all your books that are being borrowed by other people", parent, "Lent");
     pagerAdapter.addFragment(
         new Pair<Class<? extends Fragment>, Bundle>(GenericListFragment.class, bundle));
 
@@ -84,7 +103,6 @@ public class OwnedFragment extends Fragment {
     viewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
     viewPager2.setOffscreenPageLimit(tabLayout.getTabCount());
     viewPager2.setAdapter(pagerAdapter);
-
     tabLayout.addOnTabSelectedListener(new OnTabSelectedListener() {
       @Override
       public void onTabSelected(Tab tab) {
@@ -102,5 +120,79 @@ public class OwnedFragment extends Fragment {
       }
     });
     return view;
+  }
+
+
+  public void getOwnerAvailable(GenericListFragment fragment) {
+    bookActivity.getBookController()
+        .getOwnerAvailableBooks(bookActivity.getUser().getUUID(), new BookCallback() {
+          @Override
+          public void onSuccess(ArrayList<Book> books) {
+            bookActivity.getCollections().put("OwnerAvailable", books);
+            fragment.updateData(books);
+          }
+
+          @Override
+          public void onFailure(Exception e) {
+
+          }
+        });
+  }
+
+  public void getOwnerRequests(GenericListFragment fragment) {
+    bookActivity.getBookRequestController().getRequestOnOwnedBooks(new BookRequestCallback() {
+      @Override
+      public void onComplete(Map<Book, List<BookRequest>> bookWithRequests) {
+        bookActivity.setRequestsCollections(bookWithRequests);
+        fragment.updateData(bookWithRequests);
+      }
+    });
+  }
+
+  public void getOwnerAccepted(GenericListFragment fragment) {
+    bookActivity.getBookController()
+        .getOwnerAcceptedBooks(bookActivity.getUser().getUUID(), new BookCallback() {
+          @Override
+          public void onSuccess(ArrayList<Book> books) {
+            bookActivity.getCollections().put("OwnerAccepted", books);
+            fragment.updateData(books);
+          }
+
+          @Override
+          public void onFailure(Exception e) {
+
+          }
+        });
+  }
+
+  public void getOwnerLent(GenericListFragment fragment) {
+    bookActivity.getBookController()
+        .getOwnedBooks(bookActivity.getUser().getUUID(), new BookCallback() {
+          @Override
+          public void onSuccess(ArrayList<Book> books) {
+            bookActivity.getCollections().put("OwnedBooks", books);
+            bookActivity.getCollections().put("OwnerLent", (ArrayList<Book>) books.stream()
+                .filter((book -> book.getWorkflow() == BookWorkflowStage.BORROWED))
+                .collect(Collectors.toList()));
+            fragment.updateData(bookActivity.getOwnerLent());
+          }
+
+          @Override
+          public void onFailure(Exception e) {
+
+          }
+        });
+  }
+
+  public void getData(String tag, GenericListFragment fragment) {
+    if (tag.equals("Available")) {
+      getOwnerAvailable(fragment);
+    } else if (tag.equals("Requested")) {
+      getOwnerRequests(fragment);
+    } else if (tag.equals("Accepted")) {
+      getOwnerAccepted(fragment);
+    } else if (tag.equals("Lent")) {
+      getOwnerLent(fragment);
+    }
   }
 }

@@ -1,6 +1,5 @@
 package com.team41.boromi.controllers;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.type.LatLng;
 import com.team41.boromi.callbacks.ReturnCallback;
 import com.team41.boromi.constants.CommonConstants.BookStatus;
@@ -10,7 +9,6 @@ import com.team41.boromi.dbs.BookReturnDB;
 import com.team41.boromi.models.Book;
 import com.team41.boromi.models.BookReturn;
 import com.team41.boromi.models.User;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.Executor;
 import javax.inject.Inject;

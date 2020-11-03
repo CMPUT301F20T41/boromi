@@ -2,7 +2,6 @@ package com.team41.boromi.dagger;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-
 import javax.inject.Scope;
 
 /**

@@ -1,10 +1,9 @@
 package com.team41.boromi.models;
 
-import androidx.annotation.Nullable;
-
 import static com.team41.boromi.constants.CommonConstants.BookStatus;
 import static com.team41.boromi.constants.CommonConstants.BookWorkflowStage;
 
+import androidx.annotation.Nullable;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -78,13 +77,12 @@ public class Book implements Serializable {
    *
    * @param owner
    */
-  public Book(String owner) {
-    this.bookId = UUID.randomUUID().toString();
-    this.owner = owner;
-    this.status = BookStatus.AVAILABLE;
-    this.workflow = BookWorkflowStage.AVAILABLE;
-  }
-
+//  public Book(String owner) {
+//    this.bookId = UUID.randomUUID().toString();
+//    this.owner = owner;
+//    this.status = BookStatus.AVAILABLE;
+//    this.workflow = BookWorkflowStage.AVAILABLE;
+//  }
   public Book(String owner, String bookId) {
     this.bookId = bookId;
     this.owner = owner;
@@ -92,12 +90,12 @@ public class Book implements Serializable {
   }
 
   public Book(
-          String owner,
-          String title,
-          String author,
-          String ISBN,
-          BookStatus status,
-          BookWorkflowStage workflow
+      String owner,
+      String title,
+      String author,
+      String ISBN,
+      BookStatus status,
+      BookWorkflowStage workflow
   ) {
     this.owner = owner;
     this.title = title;
@@ -110,12 +108,12 @@ public class Book implements Serializable {
   }
 
   public Book(
-          String owner,
-          String title,
-          String author,
-          String ISBN,
-          BookStatus status,
-          String borrower
+      String owner,
+      String title,
+      String author,
+      String ISBN,
+      BookStatus status,
+      String borrower
   ) {
     this.owner = owner;
     this.borrower = borrower;
@@ -128,12 +126,12 @@ public class Book implements Serializable {
   }
 
   public Book(
-          String owner,
-          String title,
-          String author,
-          String ISBN,
-          BookWorkflowStage workflow,
-          String borrower
+      String owner,
+      String title,
+      String author,
+      String ISBN,
+      BookWorkflowStage workflow,
+      String borrower
   ) {
     this.owner = owner;
     this.borrower = borrower;
@@ -146,13 +144,13 @@ public class Book implements Serializable {
   }
 
   public Book(
-          String owner,
-          String title,
-          String author,
-          String ISBN,
-          BookStatus status,
-          BookWorkflowStage workflow,
-          String borrower
+      String owner,
+      String title,
+      String author,
+      String ISBN,
+      BookStatus status,
+      BookWorkflowStage workflow,
+      String borrower
   ) {
     this.owner = owner;
     this.borrower = borrower;
@@ -167,6 +165,11 @@ public class Book implements Serializable {
   // Setters / Getters Start
   public String getBookId() {
     return bookId;
+  }
+
+  // THIS IS NOT GOOD PRACTICE BUT IT WILL FIX IT
+  public void setBookId(String bookId) {
+    this.bookId = bookId;
   }
 
   public String getOwner() {
@@ -239,15 +242,16 @@ public class Book implements Serializable {
 
   @Override
   public boolean equals(@Nullable Object obj) {
-    if(obj instanceof String) {
-      if(bookId.compareTo((String) obj) == 0) {
-        return true;
-      }
+    if (obj instanceof String) {
+      return bookId.compareTo((String) obj) == 0;
     } else if (obj instanceof Book) {
-      if(bookId.compareTo(((Book) obj).getBookId()) == 0) {
-        return true;
-      }
+      return bookId.compareTo(((Book) obj).getBookId()) == 0;
     }
     return false;
+  }
+
+  @Override
+  public int hashCode() {
+    return bookId.hashCode();
   }
 }

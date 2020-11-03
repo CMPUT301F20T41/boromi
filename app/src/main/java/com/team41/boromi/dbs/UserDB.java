@@ -1,7 +1,8 @@
 package com.team41.boromi.dbs;
 
-import android.util.Log;
+import static com.team41.boromi.constants.CommonConstants.DB_TIMEOUT;
 
+import android.util.Log;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -10,13 +11,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.gson.Gson;
 import com.team41.boromi.models.User;
-
 import java.util.concurrent.TimeUnit;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import static com.team41.boromi.constants.CommonConstants.DB_TIMEOUT;
 
 @Singleton
 public class UserDB {
@@ -56,6 +53,7 @@ public class UserDB {
 
   /**
    * Attempts to find a user by their username
+   *
    * @param username The username to look for
    * @return null if no user was found, otherwise returns the found user
    */
@@ -65,9 +63,9 @@ public class UserDB {
     // Queries firestore for the username
     try {
       res = Tasks.await(
-              usersRef.whereEqualTo("username", username).get(),
-              DB_TIMEOUT,
-              TimeUnit.MILLISECONDS
+          usersRef.whereEqualTo("username", username).get(),
+          DB_TIMEOUT,
+          TimeUnit.MILLISECONDS
       );
     } catch (Exception e) { // Request failed
       Log.w(TAG, e.getCause());
@@ -94,9 +92,9 @@ public class UserDB {
 
     try {
       Tasks.await(
-              usersRef.document(user.getUUID()).set(user, SetOptions.merge()),
-              DB_TIMEOUT,
-              TimeUnit.MILLISECONDS);
+          usersRef.document(user.getUUID()).set(user, SetOptions.merge()),
+          DB_TIMEOUT,
+          TimeUnit.MILLISECONDS);
       return user;
     } catch (Exception e) {
       Log.w(TAG, e.getCause());

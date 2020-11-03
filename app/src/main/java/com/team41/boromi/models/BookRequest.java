@@ -8,6 +8,7 @@ import java.util.UUID;
  * Class representing a request made for a book.
  */
 public class BookRequest implements Serializable {
+
   private static final long serialVersionUID = 8005430L; // bookReq lookin ish haha
 
   private String requestId = UUID.randomUUID().toString();

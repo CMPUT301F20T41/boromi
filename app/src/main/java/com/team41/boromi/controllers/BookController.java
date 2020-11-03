@@ -1,30 +1,25 @@
 package com.team41.boromi.controllers;
 
+import static com.team41.boromi.constants.CommonConstants.BookStatus;
+import static com.team41.boromi.utility.Utility.isNotNullOrEmpty;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.util.Log;
-
 import androidx.annotation.NonNull;
-
 import com.team41.boromi.callbacks.BookCallback;
 import com.team41.boromi.constants.CommonConstants.BookWorkflowStage;
 import com.team41.boromi.dbs.BookDB;
 import com.team41.boromi.models.Book;
 import com.team41.boromi.models.User;
-
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import static com.team41.boromi.constants.CommonConstants.BookStatus;
-import static com.team41.boromi.utility.Utility.isNotNullOrEmpty;
+import org.apache.commons.lang3.StringUtils;
 
 @Singleton
 public class BookController {
@@ -45,18 +40,45 @@ public class BookController {
   }
 
   /**
-   * Adds Book to DB asynchronously. On Success or Failure, it will have a callback to let the ui know
+   * Adds Book to DB asynchronously. On Success or Failure, it will have a callback to let the ui
+   * know
    *
    * @param owner
    * @param author
    * @param ISBN
    * @param title
    */
-  public void addBook(String owner, String author, String ISBN, String title, final BookCallback bookCallback) {
+  public void addBook(String owner, String author, String ISBN, String title, String image,
+      final BookCallback bookCallback) {
     if (isNotNullOrEmpty(author) && isNotNullOrEmpty(ISBN) && isNotNullOrEmpty(title)) {
       Book addingBook = new Book(owner, title, author, ISBN);
       addingBook.setStatus(status.AVAILABLE);
       addingBook.setWorkflow(workflow.AVAILABLE);
+      addingBook.setImg64(image);
+      executor.execute(() -> {
+        ArrayList<Book> addedBook = new ArrayList<>();
+        addedBook.add(bookDB.pushBook(addingBook));
+        if (addedBook != null) {
+          Log.d(TAG, " book add success");
+          bookCallback.onSuccess(addedBook);
+        } else {
+          Log.d(TAG, " book add error");
+          bookCallback.onFailure(new IllegalArgumentException());
+        }
+      });
+    } else {
+      Log.d(TAG, " Error in one of the columns");
+      bookCallback.onFailure(new IllegalArgumentException());
+    }
+  }
+
+  public void addBook(String author, String ISBN, String title, Bitmap image,
+      final BookCallback bookCallback) {
+    if (isNotNullOrEmpty(author) && isNotNullOrEmpty(ISBN) && isNotNullOrEmpty(title)) {
+      Book addingBook = new Book(user.getUUID(), title, author, ISBN);
+      addingBook.setStatus(status.AVAILABLE);
+      addingBook.setWorkflow(workflow.AVAILABLE);
+      addingBook.setImg64(encodeToBase64(image));
       executor.execute(() -> {
         ArrayList<Book> addedBook = new ArrayList<>();
         addedBook.add(bookDB.pushBook(addingBook));
@@ -78,11 +100,13 @@ public class BookController {
    * same add function as above, but this time owner is set automatically by whoever is logged in
    * Just some polymorphism to have less UI handling logic
    */
-  public void addBook(String author, String ISBN, String title, final BookCallback bookCallback) {
-    if(isNotNullOrEmpty(author) && isNotNullOrEmpty(ISBN) && isNotNullOrEmpty(title)) {
+  public void addBook(String author, String ISBN, String title, String image,
+      final BookCallback bookCallback) {
+    if (isNotNullOrEmpty(author) && isNotNullOrEmpty(ISBN) && isNotNullOrEmpty(title)) {
       Book addingBook = new Book(user.getUUID(), title, author, ISBN);
       addingBook.setStatus(status.AVAILABLE);
       addingBook.setWorkflow(workflow.AVAILABLE);
+      addingBook.setImg64(image);
       executor.execute(() -> {
         ArrayList<Book> addedBook = new ArrayList<>();
         addedBook.add(bookDB.pushBook(addingBook));
@@ -109,7 +133,8 @@ public class BookController {
    * @param title
    * @return
    */
-  public void editBook(String bookID, String author, String ISBN, String title, final BookCallback bookCallback) {
+  public void editBook(String bookID, String author, String ISBN, String title,
+      final BookCallback bookCallback) {
     if (isNotNullOrEmpty(author) && isNotNullOrEmpty(ISBN) && isNotNullOrEmpty(title)) {
       executor.execute(() -> {
         ArrayList<Book> edited = new ArrayList<>();
@@ -323,24 +348,24 @@ public class BookController {
     }
   }
 
-    /**
-     * A function that confirms a book has been borrowed and not just "accepted"
-     * dont pass a null book here
-     */
-    public void confirmBookReceived(@NonNull Book book) {
-        if(book.getBorrower() == user.getUUID()) {
-            book.setStatus(BookStatus.BORROWED);
-            bookDB.pushBook(book);
-        } else {
-            Log.d(TAG, "Bad Request on" + book.getBookId());
-            Log.d(TAG, "This should never happen, confirmed book that wasn't your borrowed");
-            throw new RuntimeException("Confirmed you received a book that isn't yours");
-        }
+  /**
+   * A function that confirms a book has been borrowed and not just "accepted" dont pass a null book
+   * here
+   */
+  public void confirmBookReceived(@NonNull Book book) {
+    if (book.getBorrower() == user.getUUID()) {
+      book.setStatus(BookStatus.BORROWED);
+      bookDB.pushBook(book);
+    } else {
+      Log.d(TAG, "Bad Request on" + book.getBookId());
+      Log.d(TAG, "This should never happen, confirmed book that wasn't your borrowed");
+      throw new RuntimeException("Confirmed you received a book that isn't yours");
     }
+  }
 
   /**
-   * this is a synchronous task except for the pushing to db portion
-   * This might take a while, so it may be worth to show user a spinny circly
+   * this is a synchronous task except for the pushing to db portion This might take a while, so it
+   * may be worth to show user a spinny circly
    *
    * @param bmap
    * @param book
@@ -355,6 +380,14 @@ public class BookController {
       bookDB.pushBook(book);
     });
     bmap.recycle();
+  }
+
+  public String encodeToBase64(Bitmap bmap) {
+    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+    bmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+    String base64img = Base64.encodeToString(stream.toByteArray(), Base64.DEFAULT);
+    bmap.recycle();
+    return base64img;
   }
 
   /**
@@ -372,9 +405,11 @@ public class BookController {
   }
 
   public Bitmap decodeBookImage(Book book) {
-    if (book == null || book.getImg64() == null)
+    if (book == null || book.getImg64() == null) {
       return null;
-    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(Base64.decode(book.getImg64(), Base64.DEFAULT));
+    }
+    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
+        Base64.decode(book.getImg64(), Base64.DEFAULT));
     return BitmapFactory.decodeStream(byteArrayInputStream);
   }
 

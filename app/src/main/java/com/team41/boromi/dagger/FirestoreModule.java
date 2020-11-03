@@ -2,11 +2,9 @@ package com.team41.boromi.dagger;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
+import javax.inject.Singleton;
 
 /**
  * A Dagger module that provides the FirebaseFirestore

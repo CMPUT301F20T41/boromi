@@ -1,9 +1,7 @@
 package com.team41.boromi.controllers;
 
 import android.util.Log;
-
 import androidx.annotation.NonNull;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -15,9 +13,7 @@ import com.team41.boromi.dagger.ActivityScope;
 import com.team41.boromi.dagger.BoromiModule;
 import com.team41.boromi.dbs.UserDB;
 import com.team41.boromi.models.User;
-
 import java.util.concurrent.Executor;
-
 import javax.inject.Inject;
 
 /**
@@ -41,8 +37,8 @@ public class AuthenticationController {
   /**
    * Makes a request for user login. Mandatory callback to return changes to main thread.
    *
-   * @param email The email passed from the login fragment
-   * @param password The password passed from the login fragment
+   * @param email        The email passed from the login fragment
+   * @param password     The password passed from the login fragment
    * @param authCallback A callback function to execute on success or failure
    */
   public void makeLoginRequest(String email, String password, final AuthCallback authCallback) {
@@ -69,8 +65,9 @@ public class AuthenticationController {
    * Makes a request to sign a user up. Fails on certain conditions such as the user already has an
    * account and request sign up. More details can be found https://firebase.google.com/docs/reference/js/firebase.auth.Auth#createuserwithemailandpassword
    * This needs to be run in executor because getting the user is synchronous.
+   *
    * @param username The username entered  by the user
-   * @param email The email entered by the user
+   * @param email    The email entered by the user
    * @param password The password entered by the user
    */
   public void makeSignUpRequest(final String username, String email, String password,
@@ -80,8 +77,8 @@ public class AuthenticationController {
 
       // Takes two string params but I have no clue what they need to be
       authCallback.onFailure(new FirebaseAuthUserCollisionException(
-              "The username '" + username + "' is taken",
-              "The username '" + username + "' is taken"
+          "The username '" + username + "' is taken",
+          "The username '" + username + "' is taken"
       ));
 
       return;

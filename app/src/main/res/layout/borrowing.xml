@@ -1,117 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="#FFFFFF"
+  android:clipToPadding="false"
+  android:paddingVertical="25dp">
+
+  <LinearLayout
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#FFFFFF"
-    android:clipToPadding="false"
-    android:paddingVertical="25dp">
+    android:background="@drawable/cardshape"
+    android:elevation="10dp"
+    android:orientation="horizontal"
+    android:paddingVertical="5dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
 
     <LinearLayout
+      android:layout_width="210dp"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+
+      <LinearLayout
+        android:id="@+id/borrowed_from"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="From: "
+          android:textAppearance="@style/TextAppearance.AppCompat.Small"
+          android:textSize="10sp" />
+
+        <TextView
+          android:id="@+id/borrowing_user"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="benlala8"
+          android:textAppearance="@style/TextAppearance.AppCompat.Small"
+          android:textColor="#2196F3"
+          android:textSize="10sp" />
+      </LinearLayout>
+
+      <TextView
+        android:id="@+id/borrowing_author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/cardshape"
-        android:elevation="10dp"
-        android:orientation="horizontal"
-        android:paddingVertical="5dp"
+        android:text="J.R.R. Tolkein"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textSize="12sp" />
+
+      <TextView
+        android:id="@+id/borrowing_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="The Hobbit"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="20sp" />
+
+      <TextView
+        android:id="@+id/borrowing_isbn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ISBN: #1234567890123"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textSize="10sp" />
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:paddingHorizontal="5dp">
+
+      <ImageButton
+        android:id="@+id/borrowing_book_image"
+        android:layout_width="42dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/camera_circle"
+        android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/book_icon" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingHorizontal="5dp">
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:paddingRight="5dp">
 
-            <ImageButton
-                android:id="@+id/bookImage"
-                android:layout_width="42dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/camera_circle"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/book_icon" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <LinearLayout
-            android:layout_width="210dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="The Hobbit"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textSize="20sp"></TextView>
-
-            <TextView
-                android:id="@+id/Author"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="J.R.R. Tolkein"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textSize="12sp"></TextView>
-
-            <LinearLayout
-                android:id="@+id/borrowed_from"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="From: "
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textSize="10sp"></TextView>
-
-                <TextView
-                    android:id="@+id/user"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="benlala8"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#2196F3"
-                    android:textSize="10sp"></TextView>
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/ISBN"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ISBN: #1234567890123"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textSize="10sp"></TextView>
-
-        </LinearLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingRight="5dp">
-
-            <ImageButton
-                android:id="@+id/rightButton"
-                android:layout_width="31dp"
-                android:layout_height="29dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/return_circle"
-                android:tint="#FFFFFF"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@drawable/return_icon" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </LinearLayout>
+      <ImageButton
+        android:id="@+id/right_button"
+        android:layout_width="31dp"
+        android:layout_height="29dp"
+        android:layout_weight="1"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/return_circle"
+        android:tint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@drawable/return_icon" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+  </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

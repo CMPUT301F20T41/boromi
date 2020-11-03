@@ -13,8 +13,8 @@ public class MainActivity extends AppCompatActivity {
 
   @Inject
   AuthenticationController authController;
-  private FragmentManager manager = null;
   FragmentTransaction ft;
+  private FragmentManager manager = null;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

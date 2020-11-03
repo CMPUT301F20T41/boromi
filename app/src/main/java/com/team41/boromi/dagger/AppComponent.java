@@ -1,6 +1,7 @@
 package com.team41.boromi.dagger;
-import com.team41.boromi.TestRequestBookActivity;
+
 import com.team41.boromi.BookActivity;
+import com.team41.boromi.TestRequestBookActivity;
 import dagger.Component;
 import javax.inject.Singleton;
 

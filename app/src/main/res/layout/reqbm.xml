@@ -1,136 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="#FFFFFF"
+  android:clipToPadding="false"
+  android:paddingVertical="25dp">
+
+  <LinearLayout
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#FFFFFF"
-    android:clipToPadding="false"
-    android:paddingVertical="25dp">
+    android:background="@drawable/cardshape"
+    android:elevation="10dp"
+    android:orientation="vertical"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:elevation="10dp"
+      android:orientation="horizontal"
+      android:paddingVertical="5dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent">
+
+      <LinearLayout
+        android:layout_width="256dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/cardshape"
-        android:elevation="10dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:orientation="vertical">
 
         <LinearLayout
+          android:id="@+id/lent_to"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content">
+
+          <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:elevation="10dp"
-            android:orientation="horizontal"
-            android:paddingVertical="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:text="Giving to: "
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textSize="10sp" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingHorizontal="5dp">
-
-                <ImageButton
-                    android:id="@+id/bookImage"
-                    android:layout_width="42dp"
-                    android:layout_height="38dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/camera_circle"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/book_icon" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <LinearLayout
-                android:layout_width="256dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/Title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="The Hobbit"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textSize="20sp"></TextView>
-
-                <TextView
-                    android:id="@+id/Author"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="J.R.R. Tolkein"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textSize="12sp"></TextView>
-
-                <LinearLayout
-                    android:id="@+id/lent_to"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Giving to: "
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                        android:textSize="10sp"></TextView>
-
-                    <TextView
-                        android:id="@+id/user"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="benlala8"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                        android:textColor="#2196F3"
-                        android:textSize="10sp"></TextView>
-
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/ISBN"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="ISBN: #1234567890123"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textSize="8sp"></TextView>
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+          <TextView
+            android:id="@+id/reqbm_user"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:orientation="horizontal"
-            android:paddingVertical="10dp">
+            android:text="benlala8"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#2196F3"
+            android:textSize="10sp" />
 
-            <TextView
-                android:id="@+id/status"
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Available"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:textColor="#4CAF50"></TextView>
-
-            <TextView
-                android:id="@+id/request"
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Withdraw"
-                android:textColor="#03A9F4"></TextView>
         </LinearLayout>
+
+        <TextView
+          android:id="@+id/reqbm_author"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="J.R.R. Tolkein"
+          android:textAppearance="@style/TextAppearance.AppCompat.Small"
+          android:textSize="12sp" />
+
+        <TextView
+          android:id="@+id/reqbm_title"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="The Hobbit"
+          android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+          android:textSize="20sp" />
+
+        <TextView
+          android:id="@+id/reqbm_isbn"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:text="ISBN: #1234567890123"
+          android:textAppearance="@style/TextAppearance.AppCompat.Small"
+          android:textSize="8sp" />
+      </LinearLayout>
+
+      <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="5dp">
+
+        <ImageButton
+          android:id="@+id/reqbm_book_image"
+          android:layout_width="42dp"
+          android:layout_height="38dp"
+          android:layout_weight="1"
+          android:layout_marginStart="5dp"
+          android:layout_marginEnd="5dp"
+          android:background="@drawable/camera_circle"
+          android:scaleType="fitXY"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          app:srcCompat="@drawable/book_icon" />
+      </androidx.constraintlayout.widget.ConstraintLayout>
+
     </LinearLayout>
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="5dp"
+      android:layout_marginEnd="5dp"
+      android:orientation="horizontal"
+      android:paddingVertical="10dp">
+
+      <TextView
+        android:id="@+id/status"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="Available"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="#4CAF50" />
+
+      <TextView
+        android:id="@+id/request"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="Withdraw"
+        android:textColor="#03A9F4" />
+    </LinearLayout>
+  </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
