@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -28,73 +29,74 @@ import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 public class BookControllerTest {
+    private final static String TAG = "BookControllerTest";
+    private static BookDB bookDB;
+    private static BookController bookController;
+    private static String brock_uuid;
+    private static String ben_uuid;
+    private static String ming_uuid;
+    private static String andy_uuid;
+    BookStatus status;
+    ArrayList<Book> testBooks = new ArrayList<>();
 
-  private final static String TAG = "BookControllerTest";
-  private static BookDB bookDB;
-  private static BookController bookController;
-  private static String brock_uuid;
-  private static String ben_uuid;
-  private static String ming_uuid;
-  private static String andy_uuid;
-  BookStatus status;
-  ArrayList<Book> testBooks = new ArrayList<>();
+    /**
+     * Setting up users for uuid, books for test cases and adding them into db
+     */
+    @Before
+    public void setup() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        bookDB = new BookDB(db);
+        ExecutorService executorService = new ThreadPoolExecutor(1, 6, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>() );
 
-  /**
-   * Setting up users for uuid, books for test cases and adding them into db
-   */
-  @Before
-  public void setup() {
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    bookDB = new BookDB(db);
-    ExecutorService executorService = new ThreadPoolExecutor(1, 6, 1, TimeUnit.SECONDS,
-        new LinkedBlockingQueue<Runnable>());
-    bookController = new BookController(bookDB, executorService, db);
+        User lil_brock = new User("1234a", "Lil Brock", "lilbrock@gmail.com");
+        User lil_ming = new User("5678b", "Lil Ming", "lilming@gmail.com");
+        User lil_ben = new User("8901c", "Lil Ben", "lilben@gmail.com");
+        User lil_andy = new User("2345d", "Lil Andy", "lilandy@gmail.com");
 
-    User lil_brock = new User("1234a", "Lil Brock", "lilbrock@gmail.com");
-    User lil_ming = new User("5678b", "Lil Ming", "lilming@gmail.com");
-    User lil_ben = new User("8901c", "Lil Ben", "lilben@gmail.com");
-    User lil_andy = new User("2345d", "Lil Andy", "lilandy@gmail.com");
+        brock_uuid = lil_brock.getUUID();
+        ben_uuid = lil_ben.getUUID();
+        ming_uuid = lil_ming.getUUID();
+        andy_uuid = lil_andy.getUUID();
 
-    brock_uuid = lil_brock.getUUID();
-    ben_uuid = lil_ben.getUUID();
-    ming_uuid = lil_ming.getUUID();
-    andy_uuid = lil_andy.getUUID();
+        bookController = new BookController(bookDB, executorService, lil_andy);
 
-    Book booktest1 = new Book(brock_uuid, "Narnia 1", "JK Rowling", "123456789020");
-    booktest1.setStatus(status.AVAILABLE);
 
-    Book booktest2 = new Book(brock_uuid, "Narnia 2", "JK Rowling", "123456789021");
-    booktest2.setStatus(status.REQUESTED);
+        Book booktest1 = new Book(brock_uuid, "Narnia 1", "JK Rowling", "123456789020");
+        booktest1.setStatus(status.AVAILABLE);
 
-    Book booktest3 = new Book(brock_uuid, "Narnia 3", "JK Rowling", "123456789022");
-    booktest3.setStatus(status.ACCEPTED);
+        Book booktest2 = new Book(brock_uuid, "Narnia 2", "JK Rowling", "123456789021");
+        booktest2.setStatus(status.REQUESTED);
 
-    Book booktest4 = new Book(brock_uuid, "Narnia 4", "JK Rowling", "123456789023");
-    booktest4.setStatus(status.BORROWED);
+        Book booktest3 = new Book(brock_uuid, "Narnia 3", "JK Rowling", "123456789022");
+        booktest3.setStatus(status.ACCEPTED);
 
-    Book booktest5 = new Book(ming_uuid, "Harry Potter and the Chamber of Secrets", "JK Rowling",
-        "123456789020");
+        Book booktest4 = new Book(brock_uuid, "Narnia 4", "JK Rowling", "123456789023");
+        booktest4.setStatus(status.BORROWED);
 
-    Book booktest6 = new Book(ming_uuid, "Harry Potter and the Philosopher's Stone", "JK Rowling",
-        "123456789021");
+        Book booktest5 = new Book(ming_uuid, "Harry Potter and the Chamber of Secrets", "JK Rowling", "123456789020");
 
-    Book booktest7 = new Book(ming_uuid, "Toy Story 3", "Ming", "123456789022");
+        Book booktest6 = new Book(ming_uuid, "Harry Potter and the Philosopher's Stone", "JK Rowling", "123456789021");
 
-    Book booktest8 = new Book(ben_uuid, "Damn Ben Dipped", "Ming", "123456789023");
+        Book booktest7 = new Book(ming_uuid, "Toy Story 3", "Ming", "123456789022");
 
-    testBooks.add(booktest1);
-    testBooks.add(booktest2);
-    testBooks.add(booktest3);
-    testBooks.add(booktest4);
-    testBooks.add(booktest5);
-    testBooks.add(booktest6);
-    testBooks.add(booktest7);
-    testBooks.add(booktest8);
+        Book booktest8 = new Book(ben_uuid, "Damn Ben Dipped", "Ming", "123456789023");
 
-    for (Book eachBook : testBooks) {
-      bookDB.pushBook(eachBook);
+        testBooks.add(booktest1);
+        testBooks.add(booktest2);
+        testBooks.add(booktest3);
+        testBooks.add(booktest4);
+        testBooks.add(booktest5);
+        testBooks.add(booktest6);
+        testBooks.add(booktest7);
+        testBooks.add(booktest8);
+
+        for (Book eachBook : testBooks) {
+            bookDB.pushBook(eachBook);
+        }
     }
-  }
+
+
+
 
   /**
    * Clears DB, and array list of books
@@ -115,11 +117,12 @@ public class BookControllerTest {
   @Test
   public void testAdd() throws InterruptedException {
     String author = "Test Add";
-    String owner = "lilravi121";
+    String owner = "2345d";
     String ISBN = "127837122";
     String title = "FooBar";
+    String emptyPhoto = null;
     Log.d(TAG, "==== TEST ADD ====");
-    bookController.addBook(owner, author, ISBN, title, new BookCallback() {
+    bookController.addBook(author, ISBN, title, emptyPhoto, new BookCallback() {
       @Override
       public void onSuccess(ArrayList<Book> books) {
         ArrayList<Book> test = bookDB.getUsersOwnedBooks(owner);

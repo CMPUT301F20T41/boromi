@@ -70,8 +70,12 @@ public class AuthenticationController {
    * @param email    The email entered by the user
    * @param password The password entered by the user
    */
-  public void makeSignUpRequest(final String username, String email, String password,
-      final AuthCallback authCallback) {
+  public void makeSignUpRequest(
+          final String username,
+          String email,
+          String password,
+          final AuthCallback authCallback
+  ) {
     // Ensures that the username is unique before signing up
     if (userDB.getUserByUsername(username) != null) {
 
@@ -125,6 +129,17 @@ public class AuthenticationController {
             }
           }
         });
+  }
+
+  public void changeEmail(String email) {
+    FirebaseUser user = auth.getCurrentUser();
+    assert user != null;
+    user.updateEmail(email)
+            .addOnCompleteListener(executor, task -> {
+              if (task.isSuccessful()) {
+                Log.d(TAG, "Email Changed");
+              }
+            });
   }
 
 }

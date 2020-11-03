@@ -6,6 +6,6 @@ import com.team41.boromi.dagger.DaggerAppComponent;
 
 public class BoromiApp extends Application {
 
-  AppComponent appComponent = DaggerAppComponent.create();
+  public AppComponent appComponent = DaggerAppComponent.create();
 
 }

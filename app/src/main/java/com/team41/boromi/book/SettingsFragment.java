@@ -9,9 +9,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+
 import com.team41.boromi.BookActivity;
+import com.team41.boromi.BoromiApp;
 import com.team41.boromi.R;
+import com.team41.boromi.controllers.AuthenticationController;
 import com.team41.boromi.models.User;
+
+import javax.inject.Inject;
 
 /**
  * A simple {@link Fragment} subclass. Use the {@link SettingsFragment#newInstance} factory method
@@ -20,6 +25,9 @@ import com.team41.boromi.models.User;
 public class SettingsFragment extends Fragment {
 
   private final static String TAG = "SETTINGS_FRAGMENT";
+
+  @Inject
+  AuthenticationController authenticationController;
 
   BookActivity activity;
 
@@ -50,6 +58,11 @@ public class SettingsFragment extends Fragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    ((BoromiApp) getActivity().getApplicationContext())
+            .appComponent
+            .getAuthenticationComponent()
+            .inject(this);
+
     this.activity = (BookActivity) getActivity();
   }
 
