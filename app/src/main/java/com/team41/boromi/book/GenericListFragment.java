@@ -79,7 +79,7 @@ public class GenericListFragment extends Fragment {
     recyclerView = view.findViewById(R.id.generic_list);
 //    recyclerView.setHasFixedSize(true);
     listAdapter = new GenericListAdapter(bookDataList, bookWithRequests, layoutID,
-        ((BookActivity) getActivity()).getBookController());
+        ((BookActivity) getActivity()).getBookController(), ((BookActivity) getActivity()).getBookRequestController());
     System.out.println(tempMsg);
     System.out.println(getTag());
     recyclerView.setAdapter(listAdapter);

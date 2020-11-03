@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.team41.boromi.R;
 import com.team41.boromi.controllers.BookController;
+import com.team41.boromi.controllers.BookRequestController;
 import com.team41.boromi.models.Book;
 import com.team41.boromi.models.BookRequest;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.Map;
 public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.ViewHolder> {
 
   BookController bookController;
+  BookRequestController bookRequestController;
   private ArrayList<Book> books;
   private int resource;
   private ViewGroup parent;
@@ -33,12 +35,13 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
   }
 
   public GenericListAdapter(ArrayList<Book> books, Map<Book, List<BookRequest>> bookWithRequests,
-      int id, BookController bookController) {
+      int id, BookController bookController, BookRequestController bookRequestController) {
     this.books = books;
     this.bookWithRequests = bookWithRequests;
     subListAdapters = new ArrayList<>();
     resource = id;
     this.bookController = bookController;
+    this.bookRequestController = bookRequestController;
   }
 
 
@@ -81,7 +84,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
       } else {
         requesters = (ArrayList<BookRequest>) bookWithRequests.get(book);
       }
-      SubListAdapter subListAdapter = new SubListAdapter(requesters, book);
+      SubListAdapter subListAdapter = new SubListAdapter(requesters, book, bookRequestController);
       recyclerView.setLayoutManager(new LinearLayoutManager(parent.getContext()));
       recyclerView.setAdapter(subListAdapter);
       subListAdapters.add(subListAdapter);
