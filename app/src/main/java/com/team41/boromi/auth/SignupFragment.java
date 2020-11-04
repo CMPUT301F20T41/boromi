@@ -63,7 +63,10 @@ public class SignupFragment extends Fragment {
     spinner = view.findViewById(R.id.signup_loading);
     spinner.setVisibility(View.GONE);
     Button createAccountButton = view.findViewById(R.id.signup_signup);
-    fullNameInput = view.findViewById(R.id.signup_name);
+
+    // TODO: Commented out for now since full name isn't used
+    // fullNameInput = view.findViewById(R.id.signup_name);
+
     emailInput = view.findViewById(R.id.signup_email);
     userNameInput = view.findViewById(R.id.signup_username);
     passwordInput = view.findViewById(R.id.signup_password);
@@ -71,7 +74,9 @@ public class SignupFragment extends Fragment {
     createAccountButton.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
-        String fullName = fullNameInput.getText().toString();
+        // TODO: Commented out for now since full name isn't used
+        // String fullName = fullNameInput.getText().toString();
+
         String email = emailInput.getText().toString();
         String username = userNameInput.getText().toString();
         String password = passwordInput.getText().toString();

@@ -2,11 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="300dp"
+    android:layout_width="340dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:padding="8dp"
-    android:background="@drawable/cardshape"
+    android:padding="16dp"
     android:orientation="vertical"
     tools:context=".book.AddBookFragment">
 
@@ -14,59 +13,74 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:paddingHorizontal="5dp"
-        android:paddingVertical="8dp"
-        android:text="Enter your books' information below and we'll add it to your collection"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"></TextView>
+        android:text="Enter your books' information below"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_marginBottom="16dp"/>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageButton android:background="@drawable/camera_circle"
-            android:layout_height="38dp"
-            android:layout_width="38dp"
-            android:layout_margin="5dp"
-            app:srcCompat="@drawable/add_photo_icon"
-            android:layout_marginEnd="5dp"
-            android:layout_marginStart="5dp"
-            android:id="@+id/add_book_image"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp">
 
-        <EditText
-            android:id="@+id/add_book_author"
-            android:layout_width="251dp"
+        <ImageButton
+            android:id="@+id/add_book_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="8dp"
+            android:layout_gravity="center"
+            android:background="@drawable/camera_circle"
+            app:srcCompat="@drawable/add_photo_icon" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#22191919"
-            android:padding="8dp"
-            android:layout_margin="5dp"
-            android:hint="Author">
-        </EditText>
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/add_book_author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Author"
+                android:inputType="text"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
     </LinearLayout>
-    <EditText
-        android:id="@+id/add_book_title"
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_margin="5dp"
-        android:padding="8dp"
-        android:background="#22191919"
-        android:hint="Title"></EditText>
-    <EditText
-        android:id="@+id/add_book_isbn"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_marginBottom="8dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/add_book_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Title"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_margin="5dp"
-        android:padding="8dp"
-        android:background="#22191919"
-        android:hint="ISBN"></EditText>
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_marginBottom="8dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/add_book_isbn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="ISBN"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
     <Button
         android:id="@+id/add_book_add_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_margin="5dp"
-        android:text="ADD BOOK"
-        android:textColor="#FFFFFF"
-        android:background="@drawable/return_circle"></Button>
+        android:text="ADD BOOK"/>
 
 </LinearLayout>

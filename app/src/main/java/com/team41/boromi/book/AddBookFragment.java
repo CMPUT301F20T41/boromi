@@ -21,77 +21,82 @@ import com.team41.boromi.R;
 
 public class AddBookFragment extends DialogFragment {
 
-  private Button addBook;
-  private EditText author;
-  private EditText title;
-  private EditText isbn;
-  private ImageButton addImage;
-  private Bitmap imageBitmap;
+	private Button addBook;
+	private EditText author;
+	private EditText title;
+	private EditText isbn;
+	private ImageButton addImage;
+	private Bitmap imageBitmap;
 
-  public AddBookFragment() {
-  }
+	public AddBookFragment() {
+	}
 
-  public static AddBookFragment newInstance() {
-    AddBookFragment addBookFragment = new AddBookFragment();
-    Bundle args = new Bundle();
-    addBookFragment.setArguments(args);
-    return addBookFragment;
-  }
+	public static AddBookFragment newInstance() {
+		AddBookFragment addBookFragment = new AddBookFragment();
+		Bundle args = new Bundle();
+		addBookFragment.setArguments(args);
+		return addBookFragment;
+	}
 
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.add_book_fragment, container);
-  }
+	@Nullable
+	@Override
+	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+	                         @Nullable Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.add_book_fragment, container);
+	}
 
-  @Override
-  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    addBook = (Button) view.findViewById(R.id.add_book_add_button);
-    author = (EditText) view.findViewById(R.id.add_book_author);
-    title = (EditText) view.findViewById(R.id.add_book_title);
-    isbn = (EditText) view.findViewById(R.id.add_book_isbn);
-    addImage = (ImageButton) view.findViewById(R.id.add_book_image);
+	@Override
+	public void onResume() {
+		super.onResume();
+	}
 
-    addBook.setOnClickListener(new OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        AddBookFragmentListener listener = (AddBookFragmentListener) getActivity();
-        listener.onComplete(author.getText().toString(), title.getText().toString(),
-            isbn.getText().toString(), imageBitmap);
-        dismiss();
-      }
-    });
-    addImage.setOnClickListener(new OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        dispatchTakePictureIntent();
-      }
-    });
-  }
+	@Override
+	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		addBook = (Button) view.findViewById(R.id.add_book_add_button);
+		author = (EditText) view.findViewById(R.id.add_book_author);
+		title = (EditText) view.findViewById(R.id.add_book_title);
+		isbn = (EditText) view.findViewById(R.id.add_book_isbn);
+		addImage = (ImageButton) view.findViewById(R.id.add_book_image);
 
-  @Override
-  public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == -1) {
-      Bundle extras = data.getExtras();
-      Bitmap imageBitmap = (Bitmap) extras.get("data");
-      addImage.setImageBitmap(imageBitmap);
-      this.imageBitmap = imageBitmap;
-    }
-  }
+		addBook.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				AddBookFragmentListener listener = (AddBookFragmentListener) getActivity();
+				listener.onComplete(author.getText().toString(), title.getText().toString(),
+						isbn.getText().toString(), imageBitmap);
+				dismiss();
+			}
+		});
+		addImage.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				dispatchTakePictureIntent();
+			}
+		});
+	}
 
-  private void dispatchTakePictureIntent() {
-    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-    try {
-      startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-    } catch (ActivityNotFoundException e) {
-      // display error state to the user
-    }
-  }
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == -1) {
+			Bundle extras = data.getExtras();
+			Bitmap imageBitmap = (Bitmap) extras.get("data");
+			addImage.setImageBitmap(imageBitmap);
+			this.imageBitmap = imageBitmap;
+		}
+	}
 
-  public interface AddBookFragmentListener {
+	private void dispatchTakePictureIntent() {
+		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		try {
+			startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+		} catch (ActivityNotFoundException e) {
+			// display error state to the user
+		}
+	}
 
-    void onComplete(String author, String title, String isbn, Bitmap image);
-  }
+	public interface AddBookFragmentListener {
+
+		void onComplete(String author, String title, String isbn, Bitmap image);
+	}
 }

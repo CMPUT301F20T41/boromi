@@ -124,7 +124,7 @@ public class SettingsFragment extends Fragment implements EditUserFragment.Chang
       // A change was made, prepare an updated user
       User modifiedUser = new User(user.getUUID(), username, email);
 
-      // If the email was changed, then the change needs to made in both auth and firestore
+      // If the email was changed, then the change needs to made in both auth and firestorew
       if (!email.equals(this.user.getEmail())) {
         authenticationController.changeEmail(modifiedUser);
         BoromiModule.user = modifiedUser;

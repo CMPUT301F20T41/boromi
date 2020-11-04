@@ -6,9 +6,7 @@ import android.os.Bundle;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -82,6 +80,9 @@ public class BookActivity extends AppCompatActivity implements AddBookFragment.A
     pagerAdapter = new PagerAdapter(getSupportFragmentManager(), getLifecycle());
     Toolbar toolbar = (Toolbar) findViewById(R.id.book_toolbar);
     setSupportActionBar(toolbar);
+
+    // Prevents the keyboard from moving the entire screen up
+    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
     tabLayout = findViewById(R.id.tabs_main);
     viewPager2 = findViewById(R.id.view_pager_main);

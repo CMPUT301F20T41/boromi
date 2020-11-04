@@ -1,70 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent">
-
-  <androidx.appcompat.widget.Toolbar
-    android:id="@+id/book_toolbar"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize"
-    android:background="@color/colorPrimary"
-    android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:titleTextColor="@color/colorTextLight" />
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-  <androidx.viewpager2.widget.ViewPager2
-    android:id="@+id/view_pager_main"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:layout_marginBottom="1dp"
-    app:layout_constraintBottom_toTopOf="@+id/tabs_main"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/book_toolbar" />
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/book_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="@color/colorTextLight" />
 
-  <com.google.android.material.tabs.TabLayout
-    android:id="@+id/tabs_main"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:background="@color/colorPrimary"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:tabIndicatorColor="@color/colorSecondary"
-    app:tabSelectedTextColor="@color/colorSecondary"
-    app:tabTextColor="@color/colorTextLight">
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="1dp"
+        android:layout_weight="1"
+        app:layout_constraintTop_toBottomOf="@+id/book_toolbar" />
 
-    <com.google.android.material.tabs.TabItem
-      android:id="@+id/tab_owned_books"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:icon="@drawable/book_icon" />
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tabIndicatorColor="@color/colorSecondary"
+        app:tabIconTint="@color/colorIconLight">
 
-    <com.google.android.material.tabs.TabItem
-      android:id="@+id/tab_borrowed_books"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:icon="@drawable/outgoing_icon" />
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_owned_books"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/book_icon" />
 
-    <com.google.android.material.tabs.TabItem
-      android:id="@+id/tab_search"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:icon="@drawable/search_icon" />
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_borrowed_books"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/outgoing_icon" />
 
-    <com.google.android.material.tabs.TabItem
-      android:id="@+id/tab_location"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:icon="@drawable/location_icon" />
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/search_icon" />
 
-    <com.google.android.material.tabs.TabItem
-      android:id="@+id/tab_settings"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:icon="@drawable/settings_icon" />
-  </com.google.android.material.tabs.TabLayout>
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/location_icon" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/settings_icon" />
+    </com.google.android.material.tabs.TabLayout>
+
+</LinearLayout>

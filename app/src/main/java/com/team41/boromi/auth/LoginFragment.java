@@ -62,7 +62,7 @@ public class LoginFragment extends Fragment {
     activity = (MainActivity) getActivity();
     spinner = view.findViewById(R.id.login_loading);
     spinner.setVisibility(View.GONE);
-    TextView recoverPasswordButton = view.findViewById(R.id.login_recoverPassword);
+    Button recoverPasswordButton = view.findViewById(R.id.login_recoverPassword);
     Button loginButton = (Button) view.findViewById(R.id.login_login);
     emailInput = view.findViewById(R.id.login_email);
     passwordInput = view.findViewById(R.id.login_password);
