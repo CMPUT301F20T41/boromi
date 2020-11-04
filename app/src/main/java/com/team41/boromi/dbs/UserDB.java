@@ -22,8 +22,6 @@ public class UserDB {
   private final String DB_COLLECTION = "users";
   private final CollectionReference usersRef;
 
-  private final Gson gson = new Gson();
-
   @Inject
   public UserDB(FirebaseFirestore db) {
     usersRef = db.collection(DB_COLLECTION);
@@ -88,8 +86,6 @@ public class UserDB {
    * async pushes a user to a db merges data only in case of conflicts
    */
   public User pushUser(User user) {
-    gson.toJson(user);
-
     try {
       Tasks.await(
           usersRef.document(user.getUUID()).set(user, SetOptions.merge()),
@@ -101,5 +97,4 @@ public class UserDB {
       return null;
     }
   }
-
 }

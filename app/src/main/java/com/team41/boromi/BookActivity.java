@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
+
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
@@ -21,7 +22,6 @@ import com.team41.boromi.adapters.PagerAdapter;
 import com.team41.boromi.book.AddBookFragment;
 import com.team41.boromi.book.AddBookFragment.AddBookFragmentListener;
 import com.team41.boromi.book.BorrowedFragment;
-import com.team41.boromi.book.EditUserFragment.ChangesUserInformation;
 import com.team41.boromi.book.GenericListFragment;
 import com.team41.boromi.book.MapFragment;
 import com.team41.boromi.book.OwnedFragment;
@@ -29,9 +29,11 @@ import com.team41.boromi.book.SearchFragment;
 import com.team41.boromi.book.SettingsFragment;
 
 import com.team41.boromi.callbacks.BookCallback;
+import com.team41.boromi.controllers.AuthenticationController;
 import com.team41.boromi.controllers.BookController;
 import com.team41.boromi.controllers.BookRequestController;
 import com.team41.boromi.controllers.BookReturnController;
+import com.team41.boromi.dagger.BoromiModule;
 import com.team41.boromi.models.Book;
 import com.team41.boromi.models.BookRequest;
 import com.team41.boromi.models.User;
@@ -39,11 +41,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
 
-public class BookActivity extends AppCompatActivity implements
-        AddBookFragmentListener,
-        ChangesUserInformation {
+public class BookActivity extends AppCompatActivity implements AddBookFragmentListener {
 
   private static final String LAYOUT_PARAM1 = "LayoutID";
   private static final String DATA_PARAM2 = "Data";
@@ -238,13 +240,5 @@ public class BookActivity extends AppCompatActivity implements
 
       }
     });
-  }
-
-  @Override
-  public void changeUserInformation(String username,  String email) {
-    // Neither fields were change so do nothing
-    if (username.equals(this.user.getUsername()) && email.equals(this.user.getEmail())) {
-      return;
-    }
   }
 }

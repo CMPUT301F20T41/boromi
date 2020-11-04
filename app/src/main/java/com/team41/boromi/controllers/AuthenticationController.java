@@ -131,15 +131,31 @@ public class AuthenticationController {
         });
   }
 
-  public void changeEmail(String email) {
-    FirebaseUser user = auth.getCurrentUser();
-    assert user != null;
-    user.updateEmail(email)
+  /**
+   * Changes the users email address in firebase auth
+   * If successful, persists the change to firestore
+   * If unsuccessful, neither operation will happen
+   * @param user The modified user information
+   */
+  public void changeEmail(User user) {
+    FirebaseUser fUser = auth.getCurrentUser();
+    assert fUser != null;
+    fUser.updateEmail(user.getEmail())
             .addOnCompleteListener(executor, task -> {
               if (task.isSuccessful()) {
-                Log.d(TAG, "Email Changed");
+                userDB.pushUser(user);
+              } else {
+                Log.e(TAG, "Failed to update users email");
               }
             });
+  }
+
+  public void updateUser(User user) {
+    userDB.pushUser(user);
+  }
+
+  public void signOut() {
+    auth.signOut();
   }
 
 }

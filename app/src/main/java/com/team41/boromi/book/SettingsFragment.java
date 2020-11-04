@@ -14,6 +14,7 @@ import com.team41.boromi.BookActivity;
 import com.team41.boromi.BoromiApp;
 import com.team41.boromi.R;
 import com.team41.boromi.controllers.AuthenticationController;
+import com.team41.boromi.dagger.BoromiModule;
 import com.team41.boromi.models.User;
 
 import javax.inject.Inject;
@@ -22,7 +23,7 @@ import javax.inject.Inject;
  * A simple {@link Fragment} subclass. Use the {@link SettingsFragment#newInstance} factory method
  * to create an instance of this fragment.
  */
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends Fragment implements EditUserFragment.ChangesUserInformation {
 
   private final static String TAG = "SETTINGS_FRAGMENT";
 
@@ -30,6 +31,8 @@ public class SettingsFragment extends Fragment {
   AuthenticationController authenticationController;
 
   BookActivity activity;
+
+  User user;
 
   private TextView imageViewAvatar;
   private TextView textViewUsername;
@@ -73,7 +76,7 @@ public class SettingsFragment extends Fragment {
     View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
     // Gets the authenticated user
-    User user = activity.getUser();
+    user = activity.getUser();
 
     // Gets the ui components
     imageViewAvatar = view.findViewById(R.id.settings_user_avatar);
@@ -90,19 +93,49 @@ public class SettingsFragment extends Fragment {
     buttonLogout.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        // TODO: Logout the user
+        // TODO: Implement in a later ticket
+        //        authenticationController.signOut();
+        //        BoromiModule.user = null;
+        //
+        //        activity.finish();
       }
     });
+
+    SettingsFragment settingsFragment = this;
 
     imageViewEditUserIcon.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         assert getFragmentManager() != null;
-        new EditUserFragment().show(getFragmentManager(), "EDIT_USER");
+        new EditUserFragment().show(getChildFragmentManager(), "EDIT_USER");
       }
     });
 
     return view;
   }
 
+  @Override
+  public void changeUserInformation(String username, String email) {
+      // Neither fields were change so do nothing
+      if (username.equals(this.user.getUsername()) && email.equals(this.user.getEmail())) {
+        return;
+      }
+
+      // A change was made, prepare an updated user
+      User modifiedUser = new User(user.getUUID(), username, email);
+
+      // If the email was changed, then the change needs to made in both auth and firestore
+      if (!email.equals(this.user.getEmail())) {
+        authenticationController.changeEmail(modifiedUser);
+        BoromiModule.user = modifiedUser;
+        textViewEmail.setText(email);
+        textViewUsername.setText(username);
+        return;
+      }
+
+      // If only the username was changed, then we only need to update firestore
+      authenticationController.updateUser(modifiedUser);
+      BoromiModule.user = modifiedUser;
+      textViewUsername.setText(username);
+  }
 }
