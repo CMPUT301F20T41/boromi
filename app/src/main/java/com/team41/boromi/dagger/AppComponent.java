@@ -17,5 +17,4 @@ public interface AppComponent {
   void inject(BookActivity bookActivity);
 
   void inject(TestRequestBookActivity testActivityRequestBook);
-
 }

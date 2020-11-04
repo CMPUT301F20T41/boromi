@@ -1,15 +1,26 @@
 package com.team41.boromi.book;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.textfield.TextInputEditText;
 import com.team41.boromi.BookActivity;
 import com.team41.boromi.R;
 import com.team41.boromi.adapters.GenericListAdapter;
+import com.team41.boromi.callbacks.BookCallback;
 import com.team41.boromi.constants.CommonConstants.BookStatus;
 import com.team41.boromi.constants.CommonConstants.BookWorkflowStage;
 import com.team41.boromi.models.Book;
@@ -56,16 +67,43 @@ public class SearchFragment extends Fragment {
     View view = inflater.inflate(R.layout.fragment_search, container, false);
     bookActivity = (BookActivity) getActivity();
     recyclerView = view.findViewById(R.id.search_recyclerView);
-
+    final TextInputEditText search = view.findViewById(R.id.search_view);
+    ImageButton search_butt = view.findViewById(R.id.search_butt);
+    TextView Results = view.findViewById(R.id.results);
     searchResults = new ArrayList<>();
-    searchResults.add(new Book("owner", "T11_1", "title", "123", BookStatus.AVAILABLE,
-        BookWorkflowStage.AVAILABLE, "borower"));
-    searchResults.add(new Book("owner", "T11_2", "title", "123", BookStatus.AVAILABLE,
-        BookWorkflowStage.AVAILABLE, "borower"));
-    listAdapter = new GenericListAdapter(searchResults, R.layout.searched,
-        bookActivity.getBookController());
+    listAdapter = new GenericListAdapter(searchResults, R.layout.searched, bookActivity.getBookController());
     recyclerView.setAdapter(listAdapter);
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+    search_butt.setOnClickListener(v -> {
+      String keywords = search.getText().toString();
+      bookActivity.getBookController().findBooks(keywords, new BookCallback() {
+        @Override
+        public void onSuccess(ArrayList<Book> books) {
+            bookActivity.getCollections().put("Searched", books);
+            searchResults.clear();
+            searchResults.addAll(books);
+            getActivity().runOnUiThread(new Runnable() {
+              @Override
+              public void run() {
+                listAdapter.notifyDataSetChanged();
+                Results.setText("Results");
+              }
+            });
+        }
+
+        @Override
+        public void onFailure(Exception e) {
+          searchResults.clear();
+          getActivity().runOnUiThread(new Runnable(){
+            @Override
+            public void run() {
+              Results.setText("No results found, please try a different title");
+              listAdapter.notifyDataSetChanged();
+            }
+          });
+        }
+      });
+    });
     return view;
   }
 }

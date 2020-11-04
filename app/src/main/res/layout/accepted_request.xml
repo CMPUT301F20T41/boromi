@@ -26,7 +26,7 @@
             android:paddingHorizontal="5dp">
 
             <ImageButton
-                android:id="@+id/borrowing_book_image"
+                android:id="@+id/accepted_request_book_image"
                 android:layout_width="42dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="5dp"
@@ -46,7 +46,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/borrowing_title"
+                android:id="@+id/accepted_request_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="The Hobbit"
@@ -54,7 +54,7 @@
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/borrowing_author"
+                android:id="@+id/accpeted_request_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="J.R.R. Tolkein"
@@ -74,7 +74,7 @@
                     android:textSize="10sp" />
 
                 <TextView
-                    android:id="@+id/borrowing_user"
+                    android:id="@+id/accepted_request_user"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="benlala8"
@@ -84,7 +84,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/borrowing_isbn"
+                android:id="@+id/accepted_request_isbn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="ISBN: #1234567890123"
@@ -111,7 +111,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@drawable/return_icon" />
+                tools:srcCompat="@drawable/location_icon" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

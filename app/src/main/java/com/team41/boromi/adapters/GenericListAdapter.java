@@ -172,7 +172,6 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
           title = itemView.findViewById(R.id.reqom_title);
           author = itemView.findViewById(R.id.reqom_author);
           isbn = itemView.findViewById(R.id.reqom_isbn);
-          user = itemView.findViewById(R.id.reqom_user);
           reqom = itemView.findViewById(R.id.reqom_request_list);
           imageButton = itemView.findViewById(R.id.reqom_book_image);
           break;

@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,7 +23,6 @@ import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
 import com.google.android.material.tabs.TabLayout.Tab;
 import com.team41.boromi.adapters.PagerAdapter;
 import com.team41.boromi.book.AddBookFragment;
-import com.team41.boromi.book.AddBookFragment.AddBookFragmentListener;
 import com.team41.boromi.book.BorrowedFragment;
 import com.team41.boromi.book.GenericListFragment;
 import com.team41.boromi.book.MapFragment;
@@ -44,8 +46,10 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+import com.team41.boromi.models.Book;
+import java.util.ArrayList;
 
-public class BookActivity extends AppCompatActivity implements AddBookFragmentListener {
+public class BookActivity extends AppCompatActivity implements AddBookFragment.AddBookFragmentListener {
 
   private static final String LAYOUT_PARAM1 = "LayoutID";
   private static final String DATA_PARAM2 = "Data";
@@ -217,7 +221,6 @@ public class BookActivity extends AppCompatActivity implements AddBookFragmentLi
   protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
   }
-
   @Override
   public void onComplete(String author, String title, String isbn, Bitmap image) {
     bookController.addBook(author, isbn, title, image, new BookCallback() {
