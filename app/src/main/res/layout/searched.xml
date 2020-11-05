@@ -122,13 +122,14 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                 android:textColor="#4CAF50" />
 
-            <TextView
+            <Button
                 android:id="@+id/searched_request"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Request"
+                android:background = "#FFFFFF"
                 tools:textColor="#2196F3" />
         </LinearLayout>
     </LinearLayout>
