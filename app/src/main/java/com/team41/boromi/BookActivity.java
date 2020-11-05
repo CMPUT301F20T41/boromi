@@ -95,14 +95,14 @@ public class BookActivity extends AppCompatActivity implements AddBookFragment.A
 
     // Add fragments for each tab
     pagerAdapter
-        .addFragment(new Pair<Class<? extends Fragment>, Bundle>(OwnedFragment.class, null));
+            .addFragment(new Pair<Class<? extends Fragment>, Bundle>(OwnedFragment.class, null));
     pagerAdapter
-        .addFragment(new Pair<Class<? extends Fragment>, Bundle>(BorrowedFragment.class, null));
+            .addFragment(new Pair<Class<? extends Fragment>, Bundle>(BorrowedFragment.class, null));
     pagerAdapter
-        .addFragment(new Pair<Class<? extends Fragment>, Bundle>(SearchFragment.class, null));
+            .addFragment(new Pair<Class<? extends Fragment>, Bundle>(SearchFragment.class, null));
     pagerAdapter.addFragment(new Pair<Class<? extends Fragment>, Bundle>(MapFragment.class, null));
     pagerAdapter
-        .addFragment(new Pair<Class<? extends Fragment>, Bundle>(SettingsFragment.class, null));
+            .addFragment(new Pair<Class<? extends Fragment>, Bundle>(SettingsFragment.class, null));
 
     // configure viewpager2 and initialize page adapter
     viewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
@@ -156,8 +156,13 @@ public class BookActivity extends AppCompatActivity implements AddBookFragment.A
   }
 
 
-  public Bundle setupBundle(int layout, ArrayList<Book> data, String messsge, String parent,
-      String tag) {
+  public Bundle setupBundle(
+          int layout,
+          ArrayList<Book> data,
+          String messsge,
+          String parent,
+          String tag
+  ) {
     Bundle bundle = new Bundle();
     bundle.putInt(LAYOUT_PARAM1, layout);
     bundle.putSerializable(DATA_PARAM2, data);
@@ -215,7 +220,7 @@ public class BookActivity extends AppCompatActivity implements AddBookFragment.A
   }
 
   public void setRequestsCollections(
-      Map<Book, List<BookRequest>> requestsCollections) {
+          Map<Book, List<BookRequest>> requestsCollections) {
     this.requestsCollections = requestsCollections;
   }
 
@@ -223,9 +228,11 @@ public class BookActivity extends AppCompatActivity implements AddBookFragment.A
   protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
   }
+
   @Override
   public void onComplete(String author, String title, String isbn, Bitmap image) {
-    bookController.addBook(author, isbn, title, image, new BookCallback() {
+
+    BookCallback bookCallback = new BookCallback() {
       @Override
       public void onSuccess(ArrayList<Book> books) {
         for (Fragment f : getSupportFragmentManager().getFragments()) {
@@ -244,6 +251,8 @@ public class BookActivity extends AppCompatActivity implements AddBookFragment.A
       public void onFailure(Exception e) {
 
       }
-    });
+    };
+
+    bookController.addBook(author, isbn, title, image, bookCallback);
   }
 }

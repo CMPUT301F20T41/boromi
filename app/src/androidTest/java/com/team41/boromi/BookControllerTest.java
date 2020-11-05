@@ -1,14 +1,9 @@
 package com.team41.boromi;
 
-import static com.team41.boromi.constants.CommonConstants.DB_TIMEOUT;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import android.graphics.Bitmap;
 import android.util.Log;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.team41.boromi.callbacks.BookCallback;
 import com.team41.boromi.constants.CommonConstants.BookStatus;
@@ -16,86 +11,92 @@ import com.team41.boromi.controllers.BookController;
 import com.team41.boromi.dbs.BookDB;
 import com.team41.boromi.models.Book;
 import com.team41.boromi.models.User;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+
+import static com.team41.boromi.constants.CommonConstants.DB_TIMEOUT;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @RunWith(AndroidJUnit4.class)
 public class BookControllerTest {
-    private final static String TAG = "BookControllerTest";
-    private static BookDB bookDB;
-    private static BookController bookController;
-    private static String brock_uuid;
-    private static String ben_uuid;
-    private static String ming_uuid;
-    private static String andy_uuid;
-    BookStatus status;
-    ArrayList<Book> testBooks = new ArrayList<>();
+  private final static String TAG = "BookControllerTest";
+  private static BookDB bookDB;
+  private static BookController bookController;
+  private static String brock_uuid;
+  private static String ben_uuid;
+  private static String ming_uuid;
+  private static String andy_uuid;
+  BookStatus status;
+  ArrayList<Book> testBooks = new ArrayList<>();
 
-    /**
-     * Setting up users for uuid, books for test cases and adding them into db
-     */
-    @Before
-    public void setup() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        bookDB = new BookDB(db);
-        ExecutorService executorService = new ThreadPoolExecutor(1, 6, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>() );
+  /**
+   * Setting up users for uuid, books for test cases and adding them into db
+   */
+  @Before
+  public void setup() {
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    bookDB = new BookDB(db);
+    ExecutorService executorService = new ThreadPoolExecutor(1, 6, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 
-        User lil_brock = new User("1234a", "Lil Brock", "lilbrock@gmail.com");
-        User lil_ming = new User("5678b", "Lil Ming", "lilming@gmail.com");
-        User lil_ben = new User("8901c", "Lil Ben", "lilben@gmail.com");
-        User lil_andy = new User("2345d", "Lil Andy", "lilandy@gmail.com");
+    User lil_brock = new User("1234a", "Lil Brock", "lilbrock@gmail.com");
+    User lil_ming = new User("5678b", "Lil Ming", "lilming@gmail.com");
+    User lil_ben = new User("8901c", "Lil Ben", "lilben@gmail.com");
+    User lil_andy = new User("2345d", "Lil Andy", "lilandy@gmail.com");
 
-        brock_uuid = lil_brock.getUUID();
-        ben_uuid = lil_ben.getUUID();
-        ming_uuid = lil_ming.getUUID();
-        andy_uuid = lil_andy.getUUID();
+    brock_uuid = lil_brock.getUUID();
+    ben_uuid = lil_ben.getUUID();
+    ming_uuid = lil_ming.getUUID();
+    andy_uuid = lil_andy.getUUID();
 
-        bookController = new BookController(bookDB, executorService, lil_andy);
+    bookController = new BookController(bookDB, executorService, lil_andy);
 
 
-        Book booktest1 = new Book(brock_uuid, "Narnia 1", "JK Rowling", "123456789020");
-        booktest1.setStatus(status.AVAILABLE);
+    Book booktest1 = new Book(brock_uuid, "Narnia 1", "JK Rowling", "123456789020");
+    booktest1.setStatus(BookStatus.AVAILABLE);
 
-        Book booktest2 = new Book(brock_uuid, "Narnia 2", "JK Rowling", "123456789021");
-        booktest2.setStatus(status.REQUESTED);
+    Book booktest2 = new Book(brock_uuid, "Narnia 2", "JK Rowling", "123456789021");
+    booktest2.setStatus(BookStatus.REQUESTED);
 
-        Book booktest3 = new Book(brock_uuid, "Narnia 3", "JK Rowling", "123456789022");
-        booktest3.setStatus(status.ACCEPTED);
+    Book booktest3 = new Book(brock_uuid, "Narnia 3", "JK Rowling", "123456789022");
+    booktest3.setStatus(BookStatus.ACCEPTED);
 
-        Book booktest4 = new Book(brock_uuid, "Narnia 4", "JK Rowling", "123456789023");
-        booktest4.setStatus(status.BORROWED);
+    Book booktest4 = new Book(brock_uuid, "Narnia 4", "JK Rowling", "123456789023");
+    booktest4.setStatus(BookStatus.BORROWED);
 
-        Book booktest5 = new Book(ming_uuid, "Harry Potter and the Chamber of Secrets", "JK Rowling", "123456789020");
+    Book booktest5 = new Book(ming_uuid, "Harry Potter and the Chamber of Secrets", "JK Rowling", "123456789020");
 
-        Book booktest6 = new Book(ming_uuid, "Harry Potter and the Philosopher's Stone", "JK Rowling", "123456789021");
+    Book booktest6 = new Book(ming_uuid, "Harry Potter and the Philosopher's Stone", "JK Rowling", "123456789021");
 
-        Book booktest7 = new Book(ming_uuid, "Toy Story 3", "Ming", "123456789022");
+    Book booktest7 = new Book(ming_uuid, "Toy Story 3", "Ming", "123456789022");
 
-        Book booktest8 = new Book(ben_uuid, "Damn Ben Dipped", "Ming", "123456789023");
+    Book booktest8 = new Book(ben_uuid, "Damn Ben Dipped", "Ming", "123456789023");
 
-        testBooks.add(booktest1);
-        testBooks.add(booktest2);
-        testBooks.add(booktest3);
-        testBooks.add(booktest4);
-        testBooks.add(booktest5);
-        testBooks.add(booktest6);
-        testBooks.add(booktest7);
-        testBooks.add(booktest8);
+    testBooks.add(booktest1);
+    testBooks.add(booktest2);
+    testBooks.add(booktest3);
+    testBooks.add(booktest4);
+    testBooks.add(booktest5);
+    testBooks.add(booktest6);
+    testBooks.add(booktest7);
+    testBooks.add(booktest8);
 
-        for (Book eachBook : testBooks) {
-            bookDB.pushBook(eachBook);
-        }
+    for (Book eachBook : testBooks) {
+      bookDB.pushBook(eachBook);
     }
-
-
+  }
 
 
   /**

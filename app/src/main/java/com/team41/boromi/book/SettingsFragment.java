@@ -11,13 +11,8 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.team41.boromi.BookActivity;
-import com.team41.boromi.BoromiApp;
 import com.team41.boromi.R;
-import com.team41.boromi.controllers.AuthenticationController;
-import com.team41.boromi.dagger.BoromiModule;
 import com.team41.boromi.models.User;
-
-import javax.inject.Inject;
 
 /**
  * A simple {@link Fragment} subclass. Use the {@link SettingsFragment#newInstance} factory method
@@ -26,9 +21,6 @@ import javax.inject.Inject;
 public class SettingsFragment extends Fragment implements EditUserFragment.ChangesUserInformation {
 
   private final static String TAG = "SETTINGS_FRAGMENT";
-
-  @Inject
-  AuthenticationController authenticationController;
 
   BookActivity activity;
 
@@ -61,11 +53,6 @@ public class SettingsFragment extends Fragment implements EditUserFragment.Chang
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    ((BoromiApp) getActivity().getApplicationContext())
-            .appComponent
-            .getAuthenticationComponent()
-            .inject(this);
-
     this.activity = (BookActivity) getActivity();
   }
 
@@ -116,26 +103,7 @@ public class SettingsFragment extends Fragment implements EditUserFragment.Chang
 
   @Override
   public void changeUserInformation(String username, String email) {
-      // Neither fields were change so do nothing
-      if (username.equals(this.user.getUsername()) && email.equals(this.user.getEmail())) {
-        return;
-      }
-
-      // A change was made, prepare an updated user
-      User modifiedUser = new User(user.getUUID(), username, email);
-
-      // If the email was changed, then the change needs to made in both auth and firestorew
-      if (!email.equals(this.user.getEmail())) {
-        authenticationController.changeEmail(modifiedUser);
-        BoromiModule.user = modifiedUser;
-        textViewEmail.setText(email);
-        textViewUsername.setText(username);
-        return;
-      }
-
-      // If only the username was changed, then we only need to update firestore
-      authenticationController.updateUser(modifiedUser);
-      BoromiModule.user = modifiedUser;
-      textViewUsername.setText(username);
+    textViewUsername.setText(username);
+    textViewEmail.setText(email);
   }
 }

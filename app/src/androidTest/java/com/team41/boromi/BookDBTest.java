@@ -1,19 +1,22 @@
 package com.team41.boromi;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.team41.boromi.constants.CommonConstants.BookStatus;
 import com.team41.boromi.dbs.BookDB;
 import com.team41.boromi.models.Book;
-import java.util.ArrayList;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.ArrayList;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class BookDBTest {
@@ -29,10 +32,10 @@ public class BookDBTest {
     // I didn't know a better way to automate the process of setting up
     // A consistent testing environment
     Book book = new Book(
-        "DaGQbX2HLfditCUDKq9X1bRnXQ82",
-        "This should be Acepted",
-        "JK Rowling",
-        "123456789012"
+            "DaGQbX2HLfditCUDKq9X1bRnXQ82",
+            "This should be Acepted",
+            "JK Rowling",
+            "123456789012"
     );
     book.setStatus(BookStatus.ACCEPTED);
     testBooks.add(bookDB.pushBook(book));
@@ -104,10 +107,10 @@ public class BookDBTest {
 
     // Pushes a new book to firestore
     testBooks.add(bookDB.pushBook(new Book(
-        "testuser1",
-        "Harry Potter",
-        "J.R.R. Tolkien",
-        "8167893451982"
+            "testuser1",
+            "Harry Potter",
+            "J.R.R. Tolkien",
+            "8167893451982"
     )));
 
     // Gets the new books from firestore to ensure the count was incremented

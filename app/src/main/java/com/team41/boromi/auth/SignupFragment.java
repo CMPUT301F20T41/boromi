@@ -2,6 +2,8 @@ package com.team41.boromi.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,18 +20,24 @@ import com.team41.boromi.MainActivity;
 import com.team41.boromi.R;
 import com.team41.boromi.callbacks.AuthCallback;
 
+import static com.team41.boromi.utility.Utility.isNotNullOrEmpty;
+
 /**
  * A simple {@link Fragment} subclass. Use the {@link SignupFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class SignupFragment extends Fragment {
 
-  private EditText fullNameInput;
+  // TODO: Currently we do not ned the fullNameInput
+  //  private EditText fullNameInput;
+
   private EditText emailInput;
   private EditText userNameInput;
   private EditText passwordInput;
   private MainActivity activity;
   private ProgressBar spinner;
+
+  Button createAccountButton;
 
   public SignupFragment() {
     // Required empty public constructor
@@ -57,12 +65,13 @@ public class SignupFragment extends Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
+
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_signup, container, false);
     activity = (MainActivity) getActivity();
     spinner = view.findViewById(R.id.signup_loading);
     spinner.setVisibility(View.GONE);
-    Button createAccountButton = view.findViewById(R.id.signup_signup);
+    createAccountButton = view.findViewById(R.id.signup_signup);
 
     // TODO: Commented out for now since full name isn't used
     // fullNameInput = view.findViewById(R.id.signup_name);
@@ -70,6 +79,14 @@ public class SignupFragment extends Fragment {
     emailInput = view.findViewById(R.id.signup_email);
     userNameInput = view.findViewById(R.id.signup_username);
     passwordInput = view.findViewById(R.id.signup_password);
+
+    // Disables the button since all the text fields are empty
+    createAccountButton.setEnabled(false);
+
+    // Sets text watchers for each of the inputs
+    emailInput.addTextChangedListener(emailUsernamePasswordTextWatcher);
+    userNameInput.addTextChangedListener(emailUsernamePasswordTextWatcher);
+    passwordInput.addTextChangedListener(emailUsernamePasswordTextWatcher);
 
     createAccountButton.setOnClickListener(new OnClickListener() {
       @Override
@@ -112,4 +129,32 @@ public class SignupFragment extends Fragment {
     });
     return view;
   }
+
+  TextWatcher emailUsernamePasswordTextWatcher = new TextWatcher() {
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+      // Get the text in both fields and check that both are not null or empty
+      String email = emailInput.getText().toString().trim();
+      String password = passwordInput.getText().toString().trim();
+      String username = userNameInput.getText().toString().trim();
+
+      // Enables the login button if both fields have text, Disables it otherwise
+      createAccountButton.setEnabled(
+              isNotNullOrEmpty(email) &&
+              isNotNullOrEmpty(password) &&
+              isNotNullOrEmpty(username) &&
+              password.length() >= 6
+      );
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+    }
+  };
 }

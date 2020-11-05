@@ -1,25 +1,28 @@
 package com.team41.boromi;
 
-import static com.team41.boromi.constants.CommonConstants.DB_TIMEOUT;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
 import android.util.Log;
+
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.team41.boromi.dbs.BookDB;
 import com.team41.boromi.dbs.BookReturnDB;
 import com.team41.boromi.models.Book;
 import com.team41.boromi.models.BookReturn;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+
+import static com.team41.boromi.constants.CommonConstants.DB_TIMEOUT;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class BookReturnsDBTest {
 
@@ -44,10 +47,10 @@ public class BookReturnsDBTest {
     for (Book book : books) {
       try {
         Tasks.await(
-            db.collection("bookReturns").document(book.getBookId()).delete(), DB_TIMEOUT,
-            TimeUnit.MILLISECONDS);
+                db.collection("bookReturns").document(book.getBookId()).delete(), DB_TIMEOUT,
+                TimeUnit.MILLISECONDS);
         Tasks.await(db.collection("books").document(book.getBookId()).delete(), DB_TIMEOUT,
-            TimeUnit.MILLISECONDS);
+                TimeUnit.MILLISECONDS);
       } catch (InterruptedException | ExecutionException | TimeoutException e) {
         Log.w("REQUSTDB TEST", e.getCause());
       }

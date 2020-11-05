@@ -116,6 +116,13 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="Passwords must be at least 6 characters long" />
+
         <Button
             android:id="@+id/signup_signup"
             android:layout_width="match_parent"

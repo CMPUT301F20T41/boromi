@@ -1,7 +1,11 @@
 package com.team41.boromi.auth;
 
+import static com.team41.boromi.utility.Utility.isNotNullOrEmpty;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -28,6 +31,8 @@ public class LoginFragment extends Fragment {
 
   private EditText emailInput;
   private EditText passwordInput;
+  private Button loginButton;
+
   private MainActivity activity;
   private ProgressBar spinner;
 
@@ -56,25 +61,31 @@ public class LoginFragment extends Fragment {
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
+                           Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_login, container, false);
     activity = (MainActivity) getActivity();
     spinner = view.findViewById(R.id.login_loading);
     spinner.setVisibility(View.GONE);
     Button recoverPasswordButton = view.findViewById(R.id.login_recoverPassword);
-    Button loginButton = (Button) view.findViewById(R.id.login_login);
+    loginButton = (Button) view.findViewById(R.id.login_login);
     emailInput = view.findViewById(R.id.login_email);
     passwordInput = view.findViewById(R.id.login_password);
 
-    recoverPasswordButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        Fragment recoverPasswordFragment = new RecoverPasswordFragment();
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction ft = manager.beginTransaction();
-        ft.replace(R.id.auth_fragment, recoverPasswordFragment).addToBackStack("recover").commit();
-      }
+    // Start the button out as being disabled because the text fields are empty
+    loginButton.setEnabled(false);
+
+    // Set on change listeners for the two text fields
+    emailInput.addTextChangedListener(emailPasswordTextWatcher);
+    passwordInput.addTextChangedListener(emailPasswordTextWatcher);
+
+    recoverPasswordButton.setOnClickListener(view1 -> {
+      Fragment recoverPasswordFragment = new RecoverPasswordFragment();
+      FragmentManager manager = getFragmentManager();
+      assert manager != null;
+
+      FragmentTransaction ft = manager.beginTransaction();
+      ft.replace(R.id.auth_fragment, recoverPasswordFragment).addToBackStack("recover").commit();
     });
     loginButton.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -112,4 +123,26 @@ public class LoginFragment extends Fragment {
     });
     return view;
   }
+
+  TextWatcher emailPasswordTextWatcher = new TextWatcher() {
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+      // Get the text in both fields and check that both are not null or empty
+      String email = emailInput.getText().toString().trim();
+      String password = passwordInput.getText().toString().trim();
+
+      // Enables the login button if both fields have text, Disables it otherwise
+      loginButton.setEnabled(isNotNullOrEmpty(email) && isNotNullOrEmpty(password));
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+    }
+  };
 }

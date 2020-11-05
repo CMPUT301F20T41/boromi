@@ -78,7 +78,9 @@ public class BookController {
       Book addingBook = new Book(user.getUUID(), title, author, ISBN);
       addingBook.setStatus(status.AVAILABLE);
       addingBook.setWorkflow(workflow.AVAILABLE);
+
       addingBook.setImg64(encodeToBase64(image));
+
       executor.execute(() -> {
         ArrayList<Book> addedBook = new ArrayList<>();
         addedBook.add(bookDB.pushBook(addingBook));
@@ -383,6 +385,11 @@ public class BookController {
   }
 
   public String encodeToBase64(Bitmap bmap) {
+
+    if (bmap == null) {
+      return null;
+    }
+
     ByteArrayOutputStream stream = new ByteArrayOutputStream();
     bmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
     String base64img = Base64.encodeToString(stream.toByteArray(), Base64.DEFAULT);

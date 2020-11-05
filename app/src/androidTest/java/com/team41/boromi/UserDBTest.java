@@ -1,20 +1,23 @@
 package com.team41.boromi;
 
-import static com.team41.boromi.constants.CommonConstants.DB_TIMEOUT;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
 import android.util.Log;
+
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.team41.boromi.dbs.UserDB;
 import com.team41.boromi.models.User;
-import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
+import static com.team41.boromi.constants.CommonConstants.DB_TIMEOUT;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class UserDBTest {
 
@@ -42,9 +45,9 @@ public class UserDBTest {
     for (User user : testUsers) {
       try {
         Tasks.await(
-            db.collection("users").document(user.getUUID()).delete(),
-            DB_TIMEOUT,
-            TimeUnit.MILLISECONDS
+                db.collection("users").document(user.getUUID()).delete(),
+                DB_TIMEOUT,
+                TimeUnit.MILLISECONDS
         );
       } catch (Exception e) {
         Log.w("UserDBTest", e.getCause());
@@ -85,9 +88,9 @@ public class UserDBTest {
   @Test
   public void testCreateUser() {
     User user = new User(
-        "0000000001",
-        "testuser999",
-        "testuser999@brockchelle.com"
+            "0000000001",
+            "testuser999",
+            "testuser999@brockchelle.com"
     );
     User resultUser = userDB.pushUser(user);
 
@@ -99,9 +102,9 @@ public class UserDBTest {
   @Test
   public void testEditUser() {
     User modifiedUser = new User(
-        testUsers.get(0).getUUID(),
-        "testuser999",
-        "testuser999@brockchelle.com"
+            testUsers.get(0).getUUID(),
+            "testuser999",
+            "testuser999@brockchelle.com"
     );
 
     User resultUser = userDB.pushUser(modifiedUser);
@@ -119,9 +122,9 @@ public class UserDBTest {
 
     // Modifies the user
     user = new User(
-        user.getUUID(),
-        "testuser999",
-        "testuser999@brockchelle.com"
+            user.getUUID(),
+            "testuser999",
+            "testuser999@brockchelle.com"
     );
 
     user = userDB.pushUser(user);
@@ -138,9 +141,9 @@ public class UserDBTest {
 
     // Pushes a user
     User newUser = new User(
-        "0000000001",
-        "testuser1000",
-        "testuser1000@brockchelle.com"
+            "0000000001",
+            "testuser1000",
+            "testuser1000@brockchelle.com"
     );
 
     newUser = userDB.pushUser(newUser);
