@@ -78,9 +78,9 @@ public class BookController {
       Book addingBook = new Book(user.getUUID(), title, author, ISBN);
       addingBook.setStatus(status.AVAILABLE);
       addingBook.setWorkflow(workflow.AVAILABLE);
-
-      addingBook.setImg64(encodeToBase64(image));
-
+      if (image != null){
+        addingBook.setImg64(encodeToBase64(image));
+      }
       executor.execute(() -> {
         ArrayList<Book> addedBook = new ArrayList<>();
         addedBook.add(bookDB.pushBook(addingBook));
@@ -108,7 +108,9 @@ public class BookController {
       Book addingBook = new Book(user.getUUID(), title, author, ISBN);
       addingBook.setStatus(status.AVAILABLE);
       addingBook.setWorkflow(workflow.AVAILABLE);
-      addingBook.setImg64(image);
+      if (isNotNullOrEmpty(image)) {
+        addingBook.setImg64(image);
+      }
       executor.execute(() -> {
         ArrayList<Book> addedBook = new ArrayList<>();
         addedBook.add(bookDB.pushBook(addingBook));
@@ -135,7 +137,7 @@ public class BookController {
    * @param title
    * @return
    */
-  public void editBook(String bookID, String author, String ISBN, String title,
+  public void editBook(String bookID, String author, String ISBN, String title, Bitmap image,
       final BookCallback bookCallback) {
     if (isNotNullOrEmpty(author) && isNotNullOrEmpty(ISBN) && isNotNullOrEmpty(title)) {
       executor.execute(() -> {
@@ -145,6 +147,11 @@ public class BookController {
           editingBook.setTitle(title);
           editingBook.setAuthor(author);
           editingBook.setISBN(ISBN);
+          if (image != null) {
+            editingBook.setImg64(encodeToBase64(image));
+          } else {
+            editingBook.setImg64(null);
+          }
           edited.add(bookDB.pushBook(editingBook));
           Log.d(TAG, " book edit success");
 
@@ -430,4 +437,27 @@ public class BookController {
       bookDB.pushBook(book);
     });
   }
+
+  /**
+   * This method returns a list of books that the user is borrowing from other owners.
+   * @param username
+   * @param bookCallback
+   */
+  public void getOwnerBorrowingBooks(String username, final BookCallback bookCallback) {
+    if (isNotNullOrEmpty(username)) {
+      executor.execute(() -> {
+        ArrayList<Book> borrowingBooks = bookDB.getOwnerBorrowingBooks(username);
+        if (borrowingBooks != null) {
+          Log.d(TAG, "Success getting user borrowing books");
+          bookCallback.onSuccess(borrowingBooks);
+        } else {
+          bookCallback.onFailure(new IllegalArgumentException());
+        }
+      });
+    } else {
+      Log.d(TAG, "Owner input is missing or null");
+      bookCallback.onFailure(new IllegalArgumentException());
+    }
+  }
+
 }

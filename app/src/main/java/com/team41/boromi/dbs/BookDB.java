@@ -327,6 +327,35 @@ public class BookDB {
     return bookMap;
   }
 
+  /**
+   * This method returns a list of books that user is borrowing from other owners.
+   * @param owner
+   * @return
+   */
+  public ArrayList<Book> getOwnerBorrowingBooks(String username) {
+    final ArrayList<Book> borrowingBooks = new ArrayList<>();
+
+    QuerySnapshot res;
+
+    // Gets all books with the owner field equal to the uuid
+    try {
+      res = Tasks.await(
+              booksRef.whereEqualTo("borrower", username).whereEqualTo("status", status.BORROWED).get(),
+              DB_TIMEOUT,
+              TimeUnit.MILLISECONDS
+      );
+    } catch (Exception e) { // failed
+      Log.w(TAG, e.getCause());
+      return null;
+    }
+
+    for (DocumentSnapshot document : res.getDocuments()) {
+      borrowingBooks.add(document.toObject(Book.class));
+    }
+
+    return borrowingBooks;
+  }
+
   // TODO:
   // Add a method to query for all the books a user has
   // requested, borrowed, or been accepted to be borrowed
