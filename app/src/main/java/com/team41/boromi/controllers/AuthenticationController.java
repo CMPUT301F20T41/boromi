@@ -16,7 +16,6 @@ import com.team41.boromi.dbs.UserDB;
 import com.team41.boromi.models.User;
 import java.util.concurrent.Executor;
 import javax.inject.Inject;
-import javax.security.auth.callback.Callback;
 
 /**
  * A class that handles authentication and sign in methods
@@ -73,10 +72,10 @@ public class AuthenticationController {
    * @param password The password entered by the user
    */
   public void makeSignUpRequest(
-          final String username,
-          String email,
-          String password,
-          final AuthCallback authCallback
+      final String username,
+      String email,
+      String password,
+      final AuthCallback authCallback
   ) {
     // Ensures that the username is unique before signing up
     if (userDB.getUserByUsername(username) != null) {
@@ -136,24 +135,24 @@ public class AuthenticationController {
   }
 
   /**
-   * Changes the users email address in firebase auth
-   * If successful, persists the change to firestore
-   * If unsuccessful, neither operation will happen
+   * Changes the users email address in firebase auth If successful, persists the change to
+   * firestore If unsuccessful, neither operation will happen
+   *
    * @param user The modified user information
    */
   public void changeEmail(User user, AuthNoResultCallback authResult) {
     FirebaseUser fUser = auth.getCurrentUser();
     assert fUser != null;
     fUser.updateEmail(user.getEmail())
-            .addOnCompleteListener(executor, task -> {
-              if (task.isSuccessful()) {
-                userDB.pushUser(user);
-                authResult.onSuccess();
-              } else {
-                Log.e(TAG, "Failed to update users email");
-                authResult.onFailure(task.getException());
-              }
-            });
+        .addOnCompleteListener(executor, task -> {
+          if (task.isSuccessful()) {
+            userDB.pushUser(user);
+            authResult.onSuccess();
+          } else {
+            Log.e(TAG, "Failed to update users email");
+            authResult.onFailure(task.getException());
+          }
+        });
   }
 
   public void updateUser(User user) {

@@ -1,13 +1,10 @@
 package com.team41.boromi.book;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabItem;
@@ -19,13 +16,11 @@ import com.team41.boromi.R;
 import com.team41.boromi.adapters.PagerAdapter;
 import com.team41.boromi.callbacks.BookCallback;
 import com.team41.boromi.callbacks.BookRequestCallback;
-import com.team41.boromi.constants.CommonConstants.BookWorkflowStage;
 import com.team41.boromi.models.Book;
 import com.team41.boromi.models.BookRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * A simple {@link Fragment} subclass. Use the {@link OwnedFragment#newInstance} factory method to
@@ -61,24 +56,9 @@ public class OwnedFragment extends Fragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-  }
-
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
-    // Inflate the layout for this fragment
-    View view = inflater.inflate(R.layout.fragment_owned, container, false);
     bookActivity = (BookActivity) getActivity();
-    tabLayout = (TabLayout) view.findViewById(R.id.tabs_sub_owned);
-    viewPager2 = view.findViewById(R.id.view_pager_owned);
-    TabItem availableTab = (TabItem) view.findViewById(R.id.tabs_sub_owned_available);
-    TabItem requestsTab = (TabItem) view.findViewById(R.id.tabs_sub_owned_requests);
-    TabItem acceptedTab = (TabItem) view.findViewById(R.id.tabs_sub_owned_accepted);
-    TabItem lentTab = (TabItem) view.findViewById(R.id.tabs_sub_owned_lent);
-
-    // add fragments to tabs
     pagerAdapter = new PagerAdapter(getChildFragmentManager(), getLifecycle());
-
+    // add fragments to tabs
     Bundle bundle;
     bundle = bookActivity.setupBundle(R.layout.available, new ArrayList<>(),
         "These are all the books that you own that are available for other people to borrow",
@@ -101,6 +81,19 @@ public class OwnedFragment extends Fragment {
         "These are all your books that are being borrowed by other people", parent, "Lent");
     pagerAdapter.addFragment(
         new Pair<Class<? extends Fragment>, Bundle>(GenericListFragment.class, bundle));
+  }
+
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+    // Inflate the layout for this fragment
+    View view = inflater.inflate(R.layout.fragment_owned, container, false);
+    tabLayout = (TabLayout) view.findViewById(R.id.tabs_sub_owned);
+    viewPager2 = view.findViewById(R.id.view_pager_owned);
+    TabItem availableTab = (TabItem) view.findViewById(R.id.tabs_sub_owned_available);
+    TabItem requestsTab = (TabItem) view.findViewById(R.id.tabs_sub_owned_requests);
+    TabItem acceptedTab = (TabItem) view.findViewById(R.id.tabs_sub_owned_accepted);
+    TabItem lentTab = (TabItem) view.findViewById(R.id.tabs_sub_owned_lent);
 
     // Configure viewpager2 options and initialize page adapter
     viewPager2.setUserInputEnabled(false);
@@ -170,15 +163,12 @@ public class OwnedFragment extends Fragment {
   }
 
   public void getOwnerLent(GenericListFragment fragment) {
-    bookActivity.getBookController()
-        .getOwnedBooks(bookActivity.getUser().getUUID(), new BookCallback() {
+    bookActivity.getBookController().getOwnerBorrowedBooks(bookActivity.getUser().getUUID(),
+        new BookCallback() {
           @Override
           public void onSuccess(ArrayList<Book> books) {
-            bookActivity.getCollections().put("OwnedBooks", books);
-            bookActivity.getCollections().put("OwnerLent", (ArrayList<Book>) books.stream()
-                .filter((book -> book.getWorkflow() == BookWorkflowStage.BORROWED))
-                .collect(Collectors.toList()));
-            fragment.updateData(bookActivity.getOwnerLent());
+            bookActivity.getCollections().put("OwnerLent", books);
+            fragment.updateData(books);
           }
 
           @Override

@@ -32,7 +32,27 @@ public class LoginFragment extends Fragment {
   private EditText emailInput;
   private EditText passwordInput;
   private Button loginButton;
+  TextWatcher emailPasswordTextWatcher = new TextWatcher() {
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+      // Get the text in both fields and check that both are not null or empty
+      String email = emailInput.getText().toString().trim();
+      String password = passwordInput.getText().toString().trim();
+
+      // Enables the login button if both fields have text, Disables it otherwise
+      loginButton.setEnabled(isNotNullOrEmpty(email) && isNotNullOrEmpty(password));
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+    }
+  };
   private MainActivity activity;
   private ProgressBar spinner;
 
@@ -57,14 +77,15 @@ public class LoginFragment extends Fragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    activity = (MainActivity) getActivity();
   }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                           Bundle savedInstanceState) {
+      Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_login, container, false);
-    activity = (MainActivity) getActivity();
+
     spinner = view.findViewById(R.id.login_loading);
     spinner.setVisibility(View.GONE);
     Button recoverPasswordButton = view.findViewById(R.id.login_recoverPassword);
@@ -123,26 +144,4 @@ public class LoginFragment extends Fragment {
     });
     return view;
   }
-
-  TextWatcher emailPasswordTextWatcher = new TextWatcher() {
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-      // Get the text in both fields and check that both are not null or empty
-      String email = emailInput.getText().toString().trim();
-      String password = passwordInput.getText().toString().trim();
-
-      // Enables the login button if both fields have text, Disables it otherwise
-      loginButton.setEnabled(isNotNullOrEmpty(email) && isNotNullOrEmpty(password));
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-
-    }
-  };
 }

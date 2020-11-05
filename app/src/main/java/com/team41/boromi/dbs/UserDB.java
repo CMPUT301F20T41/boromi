@@ -9,7 +9,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
-import com.google.gson.Gson;
 import com.team41.boromi.models.User;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;

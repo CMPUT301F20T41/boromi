@@ -16,6 +16,7 @@ import com.team41.boromi.models.User;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -78,7 +79,7 @@ public class BookController {
       Book addingBook = new Book(user.getUUID(), title, author, ISBN);
       addingBook.setStatus(status.AVAILABLE);
       addingBook.setWorkflow(workflow.AVAILABLE);
-      if (image != null){
+      if (image != null) {
         addingBook.setImg64(encodeToBase64(image));
       }
       executor.execute(() -> {
@@ -372,6 +373,13 @@ public class BookController {
     }
   }
 
+  public void getBooksOthersAccepted(BookCallback bookCallback) {
+    executor.execute(() -> {
+      List<Book> bookList = bookDB.getAcceptedWithBorrower(user.getUUID());
+      bookCallback.onSuccess((ArrayList<Book>) bookList);
+    });
+  }
+
   /**
    * this is a synchronous task except for the pushing to db portion This might take a while, so it
    * may be worth to show user a spinny circly
@@ -440,6 +448,7 @@ public class BookController {
 
   /**
    * This method returns a list of books that the user is borrowing from other owners.
+   *
    * @param username
    * @param bookCallback
    */

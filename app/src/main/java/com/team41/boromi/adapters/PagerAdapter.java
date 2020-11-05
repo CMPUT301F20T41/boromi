@@ -13,9 +13,8 @@ import java.util.ArrayList;
 
 public class PagerAdapter extends FragmentStateAdapter {
 
-  public FragmentManager fragmentManager;
-
   private final ArrayList<Pair<Class<? extends Fragment>, Bundle>> fragmentClasses;
+  public FragmentManager fragmentManager;
 
   public PagerAdapter(@NonNull FragmentManager fragmentManager,
       @NonNull Lifecycle lifecycle) {

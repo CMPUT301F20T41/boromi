@@ -7,9 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.fragment.app.Fragment;
-
 import com.team41.boromi.BookActivity;
 import com.team41.boromi.R;
 import com.team41.boromi.models.User;

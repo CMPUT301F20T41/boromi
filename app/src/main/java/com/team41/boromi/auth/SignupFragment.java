@@ -1,5 +1,7 @@
 package com.team41.boromi.auth;
 
+import static com.team41.boromi.utility.Utility.isNotNullOrEmpty;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -20,8 +22,6 @@ import com.team41.boromi.MainActivity;
 import com.team41.boromi.R;
 import com.team41.boromi.callbacks.AuthCallback;
 
-import static com.team41.boromi.utility.Utility.isNotNullOrEmpty;
-
 /**
  * A simple {@link Fragment} subclass. Use the {@link SignupFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -31,13 +31,39 @@ public class SignupFragment extends Fragment {
   // TODO: Currently we do not ned the fullNameInput
   //  private EditText fullNameInput;
 
+  Button createAccountButton;
   private EditText emailInput;
   private EditText userNameInput;
   private EditText passwordInput;
+  TextWatcher emailUsernamePasswordTextWatcher = new TextWatcher() {
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+      // Get the text in both fields and check that both are not null or empty
+      String email = emailInput.getText().toString().trim();
+      String password = passwordInput.getText().toString().trim();
+      String username = userNameInput.getText().toString().trim();
+
+      // Enables the login button if both fields have text, Disables it otherwise
+      createAccountButton.setEnabled(
+          isNotNullOrEmpty(email) &&
+              isNotNullOrEmpty(password) &&
+              isNotNullOrEmpty(username) &&
+              password.length() >= 6
+      );
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+    }
+  };
   private MainActivity activity;
   private ProgressBar spinner;
-
-  Button createAccountButton;
 
   public SignupFragment() {
     // Required empty public constructor
@@ -60,6 +86,7 @@ public class SignupFragment extends Fragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    activity = (MainActivity) getActivity();
   }
 
   @Override
@@ -68,7 +95,7 @@ public class SignupFragment extends Fragment {
 
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_signup, container, false);
-    activity = (MainActivity) getActivity();
+
     spinner = view.findViewById(R.id.signup_loading);
     spinner.setVisibility(View.GONE);
     createAccountButton = view.findViewById(R.id.signup_signup);
@@ -129,32 +156,4 @@ public class SignupFragment extends Fragment {
     });
     return view;
   }
-
-  TextWatcher emailUsernamePasswordTextWatcher = new TextWatcher() {
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-      // Get the text in both fields and check that both are not null or empty
-      String email = emailInput.getText().toString().trim();
-      String password = passwordInput.getText().toString().trim();
-      String username = userNameInput.getText().toString().trim();
-
-      // Enables the login button if both fields have text, Disables it otherwise
-      createAccountButton.setEnabled(
-              isNotNullOrEmpty(email) &&
-              isNotNullOrEmpty(password) &&
-              isNotNullOrEmpty(username) &&
-              password.length() >= 6
-      );
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-
-    }
-  };
 }

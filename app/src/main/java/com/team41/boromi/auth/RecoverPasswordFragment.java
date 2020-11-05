@@ -1,6 +1,7 @@
 package com.team41.boromi.auth;
 
-import android.content.Intent;
+import static com.team41.boromi.utility.Utility.isNotNullOrEmpty;
+
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,26 +15,40 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
-
-import com.google.firebase.auth.AuthResult;
-import com.team41.boromi.BookActivity;
 import com.team41.boromi.MainActivity;
 import com.team41.boromi.R;
 import com.team41.boromi.callbacks.AuthNoResultCallback;
-
 import java.util.Objects;
-
-import static com.team41.boromi.utility.Utility.isNotNullOrEmpty;
 
 /**
  * A simple {@link Fragment} subclass. Use the {@link RecoverPasswordFragment#newInstance} factory
  * method to create an instance of this fragment.
  */
 public class RecoverPasswordFragment extends Fragment {
+
   private EditText emailInput;
   private Button recoverButton;
-  private ProgressBar spinner;
+  TextWatcher emailTextWatcher = new TextWatcher() {
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+      // Get the text in both fields and check that both are not null or empty
+      String email = emailInput.getText().toString().trim();
+
+      // Enables the login button if both fields have text, Disables it otherwise
+      recoverButton.setEnabled(isNotNullOrEmpty(email));
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+    }
+  };
+  private ProgressBar spinner;
   private MainActivity activity;
 
   public RecoverPasswordFragment() {
@@ -57,15 +72,14 @@ public class RecoverPasswordFragment extends Fragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    activity = (MainActivity) Objects.requireNonNull(getActivity());
   }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                           Bundle savedInstanceState) {
+      Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_recover_password, container, false);
-
-    activity = (MainActivity) getActivity();
 
     // Gets the ui components by id
     emailInput = view.findViewById(R.id.recover_email);
@@ -87,56 +101,35 @@ public class RecoverPasswordFragment extends Fragment {
         String email = emailInput.getText().toString();
 
         spinner.setVisibility(View.VISIBLE);
-        ((MainActivity) Objects.requireNonNull(getActivity()))
-                .getAuthController()
-                .resetPassword(email, new AuthNoResultCallback() {
+        activity
+            .getAuthController()
+            .resetPassword(email, new AuthNoResultCallback() {
+              @Override
+              public void onSuccess() {
+                Log.d("Login", "Login successful");
+                activity.runOnUiThread(new Runnable() {
                   @Override
-                  public void onSuccess() {
-                    Log.d("Login", "Login successful");
-                    activity.runOnUiThread(new Runnable() {
-                      @Override
-                      public void run() {
-                        spinner.setVisibility(View.GONE);
-                        Toast.makeText(activity, "Request Sent", Toast.LENGTH_LONG).show();
-                      }
-                    });
-                  }
-
-                  @Override
-                  public void onFailure(Exception exception) {
-                    Log.d("Login", "Request Sent");
-                    activity.runOnUiThread(new Runnable() {
-                      @Override
-                      public void run() {
-                        spinner.setVisibility(View.GONE);
-                        Toast.makeText(activity, "Failed to Send", Toast.LENGTH_LONG).show();
-                      }
-                    });
+                  public void run() {
+                    spinner.setVisibility(View.GONE);
+                    Toast.makeText(activity, "Request Sent", Toast.LENGTH_LONG).show();
                   }
                 });
+              }
+
+              @Override
+              public void onFailure(Exception exception) {
+                Log.d("Login", "Request Sent");
+                activity.runOnUiThread(new Runnable() {
+                  @Override
+                  public void run() {
+                    spinner.setVisibility(View.GONE);
+                    Toast.makeText(activity, "Failed to Send", Toast.LENGTH_LONG).show();
+                  }
+                });
+              }
+            });
       }
     });
     return view;
   }
-
-  TextWatcher emailTextWatcher = new TextWatcher() {
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-      // Get the text in both fields and check that both are not null or empty
-      String email = emailInput.getText().toString().trim();
-
-      // Enables the login button if both fields have text, Disables it otherwise
-      recoverButton.setEnabled(isNotNullOrEmpty(email));
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-
-    }
-  };
 }

@@ -28,6 +28,32 @@ public class AddBookFragment extends DialogFragment {
   private EditText editTextAuthor;
   private EditText editTextTitle;
   private EditText editTextIsbn;
+  TextWatcher allFieldsWatcher = new TextWatcher() {
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+      // Empty method, required for text watcher
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+      String author = editTextAuthor.getText().toString().trim();
+      String title = editTextTitle.getText().toString().trim();
+      String isbn = editTextIsbn.getText().toString().trim();
+
+      // Sets the button if all the text fields have content and the ISBN is 13 characters
+      buttonAddBook.setEnabled(
+          isNotNullOrEmpty(author) &&
+              isNotNullOrEmpty(title) &&
+              isNotNullOrEmpty(isbn)
+              && isbn.length() == 13
+      );
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+      // Empty method, required for text watcher
+    }
+  };
   private ImageButton addImage;
   private Bitmap imageBitmap;
 
@@ -44,7 +70,7 @@ public class AddBookFragment extends DialogFragment {
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
+      @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.add_book_fragment, container);
   }
 
@@ -77,10 +103,10 @@ public class AddBookFragment extends DialogFragment {
 
         assert listener != null;
         listener.onComplete(
-                editTextAuthor.getText().toString(),
-                editTextTitle.getText().toString(),
-                editTextIsbn.getText().toString(),
-                imageBitmap
+            editTextAuthor.getText().toString(),
+            editTextTitle.getText().toString(),
+            editTextIsbn.getText().toString(),
+            imageBitmap
         );
         dismiss();
       }
@@ -116,31 +142,4 @@ public class AddBookFragment extends DialogFragment {
 
     void onComplete(String author, String title, String isbn, Bitmap image);
   }
-
-  TextWatcher allFieldsWatcher = new TextWatcher() {
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-      // Empty method, required for text watcher
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-      String author = editTextAuthor.getText().toString().trim();
-      String title = editTextTitle.getText().toString().trim();
-      String isbn = editTextIsbn.getText().toString().trim();
-
-      // Sets the button if all the text fields have content and the ISBN is 13 characters
-      buttonAddBook.setEnabled(
-              isNotNullOrEmpty(author) &&
-                      isNotNullOrEmpty(title) &&
-                      isNotNullOrEmpty(isbn)
-                      && isbn.length() == 13
-      );
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-      // Empty method, required for text watcher
-    }
-  };
 }

@@ -71,13 +71,14 @@ public class BookRequestController {
 
   // TODO : NEED TO NOTIFY USERS THAT BOOK IS CANCELLED OR ACCEPTED
   // remove all requests on the book and set the book to your current borrowed
-  public void acceptBookRequest(BookRequest bookRequest) {
+  public void acceptBookRequest(BookRequest bookRequest, BookRequestCallback bookRequestCallback) {
     executor.execute(() -> {
       brDB.deleteRequestsForBook(bookRequest.getBookId());
       Book acceptedBook = bookDB.getBookById(bookRequest.getBookId());
       acceptedBook.setStatus(CommonConstants.BookStatus.ACCEPTED);      // sets the book to accepted
       acceptedBook.setBorrower(bookRequest.getRequestor());
       bookDB.pushBook(acceptedBook);
+      bookRequestCallback.onComplete(null);
     });
   }
 

@@ -3,7 +3,6 @@ package com.team41.boromi;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,11 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
-
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
@@ -31,11 +28,9 @@ import com.team41.boromi.book.OwnedFragment;
 import com.team41.boromi.book.SearchFragment;
 import com.team41.boromi.book.SettingsFragment;
 import com.team41.boromi.callbacks.BookCallback;
-import com.team41.boromi.controllers.AuthenticationController;
 import com.team41.boromi.controllers.BookController;
 import com.team41.boromi.controllers.BookRequestController;
 import com.team41.boromi.controllers.BookReturnController;
-import com.team41.boromi.dagger.BoromiModule;
 import com.team41.boromi.models.Book;
 import com.team41.boromi.models.BookRequest;
 import com.team41.boromi.models.User;
@@ -44,13 +39,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-
 import javax.inject.Inject;
-import com.team41.boromi.models.Book;
-import java.util.ArrayList;
 
-public class BookActivity extends AppCompatActivity implements AddBookFragment.AddBookFragmentListener, EditBookFragment.EditBookFragmentListener {
+public class BookActivity extends AppCompatActivity implements
+    AddBookFragment.AddBookFragmentListener, EditBookFragment.EditBookFragmentListener {
 
   private static final String LAYOUT_PARAM1 = "LayoutID";
   private static final String DATA_PARAM2 = "Data";
@@ -68,6 +60,7 @@ public class BookActivity extends AppCompatActivity implements AddBookFragment.A
   BookRequestController bookRequestController;
   @Inject
   User user;
+
   private ViewPager2 viewPager2;
   private PagerAdapter pagerAdapter;
   private TabLayout tabLayout;
@@ -97,14 +90,14 @@ public class BookActivity extends AppCompatActivity implements AddBookFragment.A
 
     // Add fragments for each tab
     pagerAdapter
-            .addFragment(new Pair<Class<? extends Fragment>, Bundle>(OwnedFragment.class, null));
+        .addFragment(new Pair<Class<? extends Fragment>, Bundle>(OwnedFragment.class, null));
     pagerAdapter
-            .addFragment(new Pair<Class<? extends Fragment>, Bundle>(BorrowedFragment.class, null));
+        .addFragment(new Pair<Class<? extends Fragment>, Bundle>(BorrowedFragment.class, null));
     pagerAdapter
-            .addFragment(new Pair<Class<? extends Fragment>, Bundle>(SearchFragment.class, null));
+        .addFragment(new Pair<Class<? extends Fragment>, Bundle>(SearchFragment.class, null));
     pagerAdapter.addFragment(new Pair<Class<? extends Fragment>, Bundle>(MapFragment.class, null));
     pagerAdapter
-            .addFragment(new Pair<Class<? extends Fragment>, Bundle>(SettingsFragment.class, null));
+        .addFragment(new Pair<Class<? extends Fragment>, Bundle>(SettingsFragment.class, null));
 
     // configure viewpager2 and initialize page adapter
     viewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
@@ -159,11 +152,11 @@ public class BookActivity extends AppCompatActivity implements AddBookFragment.A
 
 
   public Bundle setupBundle(
-          int layout,
-          ArrayList<Book> data,
-          String messsge,
-          String parent,
-          String tag
+      int layout,
+      ArrayList<Book> data,
+      String messsge,
+      String parent,
+      String tag
   ) {
     Bundle bundle = new Bundle();
     bundle.putInt(LAYOUT_PARAM1, layout);
@@ -172,29 +165,6 @@ public class BookActivity extends AppCompatActivity implements AddBookFragment.A
     bundle.putString(PARENT_PARAM4, parent);
     bundle.putString(TAG_PARAM5, tag);
     return bundle;
-  }
-
-  public ArrayList<Book> getOwnerAvailable() {
-    System.out.println(collections.get("OwnerAvailable"));
-    return collections.get("OwnerAvailable");
-  }
-
-  public ArrayList<Book> getOwnerRequests() {
-    System.out.println(collections.get("OwnerRequests"));
-
-    return collections.get("OwnerRequests");
-  }
-
-  public ArrayList<Book> getOwnerAccepted() {
-    System.out.println(collections.get("OwnerAccepted"));
-
-    return collections.get("OwnerAccepted");
-  }
-
-  public ArrayList<Book> getOwnerLent() {
-    System.out.println(collections.get("OwnerLent"));
-
-    return collections.get("OwnerLent");
   }
 
   public BookReturnController getBookReturnController() {
@@ -222,7 +192,7 @@ public class BookActivity extends AppCompatActivity implements AddBookFragment.A
   }
 
   public void setRequestsCollections(
-          Map<Book, List<BookRequest>> requestsCollections) {
+      Map<Book, List<BookRequest>> requestsCollections) {
     this.requestsCollections = requestsCollections;
   }
 
@@ -233,46 +203,26 @@ public class BookActivity extends AppCompatActivity implements AddBookFragment.A
 
   @Override
   public void onComplete(String author, String title, String isbn, Bitmap image) {
-
-    BookCallback bookCallback = new BookCallback() {
+    bookController.addBook(author, isbn, title, image, new BookCallback() {
       @Override
       public void onSuccess(ArrayList<Book> books) {
-        for (Fragment f : getSupportFragmentManager().getFragments()) {
-          if (f.getClass().getSimpleName().equals("OwnedFragment")) {
-            for (Fragment fc : f.getChildFragmentManager().getFragments()) {
-              GenericListFragment gf = (GenericListFragment) fc;
-              if (gf.tag.equals("Available")) {
-                ((OwnedFragment) f).getData(gf.tag, gf);
-              }
-            }
-          }
-        }
+        updateFragment("OwnedFragment", "Available");
       }
 
       @Override
       public void onFailure(Exception e) {
 
       }
-    };
-
-    bookController.addBook(author, isbn, title, image, bookCallback);
+    });
   }
 
   @Override
-  public void onEditComplete(String BookID, String author, String title, String isbn, Bitmap image){
+  public void onEditComplete(String BookID, String author, String title, String isbn,
+      Bitmap image) {
     bookController.editBook(BookID, author, isbn, title, image, new BookCallback() {
       @Override
       public void onSuccess(ArrayList<Book> books) {
-        for (Fragment f : getSupportFragmentManager().getFragments()) {
-          if (f.getClass().getSimpleName().equals("OwnedFragment")) {
-            for (Fragment fc : f.getChildFragmentManager().getFragments()) {
-              GenericListFragment gf = (GenericListFragment) fc;
-              if (gf.tag.equals("Available")) {
-                ((OwnedFragment) f).getData(gf.tag, gf);
-              }
-            }
-          }
-        }
+        updateFragment("OwnedFragment", "Available");
       }
 
       @Override
@@ -281,27 +231,30 @@ public class BookActivity extends AppCompatActivity implements AddBookFragment.A
     });
   }
 
-
-
   public void updateFragment(String mainTab, String subTab) {
-    Optional<Fragment> f = getSupportFragmentManager().getFragments().stream().filter(fragment -> fragment.getClass().getSimpleName().equals(mainTab)).findFirst();
+    Optional<Fragment> f = getSupportFragmentManager().getFragments().stream()
+        .filter(fragment -> fragment.getClass().getSimpleName().equals(mainTab)).findFirst();
     if (f.isPresent()) {
-      if (mainTab.equals("OwnedFragment")){
+      if (mainTab.equals("OwnedFragment")) {
         OwnedFragment ownedFragment = OwnedFragment.class.cast(f.get());
-        Optional<Fragment> subFragment = ownedFragment.getChildFragmentManager().getFragments().stream().filter(fragment -> ((GenericListFragment) fragment).tag.equals(subTab)).findFirst();
+        Optional<Fragment> subFragment = ownedFragment.getChildFragmentManager().getFragments()
+            .stream().filter(fragment -> ((GenericListFragment) fragment).tag.equals(subTab))
+            .findFirst();
         if (subFragment.isPresent()) {
-          ownedFragment.getData(subTab,(GenericListFragment) subFragment.get());
+          ownedFragment.getData(subTab, (GenericListFragment) subFragment.get());
         }
       } else if (mainTab.equals("BorrowedFragment")) {
         BorrowedFragment borrowedFragment = BorrowedFragment.class.cast(f.get());
-        Optional<Fragment> subFragment = borrowedFragment.getChildFragmentManager().getFragments().stream().filter(fragment -> ((GenericListFragment) fragment).tag.equals(subTab)).findFirst();
+        Optional<Fragment> subFragment = borrowedFragment.getChildFragmentManager().getFragments()
+            .stream().filter(fragment -> ((GenericListFragment) fragment).tag.equals(subTab))
+            .findFirst();
         if (subFragment.isPresent()) {
-          borrowedFragment.getData(subTab,(GenericListFragment) subFragment.get());
+          borrowedFragment.getData(subTab, (GenericListFragment) subFragment.get());
         }
       } else {
         return;
       }
     }
-  }
 
+  }
 }

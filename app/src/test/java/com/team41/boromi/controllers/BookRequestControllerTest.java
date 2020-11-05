@@ -104,7 +104,12 @@ public class BookRequestControllerTest {
 
     Mockito.when(bookDB.getBookById(Mockito.anyString())).thenReturn(mockBook);
 
-    dut.acceptBookRequest(mockRequest);
+    dut.acceptBookRequest(mockRequest, new BookRequestCallback() {
+      @Override
+      public void onComplete(Map<Book, List<BookRequest>> bookWithRequests) {
+
+      }
+    });
 
     Thread.sleep(DB_TIMEOUT); // allow complete
 
