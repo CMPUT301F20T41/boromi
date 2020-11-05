@@ -72,7 +72,7 @@ public class RecoverPasswordFragment extends Fragment {
     recoverButton = view.findViewById(R.id.recover_recover);
 
     // Gets the loading spinner and hides it
-    spinner = view.findViewById(R.id.recover_spinner);
+    spinner = view.findViewById(R.id.recover_loader);
     spinner.setVisibility(View.GONE);
 
     // Disables the button to start, empty text field
