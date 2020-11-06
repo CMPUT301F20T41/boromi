@@ -76,7 +76,7 @@ public class BorrowedFragment extends Fragment {
     pagerAdapter.addFragment(
         new Pair<Class<? extends Fragment>, Bundle>(GenericListFragment.class, bundle));
 
-    bundle = bookActivity.setupBundle(R.layout.accepted, new ArrayList<>(),
+    bundle = bookActivity.setupBundle(R.layout.accepted_request, new ArrayList<>(),
         "These are all the books that you have been accepted to borrow", parent, "Accepted");
     pagerAdapter.addFragment(
         new Pair<Class<? extends Fragment>, Bundle>(GenericListFragment.class, bundle));

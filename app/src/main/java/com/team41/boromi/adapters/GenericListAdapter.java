@@ -128,7 +128,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
       holder.author.setText(book.getAuthor());
     }
     if (holder.user != null) {
-      if (resource == R.layout.searched) {
+      if (resource == R.layout.searched || resource == R.layout.accepted_request) {
         holder.user.setText(book.getOwnerName());
       } else {
         holder.user.setText(book.getBorrowerName());
@@ -271,6 +271,17 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
           isbn = itemView.findViewById(R.id.accepted_isbn);
           user = itemView.findViewById(R.id.accepted_user);
           imageButton = itemView.findViewById(R.id.accepted_book_image);
+          rightButton = itemView.findViewById(R.id.right_button);
+          request_button = null;
+          status = null;
+          reqom = null;
+          break;
+        case (R.layout.accepted_request):
+          title = itemView.findViewById(R.id.accepted_request_title);
+          author = itemView.findViewById(R.id.accepted_request_author);
+          isbn = itemView.findViewById(R.id.accepted_request_isbn);
+          user = itemView.findViewById(R.id.accepted_request_user);
+          imageButton = itemView.findViewById(R.id.accepted_request_book_image);
           rightButton = itemView.findViewById(R.id.right_button);
           request_button = null;
           status = null;

@@ -257,7 +257,11 @@ public class BookController {
             String title = eachBook.getTitle();
             String author = eachBook.getAuthor();
             String isbn = eachBook.getISBN();
+            BookStatus status = eachBook.getStatus();
             boolean added = false;
+            if(status == BookStatus.ACCEPTED || status == BookStatus.BORROWED){
+              continue;
+            }
             if (StringUtils.containsIgnoreCase(title, keywords) && !added) {
               searchedBooks.add(eachBook);
               added = true;
