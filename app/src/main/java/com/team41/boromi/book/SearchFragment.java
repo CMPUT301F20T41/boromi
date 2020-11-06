@@ -127,7 +127,12 @@ public class SearchFragment extends Fragment {
           public void run() {
             listAdapter.notifyDataSetChanged();
             spinner.setVisibility(View.GONE);
-            Results.setText("Results");
+            if(searchResults.isEmpty() == false) {
+              Results.setText("Results");
+            }
+            else{
+              Results.setText("No results found, please try a different title");
+            }
           }
         });
       }

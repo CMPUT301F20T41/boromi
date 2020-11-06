@@ -255,8 +255,20 @@ public class BookController {
         if (allBooks != null) {
           for (Book eachBook : allBooks) {
             String title = eachBook.getTitle();
-            if (StringUtils.containsIgnoreCase(title, keywords)) {
+            String author = eachBook.getAuthor();
+            String isbn = eachBook.getISBN();
+            boolean added = false;
+            if (StringUtils.containsIgnoreCase(title, keywords) && !added) {
               searchedBooks.add(eachBook);
+              added = true;
+            }
+            else if(StringUtils.containsIgnoreCase(author, keywords) && !added){
+              searchedBooks.add(eachBook);
+              added = true;
+            }
+            else if(StringUtils.containsIgnoreCase(isbn, keywords) && !added){
+              searchedBooks.add(eachBook);
+              added = true;
             }
           }
           if (searchedBooks.size() > 0) {
@@ -533,5 +545,4 @@ public class BookController {
       }
     });
   }
-
 }
