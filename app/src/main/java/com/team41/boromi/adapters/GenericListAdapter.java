@@ -7,6 +7,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -140,10 +141,12 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
     }
     if (holder.imageButton != null) {
       Bitmap b = bookController.decodeBookImage(book);
+
       if (b != null) {
+        holder.imageButton.setScaleType(ImageView.ScaleType.FIT_XY);
         holder.imageButton.setImageBitmap(b);
       } else {
-        holder.imageButton.setImageResource(R.drawable.add_photo_icon);
+        holder.imageButton.setImageResource(R.drawable.book_icon);
       }
     }
     if (holder.reqom != null) {
@@ -239,6 +242,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
     public ViewHolder(@NonNull View itemView, int layout) {
       super(itemView);
       view = itemView;
+
       switch (layout) {
         case (R.layout.available):
           title = itemView.findViewById(R.id.available_title);
@@ -310,6 +314,9 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
           reqom = null;
           break;
       }
+
+      // Makes the circular
+      imageButton.setClipToOutline(true);
     }
   }
 }

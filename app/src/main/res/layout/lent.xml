@@ -1,117 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
+
+  <androidx.cardview.widget.CardView
+    android:layout_width="320dp"
     android:layout_height="wrap_content"
-    android:background="#FFFFFF"
+    app:cardCornerRadius="10dp"
     android:clipToPadding="false"
-    android:paddingVertical="10dp">
+    android:layout_centerHorizontal="true"
+    android:layout_margin="10dp">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:padding="12dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent">
+
+      <ImageButton
+        android:id="@+id/lent_book_image"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="12dp"
+        android:layout_gravity="center"
+        android:background="@drawable/camera_circle"
+        app:srcCompat="@drawable/book_icon" />
+
+      <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/cardshape"
-        android:elevation="10dp"
-        android:orientation="horizontal"
-        android:paddingVertical="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingHorizontal="5dp">
+        <TextView
+          android:id="@+id/lent_title"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="The Hobbit"
+          android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
 
-            <ImageButton
-                android:id="@+id/lent_book_image"
-                android:layout_width="42dp"
-                android:layout_height="38dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/camera_circle"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/add_photo_icon" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+          android:id="@+id/lent_author"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="J.R.R. Tolkein"
+          android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
 
         <LinearLayout
-            android:layout_width="210dp"
+          android:id="@+id/lent_to"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content">
+
+          <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:text="Lent to: "
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"/>
 
-            <TextView
-                android:id="@+id/lent_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="The Hobbit"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/lent_author"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="J.R.R. Tolkein"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textSize="12sp" />
-
-            <LinearLayout
-                android:id="@+id/lent_to"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Lent to: "
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textSize="10sp" />
-
-                <TextView
-                    android:id="@+id/lent_user"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="benlala8"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="#2196F3"
-                    android:textSize="10sp" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/lent_isbn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ISBN: #1234567890123"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textSize="10sp" />
-
+          <TextView
+            android:id="@+id/lent_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="blchelle"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"/>
         </LinearLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingRight="5dp">
+        <TextView
+          android:id="@+id/lent_isbn"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="ISBN: #1234567890123"
+          android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"/>
 
-            <ImageButton
-                android:id="@+id/right_button"
-                android:layout_width="31dp"
-                android:layout_height="29dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:layout_weight="1"
-                android:backgroundTint="#FFFFFF"
-                android:tint="@color/colorIconDark"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/more_horizontal_icon"
-                tools:srcCompat="@drawable/more_horizontal_icon" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+      </LinearLayout>
+
+      <ImageButton
+        android:id="@+id/right_button"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:backgroundTint="@color/colorIconLight"
+        android:tint="@color/colorIconDark"
+        app:srcCompat="@drawable/more_horizontal_icon"
+        tools:srcCompat="@drawable/more_horizontal_icon" />
+
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+  </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

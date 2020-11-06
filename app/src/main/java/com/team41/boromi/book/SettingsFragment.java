@@ -27,7 +27,9 @@ public class SettingsFragment extends Fragment implements EditUserFragment.Chang
   private TextView textViewUsername;
   private TextView textViewEmail;
   private ImageView imageViewEditUserIcon;
-  private LinearLayout buttonLogout;
+
+  // TODO: Add logout functionality
+  // private LinearLayout buttonLogout;
 
   public SettingsFragment() {
     // Required empty public constructor
@@ -78,23 +80,26 @@ public class SettingsFragment extends Fragment implements EditUserFragment.Chang
     textViewUsername = view.findViewById(R.id.settings_text_view_username);
     textViewEmail = view.findViewById(R.id.settings_text_view_email);
     imageViewEditUserIcon = view.findViewById(R.id.settings_button_edit_user);
-    buttonLogout = view.findViewById(R.id.settings_button_logout);
+
+    // TODO: Implement logging out
+    // buttonLogout = view.findViewById(R.id.settings_button_logout);
 
     // Sets the text in the email and password field
     textViewUsername.setText(user.getUsername());
     textViewEmail.setText(user.getEmail());
     imageViewAvatar.setText(Character.toString(user.getUsername().charAt(0)).toUpperCase());
 
-    buttonLogout.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        // TODO: Implement in a later ticket
-        //        authenticationController.signOut();
-        //        BoromiModule.user = null;
-        //
-        //        activity.finish();
-      }
-    });
+    // TODO: Implement logging out
+    //    buttonLogout.setOnClickListener(new View.OnClickListener() {
+    //      @Override
+    //      public void onClick(View v) {
+    //
+    //        //        authenticationController.signOut();
+    //        //        BoromiModule.user = null;
+    //        //
+    //        //        activity.finish();
+    //      }
+    //    });
 
     SettingsFragment settingsFragment = this;
 

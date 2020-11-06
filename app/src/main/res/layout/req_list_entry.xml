@@ -1,50 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:orientation="horizontal"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:paddingTop="8dp"
+  android:paddingHorizontal="8dp">
+
+  <TextView
+    android:id="@+id/req_list_entry_user"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#FFFFFF"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent"
+    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+    android:layout_weight="1"
+    android:gravity="center_vertical"
+    android:text="blchelle"/>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+  <ImageButton
+    android:id="@+id/accept"
+    android:layout_width="32dp"
+    android:layout_height="32dp"
+    android:scaleType="fitXY"
+    android:layout_marginEnd="5dp"
+    android:background="@color/colorIconLight"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toStartOf="@+id/cancel"
+    app:layout_constraintTop_toTopOf="parent"
+    app:srcCompat="@drawable/check_icon" />
 
-        <TextView
-            android:id="@+id/req_list_entry_user"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="5dp"
-            android:text="benlala8"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/accept"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+  <ImageButton
+    android:id="@+id/cancel"
+    android:layout_width="32dp"
+    android:layout_height="32dp"
+    android:scaleType="fitXY"
+    android:background="@color/colorIconLight"
+    app:srcCompat="@drawable/cancel_icon" />
 
-        <ImageButton
-            android:id="@+id/accept"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@color/colorIconLight"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/cancel"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/check_icon" />
-
-        <ImageButton
-            android:id="@+id/cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@color/colorIconLight"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/cancel_icon" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

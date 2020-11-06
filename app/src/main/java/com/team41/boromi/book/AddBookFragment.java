@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -114,6 +116,9 @@ public class AddBookFragment extends DialogFragment {
     // Disables the button to start since the fields are all empty
     buttonAddBook.setEnabled(false);
 
+    // Makes the image rounded
+    addImage.setClipToOutline(true);
+
     // Adds listeners for all of the text fields
     editTextAuthor.addTextChangedListener(allFieldsWatcher);
     editTextTitle.addTextChangedListener(allFieldsWatcher);
@@ -154,6 +159,7 @@ public class AddBookFragment extends DialogFragment {
       Bundle extras = data.getExtras();
       Bitmap imageBitmap = (Bitmap) extras.get("data");
       addImage.setImageBitmap(imageBitmap);
+      addImage.setScaleType(ImageView.ScaleType.FIT_XY);
       this.imageBitmap = imageBitmap;
     }
   }

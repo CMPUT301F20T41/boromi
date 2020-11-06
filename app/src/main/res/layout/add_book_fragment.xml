@@ -28,6 +28,7 @@
             android:layout_height="50dp"
             android:layout_marginEnd="8dp"
             android:layout_gravity="center"
+
             android:background="@drawable/camera_circle"
             app:srcCompat="@drawable/add_photo_icon" />
 

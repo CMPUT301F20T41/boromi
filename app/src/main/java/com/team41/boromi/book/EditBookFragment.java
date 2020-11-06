@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -85,6 +87,9 @@ public class EditBookFragment extends DialogFragment {
     isbn = (EditText) view.findViewById(R.id.edit_book_isbn);
     addImage = (ImageButton) view.findViewById(R.id.edit_book_book_image);
 
+    // Makes the image rounded
+    addImage.setClipToOutline(true);
+
     author.setText(editingBook.getAuthor());
     title.setText(editingBook.getTitle());
     isbn.setText(editingBook.getISBN());
@@ -93,6 +98,7 @@ public class EditBookFragment extends DialogFragment {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
           Base64.decode(editingBook.getImg64(), Base64.DEFAULT));
       Bitmap bitmap = BitmapFactory.decodeStream(byteArrayInputStream);
+      addImage.setScaleType(ImageView.ScaleType.FIT_XY);
       addImage.setImageBitmap(bitmap); // decode to image
     }
 
@@ -116,6 +122,7 @@ public class EditBookFragment extends DialogFragment {
     addImage.setOnLongClickListener(view3 -> {
       addImage.setImageResource(R.drawable.add_photo_icon);
       this.imageBitmap = null;
+      addImage.setScaleType(ImageView.ScaleType.CENTER);
       return true;
     });
   }
@@ -132,6 +139,7 @@ public class EditBookFragment extends DialogFragment {
       Bundle extras = data.getExtras();
       Bitmap imageBitmap = (Bitmap) extras.get("data");
       addImage.setImageBitmap(imageBitmap);
+      addImage.setScaleType(ImageView.ScaleType.FIT_XY);
       this.imageBitmap = imageBitmap;
     }
   }

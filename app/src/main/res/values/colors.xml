@@ -12,6 +12,8 @@
   <color name="colorTextLight">#FFFFFF</color>
   <color name="colorTextDark">#000000</color>
 
+  <color name="background">#FDFDFD</color>
+
   <color name="colorIconLight">#FFFFFF</color>
   <color name="colorIconDark">#666666</color>
 

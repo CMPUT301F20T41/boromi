@@ -1,6 +1,7 @@
 package com.team41.boromi.utility;
 
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -62,6 +63,9 @@ public class CustomClickListener implements View.OnClickListener,
       method.setAccessible(true);
       popup.setOnMenuItemClickListener(this::onMenuItemClick);
       method.invoke(popup.getMenu(), true);
+
+      popup.setGravity(Gravity.END);
+
       popup.show();
     } catch (Exception e) {
       e.printStackTrace();
