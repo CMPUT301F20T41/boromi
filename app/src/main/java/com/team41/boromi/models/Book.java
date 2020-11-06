@@ -19,7 +19,9 @@ public class Book implements Serializable {
   private String img64;
   private String bookId = UUID.randomUUID().toString();
   private String owner;
+  private String ownerName;
   private String borrower;
+  private String borrowerName;
   private String ISBN;
   private String title;
   private String author;
@@ -256,6 +258,22 @@ public class Book implements Serializable {
 
   public void setExchangeStage(ExchangeStage exchangeStage) {
     this.exchangeStage = exchangeStage;
+  }
+
+  public String getBorrowerName() {
+    return borrowerName;
+  }
+
+  public void setBorrowerName(String borrowerName) {
+    this.borrowerName = borrowerName;
+  }
+
+  public String getOwnerName() {
+    return ownerName;
+  }
+
+  public void setOwnerName(String ownerName) {
+    this.ownerName = ownerName;
   }
 
   @Override

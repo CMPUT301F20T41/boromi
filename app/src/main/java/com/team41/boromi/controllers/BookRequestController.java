@@ -88,6 +88,7 @@ public class BookRequestController {
       acceptedBook.setStatus(CommonConstants.BookStatus.ACCEPTED);      // sets the book to accepted
       acceptedBook.setWorkflow(BookWorkflowStage.PENDINGBORROW);
       acceptedBook.setBorrower(bookRequest.getRequestor());
+      acceptedBook.setBorrowerName(bookRequest.getRequestorName());
       bookDB.pushBook(acceptedBook);
       bookRequestCallback.onComplete(null);
     });
