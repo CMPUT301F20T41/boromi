@@ -1,49 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_welcome"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="32dp"
+    android:orientation="vertical"
     tools:context=".auth.WelcomeFragment">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="19dp"
-        android:text="Welcome Screen"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+  <TextView
+      android:id="@+id/welcome_header"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="32dp"
+      android:layout_marginBottom="8dp"
+      android:text="@string/welcome_page_welcome"
+      android:textColor="@color/colorPrimary"
+      android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+      android:gravity="center_horizontal"/>
 
-    <Button
-        android:id="@+id/go_signup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="134dp"
-        android:layout_marginTop="43dp"
-        android:layout_marginEnd="134dp"
-        android:layout_marginBottom="24dp"
-        android:text="Create Account"
-        app:layout_constraintBottom_toTopOf="@+id/login"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+  <ImageView
+      android:layout_width="match_parent"
+      android:layout_height="40dp"
+      android:src="@drawable/logo_boromi_text" />
 
-    <Button
-        android:id="@+id/go_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="162dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="162dp"
-        android:layout_marginBottom="193dp"
-        android:text="Login"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/go_signup" />
+  <TextView
+      android:id="@+id/welcome_subheader"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="24dp"
+      android:text="@string/welcome_page_welcome_message"
+      android:textAlignment="center"
+      android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+  <ImageView
+      android:id="@+id/welcome_img"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:src="@drawable/undraw_book_reader"
+      android:layout_weight="1"
+      android:padding="32dp"
+      android:contentDescription="Undraw Book Reader" />
+
+  <Button
+      android:id="@+id/welcome_signup"
+      android:layout_width="match_parent"
+      android:layout_height="54dp"
+      android:text="@string/welcome_create_account"
+      android:layout_marginStart="18dp"
+      android:layout_marginEnd="18dp"/>
+
+  <Button
+      android:id="@+id/welcome_login"
+      android:layout_width="match_parent"
+      android:layout_height="54dp"
+      android:text="@string/welcome_login"
+      android:layout_marginStart="18dp"
+      android:layout_marginEnd="18dp"
+      style="?attr/materialButtonOutlinedStyle"/>
+</LinearLayout>

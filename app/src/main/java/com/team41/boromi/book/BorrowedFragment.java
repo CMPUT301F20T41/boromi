@@ -1,32 +1,39 @@
 package com.team41.boromi.book;
 
 import android.os.Bundle;
-
 import android.util.Pair;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
 import com.google.android.material.tabs.TabLayout.Tab;
+import com.team41.boromi.BookActivity;
 import com.team41.boromi.R;
 import com.team41.boromi.adapters.PagerAdapter;
+import com.team41.boromi.callbacks.BookCallback;
+import com.team41.boromi.callbacks.BookRequestCallback;
+import com.team41.boromi.models.Book;
+import com.team41.boromi.models.BookRequest;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
- * A simple {@link Fragment} subclass. Use the {@link BorrowedFragment#newInstance} factory method
- * to create an instance of this fragment.
+ * BorrowedFragment manages the borrower tab. It creates 3 GenericListFragments to populate the
+ * sub tabs.
  */
 public class BorrowedFragment extends Fragment {
 
   private TabLayout tabLayout;
   private ViewPager2 viewPager2;
   private PagerAdapter pagerAdapter;
+  private BookActivity bookActivity;
+
+  private String parent = "Borrowed";
 
   public BorrowedFragment() {
     // Required empty public constructor
@@ -46,11 +53,42 @@ public class BorrowedFragment extends Fragment {
     return fragment;
   }
 
+  /**
+   * onCreated used to create the GenericListFragments that will correspond to each subtab.
+   * @param savedInstanceState
+   */
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    bookActivity = (BookActivity) getActivity();
+    // add fragments to tabs
+    ArrayList<Book> bookDataList = new ArrayList<>();
+    pagerAdapter = new PagerAdapter(getChildFragmentManager(), getLifecycle());
+
+    Bundle bundle;
+    bundle = bookActivity.setupBundle(R.layout.borrowing, new ArrayList<>(),
+        "These are all the books that you have borrowed currently", parent, "Borrowed");
+    pagerAdapter.addFragment(
+        new Pair<Class<? extends Fragment>, Bundle>(GenericListFragment.class, bundle));
+
+    bundle = bookActivity.setupBundle(R.layout.reqbm, new ArrayList<>(),
+        "These are all the books that you have requested to borrow", parent, "Requested");
+    pagerAdapter.addFragment(
+        new Pair<Class<? extends Fragment>, Bundle>(GenericListFragment.class, bundle));
+
+    bundle = bookActivity.setupBundle(R.layout.accepted_request, new ArrayList<>(),
+        "These are all the books that you have been accepted to borrow", parent, "Accepted");
+    pagerAdapter.addFragment(
+        new Pair<Class<? extends Fragment>, Bundle>(GenericListFragment.class, bundle));
   }
 
+  /**
+   * onCreateView to set up any listeners and values
+   * @param inflater
+   * @param container
+   * @param savedInstanceState
+   * @return
+   */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
@@ -58,21 +96,11 @@ public class BorrowedFragment extends Fragment {
     View view = inflater.inflate(R.layout.fragment_borrowed, container, false);
     tabLayout = (TabLayout) view.findViewById(R.id.tabs_sub_borrowed);
     viewPager2 = view.findViewById(R.id.view_pager_borrowed);
+
+    // TABS
     TabItem borrowedTab = (TabItem) view.findViewById(R.id.tabs_sub_borrowed_borrowed);
     TabItem requestedTab = (TabItem) view.findViewById(R.id.tabs_sub_borrowed_requested);
     TabItem acceptedTab = (TabItem) view.findViewById(R.id.tabs_sub_borrowed_accepted);
-
-    // add fragments to tabs
-    pagerAdapter = new PagerAdapter(getChildFragmentManager(), getLifecycle());
-    Bundle bundle = new Bundle();
-    bundle.putString("msg", "Borrowed");
-    pagerAdapter.addFragment(new Pair<Class<? extends Fragment>,Bundle>(GenericListFragment.class, bundle));
-    bundle = new Bundle();
-    bundle.putString("msg", "Requested");
-    pagerAdapter.addFragment(new Pair<Class<? extends Fragment>,Bundle>(GenericListFragment.class, bundle));
-    bundle = new Bundle();
-    bundle.putString("msg", "Accepted");
-    pagerAdapter.addFragment(new Pair<Class<? extends Fragment>,Bundle>(GenericListFragment.class, bundle));
 
     // Configure viewpager2 options and initialize page adapter
     viewPager2.setUserInputEnabled(false);
@@ -80,6 +108,9 @@ public class BorrowedFragment extends Fragment {
     viewPager2.setOffscreenPageLimit(tabLayout.getTabCount());
     viewPager2.setAdapter(pagerAdapter);
 
+    /**
+     * Changes the shown fragment depending on which tab is selected
+     */
     tabLayout.addOnTabSelectedListener(new OnTabSelectedListener() {
       @Override
       public void onTabSelected(Tab tab) {
@@ -98,4 +129,72 @@ public class BorrowedFragment extends Fragment {
     });
     return view;
   }
+
+  /**
+   * Backend call to obtain the books that the user is borrowing
+   * @param fragment GenericListFragment that will hold this data
+   */
+  public void getBorrowedBorrowed(GenericListFragment fragment) {
+    bookActivity.getBookController().getOwnerBorrowingBooks(bookActivity.getUser().getUUID(),
+        new BookCallback() {
+          @Override
+          public void onSuccess(ArrayList<Book> books) {
+            bookActivity.getCollections().put("BorrowerBorrowed", books);
+            fragment.updateData(books);
+          }
+
+          @Override
+          public void onFailure(Exception e) {
+
+          }
+        });
+  }
+
+  /**
+   * Backend call to get the books the user has requested
+   * @param fragment GenericListFragment that will hold this data
+   */
+  public void getBorrowedRequested(GenericListFragment fragment) {
+    bookActivity.getBookRequestController().getRequestedBooks(new BookRequestCallback() {
+      @Override
+      public void onComplete(Map<Book, List<BookRequest>> bookWithRequests) {
+        fragment.updateData(bookWithRequests);
+      }
+    });
+  }
+
+  /**
+   * Backend call to get the books that the user has been accepted to borrow
+   * @param fragment GenericListFragment that will hold this data
+   */
+  public void getBorrowedAccepted(GenericListFragment fragment) {
+    bookActivity.getBookController().getBooksOthersAccepted(new BookCallback() {
+      @Override
+      public void onSuccess(ArrayList<Book> books) {
+        bookActivity.getCollections().put("BorrowerAccepted", (ArrayList<Book>) books);
+        fragment.updateData(books);
+      }
+
+      @Override
+      public void onFailure(Exception e) {
+
+      }
+    });
+  }
+
+  /**
+   * Calls the corresponding backend function to fetch the data depending on which subtab
+   * @param tag Subtab tag
+   * @param fragment GenericListFragment that will hold this data
+   */
+  public void getData(String tag, GenericListFragment fragment) {
+    if (tag.equals("Borrowed")) {
+      getBorrowedBorrowed(fragment);
+    } else if (tag.equals("Requested")) {
+      getBorrowedRequested(fragment);
+    } else if (tag.equals("Accepted")) {
+      getBorrowedAccepted(fragment);
+    }
+  }
+
 }

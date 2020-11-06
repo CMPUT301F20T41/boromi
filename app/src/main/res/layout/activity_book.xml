@@ -3,56 +3,77 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:layout_height="match_parent">
+  android:layout_height="match_parent"
+  android:background="@color/background"
+  android:orientation="vertical">
 
-    <androidx.viewpager2.widget.ViewPager2
-      android:id="@+id/view_pager_main"
-      android:layout_width="409dp"
+    <androidx.appcompat.widget.Toolbar
+      android:id="@+id/book_toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="?attr/actionBarSize"
+      android:background="@color/colorPrimary"
+      android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:titleTextColor="@color/colorTextLight" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+      android:id="@+id/swipe_refresh"
+      android:layout_width="match_parent"
       android:layout_height="0dp"
-      android:layout_marginBottom="1dp"
       app:layout_constraintBottom_toTopOf="@+id/tabs_main"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent" />
+      app:layout_constraintTop_toBottomOf="@+id/book_toolbar"
+      app:layout_constraintVertical_bias="0.922">
+        <androidx.viewpager2.widget.ViewPager2
+          android:id="@+id/view_pager_main"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:layout_marginBottom="1dp"
+          app:layout_constraintTop_toBottomOf="@+id/book_toolbar" />
 
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <com.google.android.material.tabs.TabLayout
       android:id="@+id/tabs_main"
       android:layout_width="match_parent"
-      android:layout_height="0dp"
-      android:layout_marginEnd="1dp"
+      android:layout_height="wrap_content"
+      android:background="@color/colorPrimary"
       app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintEnd_toStartOf="parent">
+      app:tabIconTint="@color/colorIconLight"
+      app:tabIndicatorColor="@color/colorSecondary">
 
         <com.google.android.material.tabs.TabItem
           android:id="@+id/tab_owned_books"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="Owned" />
+          android:icon="@drawable/book_icon" />
 
         <com.google.android.material.tabs.TabItem
           android:id="@+id/tab_borrowed_books"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="Lent" />
+          android:icon="@drawable/outgoing_icon" />
 
         <com.google.android.material.tabs.TabItem
           android:id="@+id/tab_search"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="Search" />
+          android:icon="@drawable/search_icon" />
 
         <com.google.android.material.tabs.TabItem
           android:id="@+id/tab_location"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="Map" />
+          android:icon="@drawable/location_icon" />
 
         <com.google.android.material.tabs.TabItem
           android:id="@+id/tab_settings"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="Settings" />
+          android:icon="@drawable/settings_icon" />
     </com.google.android.material.tabs.TabLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

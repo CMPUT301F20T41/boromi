@@ -1,53 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context=".book.OwnedFragment">
+
+  <androidx.viewpager2.widget.ViewPager2
+    android:id="@+id/view_pager_owned"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".book.OwnedFragment">
-
-    <com.google.android.material.tabs.TabLayout
-      android:id="@+id/tabs_sub_owned"
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.tabs.TabItem
-          android:id="@+id/tabs_sub_owned_available"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="Available" />
-
-        <com.google.android.material.tabs.TabItem
-          android:id="@+id/tabs_sub_owned_requests"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="Requests" />
-
-        <com.google.android.material.tabs.TabItem
-          android:id="@+id/tabs_sub_owned_accepted"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="Accepted" />
-
-        <com.google.android.material.tabs.TabItem
-          android:id="@+id/tabs_sub_owned_lent"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="Lent" />
-
-    </com.google.android.material.tabs.TabLayout>
+    android:layout_height="0dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/tabs_sub_owned" />
 
 
-    <androidx.viewpager2.widget.ViewPager2
-      android:id="@+id/view_pager_owned"
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/tabs_sub_owned" />
+  <com.google.android.material.tabs.TabLayout
+    android:id="@+id/tabs_sub_owned"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:background="@color/colorPrimary"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:tabIndicatorColor="@color/colorSecondary"
+    app:tabSelectedTextColor="@color/colorSecondary"
+    app:tabTextColor="@color/colorTextLight">
+
+    <com.google.android.material.tabs.TabItem
+      android:id="@+id/tabs_sub_owned_available"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/owned_available" />
+
+    <com.google.android.material.tabs.TabItem
+      android:id="@+id/tabs_sub_owned_requests"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/owned_requests" />
+
+    <com.google.android.material.tabs.TabItem
+      android:id="@+id/tabs_sub_owned_accepted"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/owned_accepted" />
+
+    <com.google.android.material.tabs.TabItem
+      android:id="@+id/tabs_sub_owned_lent"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/owned_lent" />
+
+  </com.google.android.material.tabs.TabLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

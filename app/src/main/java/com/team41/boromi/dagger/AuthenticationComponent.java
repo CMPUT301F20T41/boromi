@@ -1,6 +1,7 @@
 package com.team41.boromi.dagger;
 
-import com.team41.boromi.TestActivity;
+import com.team41.boromi.MainActivity;
+import com.team41.boromi.book.EditUserFragment;
 import dagger.Subcomponent;
 
 /**
@@ -10,5 +11,7 @@ import dagger.Subcomponent;
 @Subcomponent
 public interface AuthenticationComponent {
 
-  void inject(TestActivity testActivity);
+  void inject(MainActivity mainActivity);
+
+  void inject(EditUserFragment editUserFragment);
 }
