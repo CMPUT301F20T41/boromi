@@ -1,5 +1,6 @@
 package com.team41.boromi;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -152,11 +153,12 @@ public class BookControllerTest {
     String title = "Test Ming";
     String author = "Ming";
     String ISBN = "123456789022";
+    Bitmap img = null;
     Book booktest = new Book(ming_uuid, title, author, ISBN);
     bookDB.pushBook(booktest);
     String bookID = booktest.getBookId();
     title = "Test Edit";
-    bookController.editBook(bookID, author, ISBN, title, new BookCallback() {
+    bookController.editBook(bookID, author, ISBN, title, img, new BookCallback() {
       @Override
       public void onSuccess(ArrayList<Book> books) {
         Book booktest = bookDB.getBook(bookID);
@@ -367,7 +369,7 @@ public class BookControllerTest {
 
     Thread.sleep(DB_TIMEOUT);
 
-    bookController.findBooks("Ming", new BookCallback() {
+    bookController.findBooks("THISBOOKDOESNTEXIST", new BookCallback() {
       @Override
       public void onSuccess(ArrayList<Book> books) {
         Log.d(TAG, "Failed!");
