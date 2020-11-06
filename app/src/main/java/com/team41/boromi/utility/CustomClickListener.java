@@ -2,6 +2,7 @@ package com.team41.boromi.utility;
 
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,16 +48,27 @@ public class CustomClickListener implements View.OnClickListener,
       MenuInflater inflater = popup.getMenuInflater();
       popup.setOnMenuItemClickListener(this::onMenuItemClick);
       inflater.inflate(R.menu.book_edit_delete_menu, popup.getMenu());
-      if (genericListFragment.tag.equals("Accepted") && genericListFragment.getParent().equals("Owned")) {
-        MenuItem exchange = popup.getMenu().findItem(R.id.exchange_book);
-        exchange.setVisible(true);
-        exchange.setTitle("Give");
-      } else if (genericListFragment.tag.equals("Accepted") && genericListFragment.getParent().equals("Borrowed")) {
-        MenuItem exchange = popup.getMenu().findItem(R.id.exchange_book);
-        exchange.setVisible(true);
-        exchange.setTitle("Receive");
+      if (genericListFragment.getParent().equals("Owned")) {
+        MenuItem deleteBtn = popup.getMenu().findItem(R.id.delete_book);
+        deleteBtn.setVisible(true);
+        if (genericListFragment.tag.equals("Available")) {
+          MenuItem editBtn = popup.getMenu().findItem(R.id.edit_book);
+          editBtn.setVisible(true);
+        } else if (genericListFragment.tag.equals("Accepted")) {
+          MenuItem exchange = popup.getMenu().findItem(R.id.exchange_book);
+          exchange.setVisible(true);
+          exchange.setTitle("Give");
+        }
+      } else if (genericListFragment.getParent().equals("Borrowed")) {
+        if (genericListFragment.tag.equals("Accepted")) {
+          MenuItem exchange = popup.getMenu().findItem(R.id.exchange_book);
+          exchange.setVisible(true);
+          exchange.setTitle("Receive");
+        }
       } else {
+        popup.getMenu().findItem(R.id.delete_book).setVisible(false);
         popup.getMenu().findItem(R.id.exchange_book).setVisible(false);
+        popup.getMenu().findItem(R.id.edit_book).setVisible(false);
       }
       Method method = popup.getMenu().getClass()
           .getDeclaredMethod("setOptionalIconsVisible", boolean.class);
