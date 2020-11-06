@@ -307,7 +307,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
           rightButton = null;
           withdrawButton = itemView.findViewById(R.id.reqbm_withdraw);
           request_button = null;
-          status = null;
+          status = itemView.findViewById(R.id.reqbm_status);
           reqom = null;
           break;
         case (R.layout.reqom):
