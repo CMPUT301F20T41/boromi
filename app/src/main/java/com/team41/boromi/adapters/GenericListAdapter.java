@@ -137,7 +137,8 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
       holder.title.setText(book.getTitle());
     }
     if (holder.isbn != null) {
-      holder.isbn.setText(book.getISBN());
+      String isbnText = "ISBN: " + book.getISBN();
+      holder.isbn.setText(isbnText);
     }
     if (holder.imageButton != null) {
       Bitmap b = bookController.decodeBookImage(book);
