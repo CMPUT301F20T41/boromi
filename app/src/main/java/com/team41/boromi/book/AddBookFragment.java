@@ -54,7 +54,7 @@ public class AddBookFragment extends DialogFragment {
           isNotNullOrEmpty(author) &&
               isNotNullOrEmpty(title) &&
               isNotNullOrEmpty(isbn)
-              && isbn.length() == 13
+              && returnIfISBNGood(isbn)
       );
     }
 
@@ -174,6 +174,15 @@ public class AddBookFragment extends DialogFragment {
     } catch (ActivityNotFoundException e) {
       // display error state to the user
     }
+  }
+
+  /**
+   * returns true if isbn is length 10 or 13.
+   * @param isbn
+   * @return
+   */
+  public boolean returnIfISBNGood(String isbn){
+    return isbn.length() == 13 || isbn.length() == 10;
   }
 
   /**
