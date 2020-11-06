@@ -1,5 +1,8 @@
 package com.team41.boromi.utility;
 
+/**
+ * Utility class
+ */
 public abstract class Utility {
 
   /**

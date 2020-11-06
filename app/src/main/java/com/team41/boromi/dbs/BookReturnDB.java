@@ -13,6 +13,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javax.inject.Inject;
 
+/**
+ * Firebase calls for bookReturn collection. Not Implemented yet
+ */
 public class BookReturnDB {
 
   private final static String TAG = "ReturnDB";

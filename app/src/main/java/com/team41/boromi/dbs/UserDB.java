@@ -14,6 +14,9 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+/**
+ * Firebase calls for user collection
+ */
 @Singleton
 public class UserDB {
 
@@ -29,7 +32,7 @@ public class UserDB {
   /**
    * sync request for the user
    *
-   * @param uuid
+   * @param uuid id of the user
    * @return throws runtimeException if failed, otherwise gives user
    */
   public User getUserByUUID(String uuid) {
@@ -83,6 +86,8 @@ public class UserDB {
 
   /**
    * async pushes a user to a db merges data only in case of conflicts
+   * @param user User to add
+   * @return User if successful, null otherwise
    */
   public User pushUser(User user) {
     try {

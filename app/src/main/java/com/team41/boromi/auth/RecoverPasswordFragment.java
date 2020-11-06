@@ -21,13 +21,15 @@ import com.team41.boromi.callbacks.AuthNoResultCallback;
 import java.util.Objects;
 
 /**
- * A simple {@link Fragment} subclass. Use the {@link RecoverPasswordFragment#newInstance} factory
- * method to create an instance of this fragment.
+ * RecoverPasswordFragment manages the recover password page
  */
 public class RecoverPasswordFragment extends Fragment {
 
   private EditText emailInput;
   private Button recoverButton;
+  /**
+   * Used to enable recover password button when input is detected
+   */
   TextWatcher emailTextWatcher = new TextWatcher() {
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -56,12 +58,8 @@ public class RecoverPasswordFragment extends Fragment {
   }
 
   /**
-   * Use this factory method to create a new instance of this fragment using the provided
-   * parameters.
-   *
-   * @return A new instance of fragment RecoverPassword.
+   * Factory method to create this fragment
    */
-  // TODO: Rename and change types and number of parameters
   public static RecoverPasswordFragment newInstance() {
     RecoverPasswordFragment fragment = new RecoverPasswordFragment();
     Bundle args = new Bundle();
@@ -69,12 +67,23 @@ public class RecoverPasswordFragment extends Fragment {
     return fragment;
   }
 
+  /**
+   * onCreate method to initialize any parameters
+   * @param savedInstanceState
+   */
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     activity = (MainActivity) Objects.requireNonNull(getActivity());
   }
 
+  /**
+   * onCreateView method to bind any listeners or values
+   * @param inflater
+   * @param container
+   * @param savedInstanceState
+   * @return
+   */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {

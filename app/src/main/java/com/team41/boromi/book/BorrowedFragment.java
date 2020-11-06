@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A simple {@link Fragment} subclass. Use the {@link BorrowedFragment#newInstance} factory method
- * to create an instance of this fragment.
+ * BorrowedFragment manages the borrower tab. It creates 3 GenericListFragments to populate the
+ * sub tabs.
  */
 public class BorrowedFragment extends Fragment {
 
@@ -53,6 +53,10 @@ public class BorrowedFragment extends Fragment {
     return fragment;
   }
 
+  /**
+   * onCreated used to create the GenericListFragments that will correspond to each subtab.
+   * @param savedInstanceState
+   */
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -78,6 +82,13 @@ public class BorrowedFragment extends Fragment {
         new Pair<Class<? extends Fragment>, Bundle>(GenericListFragment.class, bundle));
   }
 
+  /**
+   * onCreateView to set up any listeners and values
+   * @param inflater
+   * @param container
+   * @param savedInstanceState
+   * @return
+   */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
@@ -97,6 +108,9 @@ public class BorrowedFragment extends Fragment {
     viewPager2.setOffscreenPageLimit(tabLayout.getTabCount());
     viewPager2.setAdapter(pagerAdapter);
 
+    /**
+     * Changes the shown fragment depending on which tab is selected
+     */
     tabLayout.addOnTabSelectedListener(new OnTabSelectedListener() {
       @Override
       public void onTabSelected(Tab tab) {
@@ -116,6 +130,10 @@ public class BorrowedFragment extends Fragment {
     return view;
   }
 
+  /**
+   * Backend call to obtain the books that the user is borrowing
+   * @param fragment GenericListFragment that will hold this data
+   */
   public void getBorrowedBorrowed(GenericListFragment fragment) {
     bookActivity.getBookController().getOwnerBorrowingBooks(bookActivity.getUser().getUUID(),
         new BookCallback() {
@@ -132,6 +150,10 @@ public class BorrowedFragment extends Fragment {
         });
   }
 
+  /**
+   * Backend call to get the books the user has requested
+   * @param fragment GenericListFragment that will hold this data
+   */
   public void getBorrowedRequested(GenericListFragment fragment) {
     bookActivity.getBookRequestController().getRequestedBooks(new BookRequestCallback() {
       @Override
@@ -141,6 +163,10 @@ public class BorrowedFragment extends Fragment {
     });
   }
 
+  /**
+   * Backend call to get the books that the user has been accepted to borrow
+   * @param fragment GenericListFragment that will hold this data
+   */
   public void getBorrowedAccepted(GenericListFragment fragment) {
     bookActivity.getBookController().getBooksOthersAccepted(new BookCallback() {
       @Override
@@ -156,6 +182,11 @@ public class BorrowedFragment extends Fragment {
     });
   }
 
+  /**
+   * Calls the corresponding backend function to fetch the data depending on which subtab
+   * @param tag Subtab tag
+   * @param fragment GenericListFragment that will hold this data
+   */
   public void getData(String tag, GenericListFragment fragment) {
     if (tag.equals("Borrowed")) {
       getBorrowedBorrowed(fragment);

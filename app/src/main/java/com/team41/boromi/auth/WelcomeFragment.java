@@ -11,8 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.team41.boromi.R;
 
 /**
- * A simple {@link Fragment} subclass. Use the {@link WelcomeFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * WelcomeFragment is used on the welcome page to redirect the user to the signup or login page
  */
 public class WelcomeFragment extends Fragment {
 
@@ -33,11 +32,22 @@ public class WelcomeFragment extends Fragment {
     return fragment;
   }
 
+  /**
+   * onCreate to initialize any variables
+   * @param savedInstanceState
+   */
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
   }
 
+  /**
+   * onCreateView to bind any listeners and values
+   * @param inflater
+   * @param container
+   * @param savedInstanceState
+   * @return
+   */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {

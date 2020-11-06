@@ -14,6 +14,9 @@ import java.util.concurrent.Executor;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+/**
+ * This Controller deals with logic that involving returning a book. NOT IMPLEMENTED YET
+ */
 @Singleton
 public class BookReturnController {
 
@@ -34,11 +37,11 @@ public class BookReturnController {
   /**
    * Adds an entry to bookreturn db and updated book workflow to pending return
    *
-   * @param bookID
-   * @param owner
-   * @param returnDate
-   * @param location
-   * @param returnCallback
+   * @param bookID id of the book
+   * @param owner id of the owner
+   * @param returnDate return date
+   * @param location location to return
+   * @param returnCallback callback to execute success or failure
    */
   public void addReturnRequest(String bookID, String owner, Date returnDate, LatLng location,
       final ReturnCallback returnCallback) {
@@ -69,8 +72,8 @@ public class BookReturnController {
   /**
    * Cancels a return request. Removes from bookrequest db and updates workflow to Borrowed
    *
-   * @param bookID
-   * @param returnCallback
+   * @param bookID id of book to cancel
+   * @param returnCallback callback to execute success or failure
    */
   public void cancelReturnRequest(String bookID, final ReturnCallback returnCallback) {
     executor.execute(() -> {
@@ -99,8 +102,8 @@ public class BookReturnController {
   /**
    * Accepts a return request. Removes from bookrequest db and updates bookdb
    *
-   * @param bookID
-   * @param returnCallback
+   * @param bookID id of the book
+   * @param returnCallback callback to execute success or failure
    */
   public void acceptReturnRequest(String bookID, final ReturnCallback returnCallback) {
     executor.execute(() -> {
@@ -126,10 +129,4 @@ public class BookReturnController {
       }
     });
   }
-  // get your returns
-//  public ArrayList<Book> getYourRequestedReturns() {
-//    executor.execute(() -> {
-//
-//    });
-//  }
 }

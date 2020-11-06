@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 /**
- * A simple {@link Fragment} subclass. Use the {@link SearchFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * SearchFragment is used to manage the search tab. It will create one GenericListFragment to house
+ * the data obtained from the search
  */
 public class SearchFragment extends Fragment {
 
@@ -49,6 +49,10 @@ public class SearchFragment extends Fragment {
     return fragment;
   }
 
+  /**
+   * Create the GenericListAdapter
+   * @param savedInstanceState
+   */
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -58,6 +62,13 @@ public class SearchFragment extends Fragment {
         (BookActivity) getActivity());
   }
 
+  /**
+   * Bind any listeners, values
+   * @param inflater
+   * @param container
+   * @param savedInstanceState
+   * @return
+   */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {

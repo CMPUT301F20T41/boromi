@@ -11,11 +11,20 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.team41.boromi.FragmentFactory;
 import java.util.ArrayList;
 
+/**
+ * This function manages the fragments used in the tabs. This class is used together with
+ * Viewpager2
+ */
 public class PagerAdapter extends FragmentStateAdapter {
 
   private final ArrayList<Pair<Class<? extends Fragment>, Bundle>> fragmentClasses;
   public FragmentManager fragmentManager;
 
+  /**
+   * Initialize with a fragment manager and lifecycle object
+   * @param fragmentManager fragment manager
+   * @param lifecycle lifecycle
+   */
   public PagerAdapter(@NonNull FragmentManager fragmentManager,
       @NonNull Lifecycle lifecycle) {
     super(fragmentManager, lifecycle);
@@ -23,6 +32,11 @@ public class PagerAdapter extends FragmentStateAdapter {
     this.fragmentManager = fragmentManager;
   }
 
+  /**
+   * This function is used to create the fragments by using a FragmentFactory
+   * @param position
+   * @return
+   */
   @NonNull
   @Override
   public Fragment createFragment(int position) {
@@ -36,11 +50,19 @@ public class PagerAdapter extends FragmentStateAdapter {
     }
   }
 
+  /**
+   * Returns the number of fragments
+   * @return number of fragments
+   */
   @Override
   public int getItemCount() {
     return fragmentClasses.size();
   }
 
+  /**
+   * Adds a fragment
+   * @param f Fragment.Class with a Bundle to pass in any objects
+   */
   public void addFragment(Pair<Class<? extends Fragment>, Bundle> f) {
     fragmentClasses.add(f);
   }

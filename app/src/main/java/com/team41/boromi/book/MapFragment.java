@@ -8,8 +8,7 @@ import androidx.fragment.app.Fragment;
 import com.team41.boromi.R;
 
 /**
- * A simple {@link Fragment} subclass. Use the {@link MapFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Not Implemented Yet
  */
 public class MapFragment extends Fragment {
 

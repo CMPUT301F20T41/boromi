@@ -44,6 +44,13 @@ import java.util.Map;
 import java.util.Optional;
 import javax.inject.Inject;
 
+/**
+ * BookActivity is the main activity that will house all of the fragments. It creates the fragments
+ * for the main tabs (OwnedFragment, BorrowedFragment, SearchFragment, MapFragment, SettingsFragment)
+ * It uses PagerAdapter, ViewPager2, TabsLayout to switch betwen the tabs and fragments.
+ * Each SubFragment may create more fragments. For example, OwnedFragment, BorrowedFragment,
+ * SearchFragment will be creating GenericListFragments to house lists
+ */
 public class BookActivity extends AppCompatActivity implements
     AddBookFragment.AddBookFragmentListener, EditBookFragment.EditBookFragmentListener {
 
@@ -71,6 +78,10 @@ public class BookActivity extends AppCompatActivity implements
   private Map<Book, List<BookRequest>> requestsCollections = new HashMap<>();
   private MenuItem addButton;
 
+  /**
+   * Initialize any values, create the fragments, link pagerAdapter, ViewPager2, and tabLayout
+   * @param savedInstanceState
+   */
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -107,6 +118,9 @@ public class BookActivity extends AppCompatActivity implements
     viewPager2.setOffscreenPageLimit(tabLayout.getTabCount());
     viewPager2.setUserInputEnabled(false);
     viewPager2.setAdapter(pagerAdapter);
+    /**
+     * Switch fragments depending on the selected tab
+     */
     tabLayout.addOnTabSelectedListener(new OnTabSelectedListener() {
       @Override
       public void onTabSelected(Tab tab) {
@@ -124,11 +138,14 @@ public class BookActivity extends AppCompatActivity implements
       }
     });
 
+    /**
+     * Pull down refresh updates OwnedFragment tab and BorrowedFragment tab.
+     */
     final SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_refresh);
     swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
       @Override
       public void onRefresh() {
-        updateFragment("OwnedFragment", "Accepted");
+        updateFragment("OwnedFragment", "Available");
         updateFragment("OwnedFragment", "Requested");
         updateFragment("OwnedFragment", "Accepted");
         updateFragment("OwnedFragment", "Lent");
@@ -140,21 +157,26 @@ public class BookActivity extends AppCompatActivity implements
     });
   }
 
-  public Bitmap getAddedImage() {
-    return addedImage;
-  }
-
+  /**
+   * Custom toolbar to house add/scan buttons
+   * @param menu
+   * @return
+   */
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.toolbar_menu, menu);
     return true;
   }
 
+  /**
+   * Logic when toolbar buttons are clicked
+   * @param item selected menu item
+   * @return
+   */
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
     switch (item.getItemId()) {
       case R.id.toolbar_add:
-        // TODO add toolbar add logic
         FragmentManager fragmentManager = getSupportFragmentManager();
         AddBookFragment addBookFragment = AddBookFragment.newInstance();
         addBookFragment.show(fragmentManager, "addBook");
@@ -168,6 +190,15 @@ public class BookActivity extends AppCompatActivity implements
   }
 
 
+  /**
+   * Sets up bundle for GenericListFragment
+   * @param layout model to inject
+   * @param data book data to inject
+   * @param messsge description of the tab
+   * @param parent parent fragment tag
+   * @param tag genericlistfragment tag
+   * @return Bundle
+   */
   public Bundle setupBundle(
       int layout,
       ArrayList<Book> data,
@@ -184,30 +215,58 @@ public class BookActivity extends AppCompatActivity implements
     return bundle;
   }
 
+  /**
+   * Gets the bookReturnController
+   * @return BookReturnController
+   */
   public BookReturnController getBookReturnController() {
     return bookReturnController;
   }
 
+  /**
+   * Gets the BookController
+   * @return BookController
+   */
   public BookController getBookController() {
     return bookController;
   }
 
+  /**
+   * Gets the BookRequestController
+   * @return BookRequestController
+   */
   public BookRequestController getBookRequestController() {
     return bookRequestController;
   }
 
+  /**
+   * Gets logged in user
+   * @return User
+   */
   public User getUser() {
     return user;
   }
 
+  /**
+   * get Collections that stores data fetched from firebase locally
+   * @return
+   */
   public Map<String, ArrayList<Book>> getCollections() {
     return collections;
   }
 
+  /**
+   * get Collections that stores request data obtained from firebase
+   * @return
+   */
   public Map<Book, List<BookRequest>> getRequestsCollections() {
     return requestsCollections;
   }
 
+  /**
+   * Sets the request collection
+   * @param requestsCollections
+   */
   public void setRequestsCollections(
       Map<Book, List<BookRequest>> requestsCollections) {
     this.requestsCollections = requestsCollections;
@@ -218,6 +277,13 @@ public class BookActivity extends AppCompatActivity implements
     super.onActivityResult(requestCode, resultCode, data);
   }
 
+  /**
+   * Logic when a book is added. Call the controller method then update the fragment
+   * @param author author of the book
+   * @param title title of the book
+   * @param isbn isbn of the book
+   * @param image image of the book
+   */
   @Override
   public void onComplete(String author, String title, String isbn, Bitmap image) {
     bookController.addBook(author, isbn, title, image, new BookCallback() {
@@ -233,6 +299,14 @@ public class BookActivity extends AppCompatActivity implements
     });
   }
 
+  /**
+   * Callback for editing a book. When the book dialog closes
+   * @param BookID id of the edited book
+   * @param author new author
+   * @param title new title
+   * @param isbn new isbn
+   * @param image new image
+   */
   @Override
   public void onEditComplete(String BookID, String author, String title, String isbn,
       Bitmap image) {
@@ -248,6 +322,11 @@ public class BookActivity extends AppCompatActivity implements
     });
   }
 
+  /**
+   * This function updates an individual subfragment
+   * @param mainTab Class name of the parent fragment (main tab)
+   * @param subTab Tag of the sub fragment (GenericListFragment)
+   */
   public void updateFragment(String mainTab, String subTab) {
     Optional<Fragment> f = getSupportFragmentManager().getFragments().stream()
         .filter(fragment -> fragment.getClass().getSimpleName().equals(mainTab)).findFirst();
@@ -272,6 +351,5 @@ public class BookActivity extends AppCompatActivity implements
         return;
       }
     }
-
   }
 }

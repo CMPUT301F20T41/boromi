@@ -120,6 +120,11 @@ public class AuthenticationController {
     BoromiModule.user = user;   // set user in signup process
   }
 
+  /**
+   * Sends a request to update a user's password
+   * @param email email to update
+   * @param authCallback callback function to execute success or failure
+   */
   public void resetPassword(String email, AuthNoResultCallback authCallback) {
     auth.sendPasswordResetEmail(email)
         .addOnCompleteListener(executor, new OnCompleteListener<Void>() {
@@ -155,10 +160,17 @@ public class AuthenticationController {
         });
   }
 
+  /**
+   * Updates the user
+   * @param user User object to be updated
+   */
   public void updateUser(User user) {
     userDB.pushUser(user);
   }
 
+  /**
+   * Signs out of the app
+   */
   public void signOut() {
     auth.signOut();
   }

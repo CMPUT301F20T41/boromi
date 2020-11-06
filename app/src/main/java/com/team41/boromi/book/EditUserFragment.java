@@ -24,6 +24,9 @@ import com.team41.boromi.dagger.BoromiModule;
 import com.team41.boromi.models.User;
 import javax.inject.Inject;
 
+/**
+ * This Dialog fragment is used when a user edits their information
+ */
 public class EditUserFragment extends DialogFragment {
 
   @Inject
@@ -31,6 +34,9 @@ public class EditUserFragment extends DialogFragment {
   private TextInputEditText editTextUsername;
   private TextInputEditText editTextEmail;
   private Button buttonSaveChanges;
+  /**
+   * Validate input fields have been filled
+   */
   TextWatcher usernameEmailWatcher = new TextWatcher() {
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -56,6 +62,9 @@ public class EditUserFragment extends DialogFragment {
   private User user;
   private BookActivity activity;
   private Boolean successfulWrite = false;
+  /**
+   * Update user information
+   */
   private View.OnClickListener attemptToChangeUserInformation = new View.OnClickListener() {
 
     @Override
@@ -122,6 +131,11 @@ public class EditUserFragment extends DialogFragment {
     }
   };
 
+  /**
+   * Initialize values
+   * @param savedInstanceState
+   * @return
+   */
   @NonNull
   @Override
   public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -154,6 +168,9 @@ public class EditUserFragment extends DialogFragment {
     return builder.setView(view).create();
   }
 
+  /**
+   * update ui
+   */
   @Override
   public void onDestroy() {
     super.onDestroy();

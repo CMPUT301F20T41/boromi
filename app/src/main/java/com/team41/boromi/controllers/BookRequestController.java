@@ -61,6 +61,10 @@ public class BookRequestController {
     });
   }
 
+  /**
+   * Gets books that owner owns that are accepted
+   * @param bookRequestCallback
+   */
   public void getRequestOnOwnedBooks(final BookRequestCallback bookRequestCallback) {
     executor.execute(() -> {
       List<BookRequest> bookRequestsFromUser = brDB.getBookRequestsForOwner(user.getUUID());
@@ -71,7 +75,12 @@ public class BookRequestController {
   }
 
   // TODO : NEED TO NOTIFY USERS THAT BOOK IS CANCELLED OR ACCEPTED
-  // remove all requests on the book and set the book to your current borrowed
+  /**
+   * Accepts a book request and remove all requests on the book
+   * and set the book to your current borrowed
+   * @param bookRequest
+   * @param bookRequestCallback
+   */
   public void acceptBookRequest(BookRequest bookRequest, BookRequestCallback bookRequestCallback) {
     executor.execute(() -> {
       brDB.deleteRequestsForBook(bookRequest.getBookId());
@@ -85,7 +94,10 @@ public class BookRequestController {
   }
 
   // TODO : NOTIFY USER THEIR BOOK REQUEST WAS CANCELLED
-  // can also be used to "cancel" bookRequests
+  /**
+   * Declines a book request or cancel a book request
+   * @param bookRequest BookRequest to cancel/decline
+   */
   public void declineBookRequest(BookRequest bookRequest) {
     executor.execute(() -> {
       brDB.deleteBookRequest(bookRequest.getRequestId());

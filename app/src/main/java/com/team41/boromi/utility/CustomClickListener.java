@@ -16,7 +16,9 @@ import com.team41.boromi.models.Book;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-
+/**
+ * This class is a listener for the more (...) button that appears on the cards.
+ */
 public class CustomClickListener implements View.OnClickListener,
     PopupMenu.OnMenuItemClickListener {
 
@@ -33,6 +35,10 @@ public class CustomClickListener implements View.OnClickListener,
     this.genericListFragment = genericListFragment;
   }
 
+  /**
+   * Expand the more button and show the dropdown menu
+   * @param view
+   */
   @Override
   public void onClick(View view) {
     PopupMenu popup = new PopupMenu(view.getContext(), view);
@@ -62,6 +68,11 @@ public class CustomClickListener implements View.OnClickListener,
     }
   }
 
+  /**
+   * onClick functionality for individual menu items
+   * @param menuItem
+   * @return
+   */
   @Override
   public boolean onMenuItemClick(MenuItem menuItem) {
     switch (menuItem.getItemId()) {

@@ -17,6 +17,9 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+/**
+ * Firebase calls for bookRequest collection
+ */
 @Singleton
 public class BookRequestDB {
 
@@ -36,8 +39,8 @@ public class BookRequestDB {
   /**
    * Grabs a list of bookRequests from an uid
    *
-   * @param
-   * @return
+   * @param uid id of the user
+   * @return list of bookRequests
    */
   public List<BookRequest> getBookRequests(String uid) {
     ArrayList<BookRequest> bookRequests = new ArrayList<>();
@@ -65,11 +68,17 @@ public class BookRequestDB {
 
   /**
    * async push a book request to the db, if it already exists then update it
+   * @param bookRequest bookRequest to be pushed
    */
   public void pushBookRequest(BookRequest bookRequest) {
     bookRequestsRef.document(bookRequest.getRequestId()).set(bookRequest, SetOptions.merge());
   }
 
+  /**
+   * Gets owned books that are requested
+   * @param owner
+   * @return
+   */
   public List<BookRequest> getBookRequestsForOwner(String owner) {
     List<BookRequest> bookRequests = new ArrayList<>();
 
@@ -96,6 +105,7 @@ public class BookRequestDB {
 
   /**
    * Removes requests from library that have bookId sync grabs bookid, but async delete them
+   * @param bid id of the book
    */
   public void deleteRequestsForBook(String bid) {
     QuerySnapshot res;
@@ -117,6 +127,11 @@ public class BookRequestDB {
   }
 
   // async delete bookrequest
+
+  /**
+   * Deletes a book request
+   * @param rid
+   */
   public void deleteBookRequest(String rid) {
     bookRequestsRef.document(rid).delete();
   }

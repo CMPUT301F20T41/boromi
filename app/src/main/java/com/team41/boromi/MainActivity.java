@@ -9,6 +9,9 @@ import com.team41.boromi.auth.WelcomeFragment;
 import com.team41.boromi.controllers.AuthenticationController;
 import javax.inject.Inject;
 
+/**
+ * This is the main activity and starting point of our app. Here, the WelcomeFragment will be shown
+ */
 public class MainActivity extends AppCompatActivity {
 
   @Inject
@@ -16,6 +19,10 @@ public class MainActivity extends AppCompatActivity {
   FragmentTransaction ft;
   private FragmentManager manager = null;
 
+  /**
+   * Initialize variables, inject app, show WelcomeFragment
+   * @param savedInstanceState
+   */
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -32,10 +39,18 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
+  /**
+   * Custom back button in the auth pages
+   * @param view
+   */
   public void customBack(View view) {
     super.onBackPressed();
   }
 
+  /**
+   * Gets the authController
+   * @return AuthenticationController
+   */
   public AuthenticationController getAuthController() {
     return authController;
   }

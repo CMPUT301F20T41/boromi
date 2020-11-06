@@ -21,20 +21,18 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A simple {@link Fragment} subclass. Use the {@link GenericListFragment#newInstance} factory
- * method to create an instance of this fragment.
+ * GenericListFragment is used for each of the subtabs and the search. It will inflate the model
+ * that it has been provided with
  */
 public class GenericListFragment extends Fragment {
-
-  // TODO: Rename parameter arguments, choose names that match
-  // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+  // Bundle tags
   private static final String LAYOUT_PARAM1 = "LayoutID";
   private static final String DATA_PARAM2 = "Data";
   private static final String MSG_PARAM3 = "Msg";
   private static final String PARENT_PARAM4 = "Parent";
   private static final String TAG_PARAM5 = "TAG";
   private static final String TAG = "GenericListFrag";
-  private final GenericListFragment _this = this;
+
   public String tag;
   RecyclerView recyclerView;
   GenericListAdapter listAdapter;
@@ -61,6 +59,10 @@ public class GenericListFragment extends Fragment {
     return fragment;
   }
 
+  /**
+   * Initialize any values/unpack bundle
+   * @param savedInstanceState
+   */
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -73,10 +75,22 @@ public class GenericListFragment extends Fragment {
     }
   }
 
+  /**
+   * Gets the parent tag. Example if this instance of GenericListFragment is the sub tab of Owner
+   * books, then the parent would be "Owner"
+   * @return String tag of the parent fragment
+   */
   public String getParent() {
     return parent;
   }
 
+  /**
+   * Bind any listeners and initialize any values. This will also set up the GenericListAdapter
+   * @param inflater
+   * @param container
+   * @param savedInstanceState
+   * @return
+   */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
@@ -97,6 +111,11 @@ public class GenericListFragment extends Fragment {
     return view;
   }
 
+  /**
+   * This function will be called from the parent fragment to update the data of this
+   * GenericListFragment by updating the adapter list
+   * @param books books to update
+   */
   public void updateData(ArrayList<Book> books) {
     this.bookDataList.clear();
     this.bookDataList.addAll(books);
@@ -108,6 +127,10 @@ public class GenericListFragment extends Fragment {
     });
   }
 
+  /**
+   * Polymorphism to accept a map. Request tabs use a map of Book and BookRequest.
+   * @param bookWithRequests Map of Book and List of BookRequests
+   */
   public void updateData(Map<Book, List<BookRequest>> bookWithRequests) {
     this.bookDataList.clear();
     this.bookDataList.addAll(bookWithRequests.keySet());
@@ -122,6 +145,11 @@ public class GenericListFragment extends Fragment {
     });
   }
 
+  /**
+   * Used in the Accepted tabs to process the exchanging of the book. It will also refresh the
+   * lent, accepted, borrowed, requested subtabs
+   * @param book Book to be exchanged
+   */
   public void bookExchangeRequest(Book book) {
     BookActivity bookActivity = (BookActivity) getActivity();
     bookActivity.getBookController().updateBookExchange(bookActivity.getUser().getUUID(), book,

@@ -23,18 +23,18 @@ import com.team41.boromi.R;
 import com.team41.boromi.callbacks.AuthCallback;
 
 /**
- * A simple {@link Fragment} subclass. Use the {@link SignupFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * SignupFragment manages the signup page and creates an account for the user and redirects the
+ * user to the book activity when their account is created.
  */
 public class SignupFragment extends Fragment {
-
-  // TODO: Currently we do not ned the fullNameInput
-  //  private EditText fullNameInput;
 
   Button createAccountButton;
   private EditText emailInput;
   private EditText userNameInput;
   private EditText passwordInput;
+  /**
+   * Used to enable the create account button when input fields are filled
+   */
   TextWatcher emailUsernamePasswordTextWatcher = new TextWatcher() {
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -70,9 +70,7 @@ public class SignupFragment extends Fragment {
   }
 
   /**
-   * Use this factory method to create a new instance of this fragment using the provided
-   * parameters.
-   *
+   * Use this factory method to create a new instance of this fragment
    * @return A new instance of fragment SignupFragment.
    */
   // TODO: Rename and change types and number of parameters
@@ -83,12 +81,23 @@ public class SignupFragment extends Fragment {
     return fragment;
   }
 
+  /**
+   * onCreate method to initialize any variables
+   * @param savedInstanceState
+   */
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     activity = (MainActivity) getActivity();
   }
 
+  /**
+   * onCreateView to bind any listeners or values
+   * @param inflater
+   * @param container
+   * @param savedInstanceState
+   * @return
+   */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
@@ -99,9 +108,6 @@ public class SignupFragment extends Fragment {
     spinner = view.findViewById(R.id.signup_loading);
     spinner.setVisibility(View.GONE);
     createAccountButton = view.findViewById(R.id.signup_signup);
-
-    // TODO: Commented out for now since full name isn't used
-    // fullNameInput = view.findViewById(R.id.signup_name);
 
     emailInput = view.findViewById(R.id.signup_email);
     userNameInput = view.findViewById(R.id.signup_username);
@@ -118,9 +124,6 @@ public class SignupFragment extends Fragment {
     createAccountButton.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
-        // TODO: Commented out for now since full name isn't used
-        // String fullName = fullNameInput.getText().toString();
-
         String email = emailInput.getText().toString();
         String username = userNameInput.getText().toString();
         String password = passwordInput.getText().toString();

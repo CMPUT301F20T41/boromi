@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A simple {@link Fragment} subclass. Use the {@link OwnedFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * This Fragment manages the user Owned books tab. It will create 4 GenericListFragments for
+ * each of its 4 tabs.
  */
 public class OwnedFragment extends Fragment {
 
@@ -53,6 +53,10 @@ public class OwnedFragment extends Fragment {
     return fragment;
   }
 
+  /**
+   * Create the GenericListFragments that will populate each of the 4 tabs.
+   * @param savedInstanceState
+   */
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -83,6 +87,13 @@ public class OwnedFragment extends Fragment {
         new Pair<Class<? extends Fragment>, Bundle>(GenericListFragment.class, bundle));
   }
 
+  /**
+   * Bind any listeners and values, also set up viewpager to change between subtabs
+   * @param inflater
+   * @param container
+   * @param savedInstanceState
+   * @return
+   */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
@@ -100,6 +111,9 @@ public class OwnedFragment extends Fragment {
     viewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
     viewPager2.setOffscreenPageLimit(tabLayout.getTabCount());
     viewPager2.setAdapter(pagerAdapter);
+    /**
+     * Changes the fragment depending on which subtab is clicked
+     */
     tabLayout.addOnTabSelectedListener(new OnTabSelectedListener() {
       @Override
       public void onTabSelected(Tab tab) {
@@ -120,6 +134,10 @@ public class OwnedFragment extends Fragment {
   }
 
 
+  /**
+   * Backend call to get the books that the user owns that are available
+   * @param fragment GenericListFragment that will be updated with this data
+   */
   public void getOwnerAvailable(GenericListFragment fragment) {
     bookActivity.getBookController()
         .getOwnerAvailableBooks(bookActivity.getUser().getUUID(), new BookCallback() {
@@ -136,6 +154,10 @@ public class OwnedFragment extends Fragment {
         });
   }
 
+  /**
+   * Backend call to get the books that the user owns that have been requested.
+   * @param fragment GenericListFragment that will be updated with this data
+   */
   public void getOwnerRequests(GenericListFragment fragment) {
     bookActivity.getBookRequestController().getRequestOnOwnedBooks(new BookRequestCallback() {
       @Override
@@ -146,6 +168,10 @@ public class OwnedFragment extends Fragment {
     });
   }
 
+  /**
+   * Backend call to get the books that the owner has accepted to be borrowed
+   * @param fragment GenericListFragment that will be updated with this data
+   */
   public void getOwnerAccepted(GenericListFragment fragment) {
     bookActivity.getBookController()
         .getOwnerAcceptedBooks(bookActivity.getUser().getUUID(), new BookCallback() {
@@ -162,6 +188,10 @@ public class OwnedFragment extends Fragment {
         });
   }
 
+  /**
+   * Backend call to get the books that the owner owns that are being lent
+   * @param fragment GenericListFragment that will be updated with this data
+   */
   public void getOwnerLent(GenericListFragment fragment) {
     bookActivity.getBookController().getOwnerBorrowedBooks(bookActivity.getUser().getUUID(),
         new BookCallback() {
@@ -178,6 +208,11 @@ public class OwnedFragment extends Fragment {
         });
   }
 
+  /**
+   * Calls the corresponding backend function to fetch the data depending on which subtab
+   * @param tag Subtab tag
+   * @param fragment GenericListFragment that will hold this data
+   */
   public void getData(String tag, GenericListFragment fragment) {
     if (tag.equals("Available")) {
       getOwnerAvailable(fragment);

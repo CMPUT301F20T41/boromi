@@ -1,5 +1,8 @@
 package com.team41.boromi.callbacks;
 
+/**
+ * Interface for callbacks for auth
+ */
 public interface AuthNoResultCallback {
 
   void onSuccess();

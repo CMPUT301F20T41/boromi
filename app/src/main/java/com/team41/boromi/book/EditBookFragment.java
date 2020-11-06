@@ -23,7 +23,9 @@ import com.team41.boromi.R;
 import com.team41.boromi.models.Book;
 import java.io.ByteArrayInputStream;
 
-
+/**
+ * This Dialog Fragment is used when the user chooses to edit a book.
+ */
 public class EditBookFragment extends DialogFragment {
 
   Book editingBook;
@@ -38,6 +40,11 @@ public class EditBookFragment extends DialogFragment {
     this.editingBook = editingBook;
   }
 
+  /**
+   * Factory method to create EditBookFragment
+   * @param book
+   * @return
+   */
   public static EditBookFragment newInstance(Book book) {
     EditBookFragment editBookFragment = new EditBookFragment(book);
     Bundle args = new Bundle();
@@ -45,6 +52,13 @@ public class EditBookFragment extends DialogFragment {
     return editBookFragment;
   }
 
+  /**
+   * Initialize any values
+   * @param inflater
+   * @param container
+   * @param savedInstanceState
+   * @return
+   */
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -57,6 +71,11 @@ public class EditBookFragment extends DialogFragment {
     super.onResume();
   }
 
+  /**
+   * Bind any listeners or values
+   * @param view
+   * @param savedInstanceState
+   */
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
@@ -101,6 +120,12 @@ public class EditBookFragment extends DialogFragment {
     });
   }
 
+  /**
+   * Called when returning from Camera Activity and stores the photo taken.
+   * @param requestCode
+   * @param resultCode
+   * @param data
+   */
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == -1) {
@@ -111,6 +136,9 @@ public class EditBookFragment extends DialogFragment {
     }
   }
 
+  /**
+   * Starts camera event to take a new photo
+   */
   private void dispatchTakePictureIntent() {
     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     try {
@@ -120,6 +148,9 @@ public class EditBookFragment extends DialogFragment {
     }
   }
 
+  /**
+   * Listener that is called when edit book button is pressed
+   */
   public interface EditBookFragmentListener {
 
     void onEditComplete(String BookID, String author, String title, String isbn, Bitmap image);

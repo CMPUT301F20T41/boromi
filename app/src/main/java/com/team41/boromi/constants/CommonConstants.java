@@ -1,5 +1,8 @@
 package com.team41.boromi.constants;
 
+/**
+ * Common constants that the app uses
+ */
 public class CommonConstants {
 
   public static final long DB_TIMEOUT = 5000; // 5s

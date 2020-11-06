@@ -23,6 +23,9 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+/**
+ * Firebase calls for book collection
+ */
 @Singleton
 public class BookDB {
 
@@ -133,8 +136,8 @@ public class BookDB {
   /**
    * Searches book by querying keywords
    *
-   * @param keywords
-   * @return
+   * @param keywords keywords to search for
+   * @return list of all the books found
    */
   public ArrayList<Book> findBooks(String keywords) {
     final ArrayList<Book> foundBooks = new ArrayList<>();
@@ -161,7 +164,7 @@ public class BookDB {
   /**
    * Get Book using BookID
    *
-   * @param bookID
+   * @param bookID id of the book
    * @return book
    */
   public Book getBook(String bookID) {
@@ -212,6 +215,11 @@ public class BookDB {
     return bookList;
   }
 
+  /**
+   * Get owner requested books
+   * @param owner id of the owner
+   * @return list of books owned by the owner
+   */
   public ArrayList<Book> getOwnerRequestedBooks(String owner) {
     final ArrayList<Book> requestedBooks = new ArrayList<>();
 
@@ -236,6 +244,11 @@ public class BookDB {
     return requestedBooks;
   }
 
+  /**
+   * Gets books that are owned by the owner and are borrowed
+   * @param owner id of the owner
+   * @return list of books
+   */
   public ArrayList<Book> getOwnerBorrowedBooks(String owner) {
     final ArrayList<Book> borrowedBooks = new ArrayList<>();
 
@@ -260,6 +273,11 @@ public class BookDB {
     return borrowedBooks;
   }
 
+  /**
+   * Get books that owner owns that are accepted to borrow
+   * @param owner id of the owner
+   * @return list of books
+   */
   public ArrayList<Book> getOwnerAcceptedBooks(String owner) {
     final ArrayList<Book> acceptedBooks = new ArrayList<>();
 
@@ -284,6 +302,11 @@ public class BookDB {
     return acceptedBooks;
   }
 
+  /**
+   * Get books that owner owns and are available
+   * @param owner id of the owner
+   * @return list of books
+   */
   public ArrayList<Book> getOwnerAvailableBooks(String owner) {
     final ArrayList<Book> availableBooks = new ArrayList<>();
 
@@ -308,6 +331,11 @@ public class BookDB {
     return availableBooks;
   }
 
+  /**
+   * Get book by id
+   * @param bid id of the book
+   * @return book
+   */
   public Book getBookById(String bid) {
     DocumentSnapshot res;
 
@@ -328,8 +356,8 @@ public class BookDB {
   /**
    * returns book and the bookrequest accompanying it
    *
-   * @param BookRequestList
-   * @return
+   * @param BookRequestList List of books
+   * @return Map of key:Book and value:List of BookRequest
    */
   public Map<Book, List<BookRequest>> getBooksWithRequestList(List<BookRequest> BookRequestList) {
     Map<Book, List<BookRequest>> bookMap = new HashMap<>();
@@ -355,8 +383,8 @@ public class BookDB {
 
   /**
    * This method returns a list of books that user is borrowing from other owners.
-   *
-   * @return
+   * @param username id of the user
+   * @return list of books
    */
   public ArrayList<Book> getOwnerBorrowingBooks(String username) {
     final ArrayList<Book> borrowingBooks = new ArrayList<>();

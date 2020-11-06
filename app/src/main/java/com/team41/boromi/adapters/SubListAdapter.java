@@ -16,6 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class is recyclerview adapter that is used on the owner requests tab to show the user
+ * request for each book
+ */
 public class SubListAdapter extends RecyclerView.Adapter<SubListAdapter.ViewHolder> {
 
   private final SubListAdapter _this = this;
@@ -37,6 +41,12 @@ public class SubListAdapter extends RecyclerView.Adapter<SubListAdapter.ViewHold
     }
   }
 
+  /**
+   * Overrides onCreateViewHolder to set listeners and get layout elements and inflate the layout
+   * @param parent
+   * @param viewType
+   * @return
+   */
   @NonNull
   @Override
   public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -75,28 +85,44 @@ public class SubListAdapter extends RecyclerView.Adapter<SubListAdapter.ViewHold
     return holder;
   }
 
+  /**
+   * Update the model with the correct values
+   * @param holder
+   * @param position
+   */
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
     holder.user.setText(usersRequested.get(position).getRequestorName());
   }
 
+  /**
+   * Returns number of elements (requests)
+   * @return number of items in the list
+   */
   @Override
   public int getItemCount() {
     return usersRequested.size();
   }
 
+  /**
+   * Returns the book that is being requested on
+   * @return returns the book that is being requested on
+   */
   public Book getBook() {
     return book;
   }
 
-  public ArrayList<BookRequest> getUsersRequested() {
-    return this.usersRequested;
-  }
-
+  /**
+   * Sets the users that requested the book
+   * @param usersRequested
+   */
   public void setUsersRequested(ArrayList<BookRequest> usersRequested) {
     this.usersRequested = usersRequested;
   }
 
+  /**
+   * ViewHolder class to hold the model
+   */
   public static class ViewHolder extends RecyclerView.ViewHolder {
 
     TextView user;
