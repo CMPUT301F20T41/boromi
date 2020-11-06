@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener;
 import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
@@ -121,6 +124,20 @@ public class BookActivity extends AppCompatActivity implements
       }
     });
 
+    final SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_refresh);
+    swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+      @Override
+      public void onRefresh() {
+        updateFragment("OwnedFragment", "Accepted");
+        updateFragment("OwnedFragment", "Requested");
+        updateFragment("OwnedFragment", "Accepted");
+        updateFragment("OwnedFragment", "Lent");
+        updateFragment("BorrowedFragment", "Borrowed");
+        updateFragment("BorrowedFragment", "Requested");
+        updateFragment("BorrowedFragment", "Accepted");
+        swipeRefreshLayout.setRefreshing(false);
+      }
+    });
   }
 
   public Bitmap getAddedImage() {

@@ -22,12 +22,14 @@ public class CustomClickListener implements View.OnClickListener,
 
   Book book;
   BookController bookController;
+  BookActivity bookActivity;
   GenericListFragment genericListFragment;
 
-  public CustomClickListener(Book book, BookController bookController,
+  public CustomClickListener(Book book, BookActivity bookActivity,
       GenericListFragment genericListFragment) {
     this.book = book;
-    this.bookController = bookController;
+    this.bookActivity = bookActivity;
+    this.bookController = bookActivity.getBookController();
     this.genericListFragment = genericListFragment;
   }
 
@@ -38,6 +40,17 @@ public class CustomClickListener implements View.OnClickListener,
       MenuInflater inflater = popup.getMenuInflater();
       popup.setOnMenuItemClickListener(this::onMenuItemClick);
       inflater.inflate(R.menu.book_edit_delete_menu, popup.getMenu());
+      if (genericListFragment.tag.equals("Accepted") && genericListFragment.getParent().equals("Owned")) {
+        MenuItem exchange = popup.getMenu().findItem(R.id.exchange_book);
+        exchange.setVisible(true);
+        exchange.setTitle("Give");
+      } else if (genericListFragment.tag.equals("Accepted") && genericListFragment.getParent().equals("Borrowed")) {
+        MenuItem exchange = popup.getMenu().findItem(R.id.exchange_book);
+        exchange.setVisible(true);
+        exchange.setTitle("Receive");
+      } else {
+        popup.getMenu().findItem(R.id.exchange_book).setVisible(false);
+      }
       Method method = popup.getMenu().getClass()
           .getDeclaredMethod("setOptionalIconsVisible", boolean.class);
       method.setAccessible(true);
@@ -80,7 +93,8 @@ public class CustomClickListener implements View.OnClickListener,
           public void onFailure(Exception e) {
           }
         });
-
+      case R.id.exchange_book:
+        genericListFragment.bookExchangeRequest(book);
     }
     return false;
   }

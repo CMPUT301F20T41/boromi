@@ -13,4 +13,12 @@
         android:icon="@drawable/delete_icon"
         android:iconTint="@color/colorError"
         android:title="delete book" />
+
+    <item
+      android:id="@+id/exchange_book"
+      android:layout_width="10dp"
+      android:icon="@drawable/delete_icon"
+      android:iconTint="@color/colorError"
+      android:title="temp"
+      android:visible="false"/>
 </menu>

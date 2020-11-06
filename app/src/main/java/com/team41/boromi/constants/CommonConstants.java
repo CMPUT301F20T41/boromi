@@ -22,5 +22,9 @@ public class CommonConstants {
     PENDINGRETURN
   }
 
+  public enum ExchangeStage {
+    OWNER,
+    BORROWER
+  }
 
 }

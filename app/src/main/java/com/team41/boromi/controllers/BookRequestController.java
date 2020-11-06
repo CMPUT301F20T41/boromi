@@ -2,6 +2,7 @@ package com.team41.boromi.controllers;
 
 import com.team41.boromi.callbacks.BookRequestCallback;
 import com.team41.boromi.constants.CommonConstants;
+import com.team41.boromi.constants.CommonConstants.BookWorkflowStage;
 import com.team41.boromi.dbs.BookDB;
 import com.team41.boromi.dbs.BookRequestDB;
 import com.team41.boromi.models.Book;
@@ -76,6 +77,7 @@ public class BookRequestController {
       brDB.deleteRequestsForBook(bookRequest.getBookId());
       Book acceptedBook = bookDB.getBookById(bookRequest.getBookId());
       acceptedBook.setStatus(CommonConstants.BookStatus.ACCEPTED);      // sets the book to accepted
+      acceptedBook.setWorkflow(BookWorkflowStage.PENDINGBORROW);
       acceptedBook.setBorrower(bookRequest.getRequestor());
       bookDB.pushBook(acceptedBook);
       bookRequestCallback.onComplete(null);

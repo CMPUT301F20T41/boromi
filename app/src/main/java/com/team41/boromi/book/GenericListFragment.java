@@ -11,6 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.team41.boromi.BookActivity;
 import com.team41.boromi.R;
 import com.team41.boromi.adapters.GenericListAdapter;
+import com.team41.boromi.callbacks.BookCallback;
+import com.team41.boromi.constants.CommonConstants.BookStatus;
+import com.team41.boromi.constants.CommonConstants.ExchangeStage;
 import com.team41.boromi.models.Book;
 import com.team41.boromi.models.BookRequest;
 import java.util.ArrayList;
@@ -117,5 +120,27 @@ public class GenericListFragment extends Fragment {
         listAdapter.notifySubAdapters();
       }
     });
+  }
+
+  public void bookExchangeRequest(Book book) {
+    BookActivity bookActivity = (BookActivity) getActivity();
+    bookActivity.getBookController().updateBookExchange(bookActivity.getUser().getUUID(), book,
+        new BookCallback() {
+          @Override
+          public void onSuccess(ArrayList<Book> books) {
+            if (books.get(0).getStatus() == BookStatus.BORROWED) {
+              bookActivity.updateFragment("OwnedFragment", "Lent");
+              bookActivity.updateFragment("OwnedFragment", "Accepted");
+              bookActivity.updateFragment("BorrowedFragment", "Borrowed");
+              bookActivity.updateFragment("BorrowedFragment", "Requested");
+
+            }
+          }
+
+          @Override
+          public void onFailure(Exception e) {
+
+          }
+        });
   }
 }

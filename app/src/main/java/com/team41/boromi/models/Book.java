@@ -4,6 +4,7 @@ import static com.team41.boromi.constants.CommonConstants.BookStatus;
 import static com.team41.boromi.constants.CommonConstants.BookWorkflowStage;
 
 import androidx.annotation.Nullable;
+import com.team41.boromi.constants.CommonConstants.ExchangeStage;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -25,6 +26,7 @@ public class Book implements Serializable {
   private String desc;
   private BookStatus status;
   private BookWorkflowStage workflow;
+  private ExchangeStage exchangeStage;
 
   // TODO
   // I didn't include logic for the requesters/borrowers/img/location
@@ -48,6 +50,7 @@ public class Book implements Serializable {
     this.borrower = null;
     this.status = BookStatus.AVAILABLE;
     this.workflow = BookWorkflowStage.AVAILABLE;
+    this.exchangeStage = null;
   }
 
   public Book(String owner, String title, String author, String ISBN, BookStatus status) {
@@ -59,6 +62,7 @@ public class Book implements Serializable {
     this.bookId = UUID.randomUUID().toString();
     this.borrower = null;
     this.workflow = BookWorkflowStage.AVAILABLE;
+    this.exchangeStage = null;
   }
 
   public Book(String owner, String title, String author, String ISBN, BookWorkflowStage workflow) {
@@ -70,6 +74,7 @@ public class Book implements Serializable {
     this.bookId = UUID.randomUUID().toString();
     this.borrower = null;
     this.status = BookStatus.AVAILABLE;
+    this.exchangeStage = null;
   }
 
   /**
@@ -87,6 +92,7 @@ public class Book implements Serializable {
     this.bookId = bookId;
     this.owner = owner;
     this.status = BookStatus.AVAILABLE;
+    this.exchangeStage = null;
   }
 
   public Book(
@@ -105,6 +111,7 @@ public class Book implements Serializable {
     this.workflow = workflow;
     this.bookId = UUID.randomUUID().toString();
     this.borrower = null;
+    this.exchangeStage = null;
   }
 
   public Book(
@@ -123,6 +130,7 @@ public class Book implements Serializable {
     this.status = status;
     this.bookId = UUID.randomUUID().toString();
     this.workflow = BookWorkflowStage.AVAILABLE;
+    this.exchangeStage = null;
   }
 
   public Book(
@@ -141,6 +149,7 @@ public class Book implements Serializable {
     this.workflow = workflow;
     this.bookId = UUID.randomUUID().toString();
     this.status = BookStatus.AVAILABLE;
+    this.exchangeStage = null;
   }
 
   public Book(
@@ -160,6 +169,7 @@ public class Book implements Serializable {
     this.workflow = workflow;
     this.status = status;
     this.bookId = UUID.randomUUID().toString();
+    this.exchangeStage = null;
   }
 
   // Setters / Getters Start
@@ -238,6 +248,14 @@ public class Book implements Serializable {
 
   public void setImg64(String img64) {
     this.img64 = img64;
+  }
+
+  public ExchangeStage getExchangeStage() {
+    return exchangeStage;
+  }
+
+  public void setExchangeStage(ExchangeStage exchangeStage) {
+    this.exchangeStage = exchangeStage;
   }
 
   @Override

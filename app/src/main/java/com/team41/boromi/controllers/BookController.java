@@ -10,6 +10,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import com.team41.boromi.callbacks.BookCallback;
 import com.team41.boromi.constants.CommonConstants.BookWorkflowStage;
+import com.team41.boromi.constants.CommonConstants.ExchangeStage;
 import com.team41.boromi.dbs.BookDB;
 import com.team41.boromi.models.Book;
 import com.team41.boromi.models.User;
@@ -467,6 +468,41 @@ public class BookController {
       Log.d(TAG, "Owner input is missing or null");
       bookCallback.onFailure(new IllegalArgumentException());
     }
+  }
+
+  public void updateBookExchange(String username, Book book, final BookCallback bookCallback) {
+    executor.execute(() -> {
+      Book findBook = bookDB.getBookById(book.getBookId());
+      if (findBook == null) {
+        return;
+      }
+      ExchangeStage state = findBook.getExchangeStage();
+      if (state == ExchangeStage.BORROWER && username.equals(book.getOwner())) {
+        book.setExchangeStage(null);
+        book.setWorkflow(BookWorkflowStage.BORROWED);
+        book.setStatus(BookStatus.BORROWED);
+      } else if (state == ExchangeStage.OWNER && username.equals(book.getBorrower())) {
+        book.setExchangeStage(null);
+        book.setWorkflow(BookWorkflowStage.BORROWED);
+        book.setStatus(BookStatus.BORROWED);
+      } else if (state == null && username.equals(book.getBorrower())) {
+        book.setExchangeStage(ExchangeStage.BORROWER);
+        book.setWorkflow(BookWorkflowStage.PENDINGBORROW);
+      } else if (state == null && username.equals(book.getOwner())) {
+        book.setExchangeStage(ExchangeStage.OWNER);
+        book.setWorkflow(BookWorkflowStage.PENDINGBORROW);
+      } else {
+        return;
+      }
+      Book returnBook = bookDB.pushBook(book);
+      if (returnBook != null) {
+        ArrayList<Book> books = new ArrayList<>();
+        books.add(returnBook);
+        bookCallback.onSuccess(books);
+      } else {
+        bookCallback.onFailure(new IllegalArgumentException());
+      }
+    });
   }
 
 }

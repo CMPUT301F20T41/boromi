@@ -148,7 +148,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
     }
     if (holder.rightButton != null) {
       holder.rightButton
-          .setOnClickListener(new CustomClickListener(book, bookController, genericListFragment));
+          .setOnClickListener(new CustomClickListener(book, bookActivity, genericListFragment));
     }
   }
 
