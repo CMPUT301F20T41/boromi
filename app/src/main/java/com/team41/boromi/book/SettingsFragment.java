@@ -26,7 +26,7 @@ public class SettingsFragment extends Fragment implements EditUserFragment.Chang
   private TextView imageViewAvatar;
   private TextView textViewUsername;
   private TextView textViewEmail;
-  private ImageView imageViewEditUserIcon;
+//  private ImageView imageViewEditUserIcon;
 
   // TODO: Add logout functionality
   // private LinearLayout buttonLogout;
@@ -79,7 +79,7 @@ public class SettingsFragment extends Fragment implements EditUserFragment.Chang
     imageViewAvatar = view.findViewById(R.id.settings_user_avatar);
     textViewUsername = view.findViewById(R.id.settings_text_view_username);
     textViewEmail = view.findViewById(R.id.settings_text_view_email);
-    imageViewEditUserIcon = view.findViewById(R.id.settings_button_edit_user);
+//    imageViewEditUserIcon = view.findViewById(R.id.settings_button_edit_user);
 
     // TODO: Implement logging out
     // buttonLogout = view.findViewById(R.id.settings_button_logout);
@@ -103,13 +103,13 @@ public class SettingsFragment extends Fragment implements EditUserFragment.Chang
 
     SettingsFragment settingsFragment = this;
 
-    imageViewEditUserIcon.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        assert getFragmentManager() != null;
-        new EditUserFragment().show(getChildFragmentManager(), "EDIT_USER");
-      }
-    });
+//    imageViewEditUserIcon.setOnClickListener(new View.OnClickListener() {
+//      @Override
+//      public void onClick(View v) {
+//        assert getFragmentManager() != null;
+//        new EditUserFragment().show(getChildFragmentManager(), "EDIT_USER");
+//      }
+//    });
 
     return view;
   }

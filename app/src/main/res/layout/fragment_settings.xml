@@ -46,14 +46,14 @@
             android:text="emailaddress@email.com"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
       </LinearLayout>
-      <ImageView
-          android:id="@+id/settings_button_edit_user"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center"
-          android:src="@drawable/edit_icon"
-          android:padding="8dp"
-          app:tint="@color/colorIconDark" />
+<!--      <ImageView-->
+<!--          android:id="@+id/settings_button_edit_user"-->
+<!--          android:layout_width="wrap_content"-->
+<!--          android:layout_height="wrap_content"-->
+<!--          android:layout_gravity="center"-->
+<!--          android:src="@drawable/edit_icon"-->
+<!--          android:padding="8dp"-->
+<!--          app:tint="@color/colorIconDark" />-->
 
     </LinearLayout>
 
