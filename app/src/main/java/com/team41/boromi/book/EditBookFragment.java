@@ -8,6 +8,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -94,6 +96,12 @@ public class EditBookFragment extends DialogFragment {
     title.setText(editingBook.getTitle());
     isbn.setText(editingBook.getISBN());
 
+    author.addTextChangedListener(allFieldsWatcher);
+    title.addTextChangedListener(allFieldsWatcher);
+    isbn.addTextChangedListener(allFieldsWatcher);
+
+    addImage.setClipToOutline(true);
+
     if (editingBook.getImg64() != null) {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
           Base64.decode(editingBook.getImg64(), Base64.DEFAULT));
@@ -103,19 +111,20 @@ public class EditBookFragment extends DialogFragment {
     }
 
     editBook.setOnClickListener(view1 -> {
-      String author_text = author.getText().toString();
-      String title_text = title.getText().toString();
-      String isbn_text = isbn.getText().toString();
       EditBookFragmentListener listener = (EditBookFragmentListener) getActivity();
-      if (isNotNullOrEmpty(author_text) && isNotNullOrEmpty(title_text) && isNotNullOrEmpty(
-          isbn_text)) {
+
+        assert listener != null;
+
         if (imageBitmap == null && editingBook.getImg64() != null) {
           imageBitmap = ((BookActivity) getActivity()).getBookController().decodeBookImage(editingBook);
         }
-        listener.onEditComplete(editingBook.getBookId(), author_text, title_text, isbn_text,
+        listener.onEditComplete(
+                editingBook.getBookId(),
+                author.getText().toString(),
+                title.getText().toString(),
+                isbn.getText().toString(),
             imageBitmap);
         dismiss();
-      }
     });
 
     addImage.setOnClickListener(view2 -> dispatchTakePictureIntent());
@@ -154,6 +163,40 @@ public class EditBookFragment extends DialogFragment {
     } catch (Exception e) {
       // display error state to the user
     }
+  }
+
+  /**
+   * Used to validate input fields
+   */
+  TextWatcher allFieldsWatcher = new TextWatcher() {
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+      // Empty method, required for text watcher
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+      String authorText = author.getText().toString().trim();
+      String titleText = title.getText().toString().trim();
+      String isbnText = isbn.getText().toString().trim();
+
+      // Sets the button if all the text fields have content and the ISBN is 13 characters
+      editBook.setEnabled(isNotNullOrEmpty(authorText) && isNotNullOrEmpty(titleText) && isNotNullOrEmpty(isbnText) && returnIfISBNGood(isbnText));
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+      // Empty method, required for text watcher
+    }
+  };
+
+  /**
+   * returns true if isbn is length 10 or 13.
+   * @param isbn
+   * @return
+   */
+  public boolean returnIfISBNGood(String isbn){
+    return isbn.length() == 13 || isbn.length() == 10;
   }
 
   /**
