@@ -101,14 +101,14 @@
           android:textAppearance="@style/TextAppearance.AppCompat.Body2"
           android:textColor="@color/colorTextLight"/>
 
-        <TextView
-          android:id="@+id/reqbm_withdraw"
-          android:layout_width="fill_parent"
-          android:layout_height="40dp"
-          android:layout_weight="1"
-          android:gravity="center"
-          android:text="Withdraw"
-          android:textColor="#03A9F4" />
+<!--        <TextView-->
+<!--          android:id="@+id/reqbm_withdraw"-->
+<!--          android:layout_width="fill_parent"-->
+<!--          android:layout_height="40dp"-->
+<!--          android:layout_weight="1"-->
+<!--          android:gravity="center"-->
+<!--          android:text="Withdraw"-->
+<!--          android:textColor="#03A9F4" />-->
 
       </LinearLayout>
 
