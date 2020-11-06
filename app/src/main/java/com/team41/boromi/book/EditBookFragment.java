@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import com.team41.boromi.BookActivity;
 import com.team41.boromi.R;
 import com.team41.boromi.models.Book;
 import java.io.ByteArrayInputStream;
@@ -83,6 +84,9 @@ public class EditBookFragment extends DialogFragment {
       EditBookFragmentListener listener = (EditBookFragmentListener) getActivity();
       if (isNotNullOrEmpty(author_text) && isNotNullOrEmpty(title_text) && isNotNullOrEmpty(
           isbn_text)) {
+        if (imageBitmap == null && editingBook.getImg64() != null) {
+          imageBitmap = ((BookActivity) getActivity()).getBookController().decodeBookImage(editingBook);
+        }
         listener.onEditComplete(editingBook.getBookId(), author_text, title_text, isbn_text,
             imageBitmap);
         dismiss();
