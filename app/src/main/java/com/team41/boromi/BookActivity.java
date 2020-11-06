@@ -352,4 +352,9 @@ public class BookActivity extends AppCompatActivity implements
       }
     }
   }
+
+  @Override
+  public void onBackPressed() {
+
+  }
 }
