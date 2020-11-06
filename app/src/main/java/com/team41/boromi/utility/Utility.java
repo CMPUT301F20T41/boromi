@@ -12,7 +12,7 @@ public abstract class Utility {
    * @return
    */
   public static boolean isNotNullOrEmpty(String str) {
-    if (!str.trim().isEmpty() && str != null) {
+    if (str != null && !str.trim().isEmpty()) {
       return true;
     }
     return false;
