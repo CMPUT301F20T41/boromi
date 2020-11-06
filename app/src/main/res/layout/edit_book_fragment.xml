@@ -65,13 +65,16 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-      android:layout_marginBottom="8dp">
+      android:layout_marginBottom="8dp"
+      app:counterMaxLength="13"
+      app:counterEnabled="true">
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/edit_book_isbn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="ISBN"
+        android:inputType="number"
         />
 
   </com.google.android.material.textfield.TextInputLayout>
