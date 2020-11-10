@@ -32,7 +32,7 @@ public class BookDBTest {
     // I didn't know a better way to automate the process of setting up
     // A consistent testing environment
     Book book = new Book(
-            "DaGQbX2HLfditCUDKq9X1bRnXQ82",
+            "testuser1",
             "This should be Acepted",
             "JK Rowling",
             "123456789012"
@@ -47,8 +47,8 @@ public class BookDBTest {
     // This assumes correct functionality of the deleteBook method but
     // I didn't know a better way to automate the process of setting up
     // A consistent testing environment
-//		for (Book book : testBooks)
-//			bookDB.deleteBook(book.getBookId());
+		for (Book book : testBooks)
+			bookDB.deleteBook(book.getBookId());
 
     testBooks.clear();
   }
