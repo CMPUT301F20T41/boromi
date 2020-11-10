@@ -24,4 +24,6 @@ jobs:
 
       with:
         api-level: 29
-        script: ./gradlew connectedCheck
+        script: |
+          chmod +x gradlew
+          ./gradlew connectedCheck
