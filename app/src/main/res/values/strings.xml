@@ -1,40 +1,40 @@
 <resources>
-  <string name="app_name">Boromi</string>
-  <string name="title_activity_test">TestActivity</string>
+    <string name="app_name">Boromi</string>
+    <string name="title_activity_test">TestActivity</string>
 
-  <!--generic-->
-  <string name="email">Email Address</string>
-  <string name="password">Password</string>
-  <!--signup-->
-  <string name="signup_page_name">Full Name</string>
-  <string name="signup_page_username">Username</string>
-  <!--login-->
-  <string name="login_page_login">LOGIN</string>
-  <string name="login_page_login_message">Login with your email address and password</string>
-  <string name="login_page_forgot">Forgot Your Password?</string>
-  <!--signup-->
-  <string name="signup_page_signup">CREATE ACCOUNT</string>
-  <string name="signup_page_signup_message">Enter your information below and we will set up your account!</string>
+    <!--generic-->
+    <string name="email">Email Address</string>
+    <string name="password">Password</string>
+    <!--signup-->
+    <string name="signup_page_name">Full Name</string>
+    <string name="signup_page_username">Username</string>
+    <!--login-->
+    <string name="login_page_login">LOGIN</string>
+    <string name="login_page_login_message">Login with your email address and password</string>
+    <string name="login_page_forgot">Forgot Your Password?</string>
+    <!--signup-->
+    <string name="signup_page_signup">CREATE ACCOUNT</string>
+    <string name="signup_page_signup_message">Enter your information below and we will set up your account!</string>
 
-  <!--signup-->
-  <string name="recover_page_recover">FORGOT PASSWORD</string>
-  <string name="recover_page_recover_message">Enter your email address and we will send you a link to reset your password</string>
+    <!--signup-->
+    <string name="recover_page_recover">FORGOT PASSWORD</string>
+    <string name="recover_page_recover_message">Enter your email address and we will send you a link to reset your password</string>
 
-  <!--welcome-->
-  <string name="welcome_page_welcome">Welcome to</string>
-  <string name="welcome_page_welcome_message">You are only a couple of steps away from joining a network of bookworms just like yourself</string>
-  <string name="welcome_create_account">CREATE AN ACCOUNT</string>
-  <string name="welcome_login">ALREADY SIGNED UP? LOGIN</string>
+    <!--welcome-->
+    <string name="welcome_page_welcome">Welcome to</string>
+    <string name="welcome_page_welcome_message">You are only a couple of steps away from joining a network of bookworms just like yourself</string>
+    <string name="welcome_create_account">CREATE AN ACCOUNT</string>
+    <string name="welcome_login">ALREADY SIGNED UP? LOGIN</string>
 
-  <!--borrowed-->
-  <string name="borrowed_borrowed">Borrowed</string>
-  <string name="borrowed_requested">Requested</string>
-  <string name="borrowed_accepted">Accepted</string>
+    <!--borrowed-->
+    <string name="borrowed_borrowed">Borrowed</string>
+    <string name="borrowed_requested">Requested</string>
+    <string name="borrowed_accepted">Accepted</string>
 
-  <!--owned-->
-  <string name="owned_available">Available</string>
-  <string name="owned_requests">Requests</string>
-  <string name="owned_accepted">Accepted</string>
-  <string name="owned_lent">Lent</string>
+    <!--owned-->
+    <string name="owned_available">Available</string>
+    <string name="owned_requests">Requests</string>
+    <string name="owned_accepted">Accepted</string>
+    <string name="owned_lent">Lent</string>
 
 </resources>

@@ -6,17 +6,28 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import com.team41.boromi.auth.WelcomeFragment;
+import com.team41.boromi.controllers.AuthenticationController;
+import javax.inject.Inject;
 
+/**
+ * This is the main activity and starting point of our app. Here, the WelcomeFragment will be shown
+ */
 public class MainActivity extends AppCompatActivity {
 
-
-  private FragmentManager manager = null;
+  @Inject
+  AuthenticationController authController;
   FragmentTransaction ft;
+  private FragmentManager manager = null;
 
+  /**
+   * Initialize variables, inject app, show WelcomeFragment
+   * @param savedInstanceState
+   */
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    ((BoromiApp) getApplicationContext()).appComponent.getAuthenticationComponent().inject(this);
 
     if (manager == null) {
       manager = getSupportFragmentManager();
@@ -28,7 +39,20 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
+  /**
+   * Custom back button in the auth pages
+   * @param view
+   */
   public void customBack(View view) {
     super.onBackPressed();
   }
+
+  /**
+   * Gets the authController
+   * @return AuthenticationController
+   */
+  public AuthenticationController getAuthController() {
+    return authController;
+  }
+
 }

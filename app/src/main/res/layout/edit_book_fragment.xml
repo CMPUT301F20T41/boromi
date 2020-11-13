@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/edit_book_fragment"
+    android:layout_width="340dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:padding="16dp"
+    android:orientation="vertical"
+    tools:context=".book.AddBookFragment">
+
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:text="Edit your books' information and we'll save your changes for you"
+      android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+      android:layout_marginBottom="16dp"/>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="8dp">
+
+    <ImageButton
+        android:id="@+id/edit_book_book_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="8dp"
+        android:layout_gravity="center"
+        android:background="@drawable/camera_circle"
+        app:srcCompat="@drawable/add_photo_icon" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+
+      <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/edit_book_author"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="Author"
+          android:inputType="text"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+  </LinearLayout>
+
+  <com.google.android.material.textfield.TextInputLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+      android:layout_marginBottom="8dp">
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/edit_book_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Title" />
+
+  </com.google.android.material.textfield.TextInputLayout>
+
+  <com.google.android.material.textfield.TextInputLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+      android:layout_marginBottom="8dp"
+      app:counterMaxLength="13"
+      app:counterEnabled="true">
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/edit_book_isbn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="ISBN"
+        android:inputType="number"
+        />
+
+  </com.google.android.material.textfield.TextInputLayout>
+
+  <Button
+      android:id="@+id/edit_book_add_button"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="SAVE CHANGES"/>
+
+</LinearLayout>

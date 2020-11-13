@@ -6,8 +6,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.team41.boromi.callbacks.AuthCallback;
+import com.team41.boromi.callbacks.AuthNoResultCallback;
 import com.team41.boromi.dagger.ActivityScope;
 import com.team41.boromi.dagger.BoromiModule;
 import com.team41.boromi.dbs.UserDB;
@@ -33,15 +35,12 @@ public class AuthenticationController {
     this.executor = executor;
   }
 
-  // TODO
-  // IMPLEMENTATION OF LOGIN WITH USERNAME
-
   /**
    * Makes a request for user login. Mandatory callback to return changes to main thread.
    *
-   * @param email
-   * @param password
-   * @param authCallback
+   * @param email        The email passed from the login fragment
+   * @param password     The password passed from the login fragment
+   * @param authCallback A callback function to execute on success or failure
    */
   public void makeLoginRequest(String email, String password, final AuthCallback authCallback) {
     auth.signInWithEmailAndPassword(email, password)
@@ -50,7 +49,9 @@ public class AuthenticationController {
             if (task.isSuccessful()) {
               // Sign in success, update UI with the signed-in user's information
               Log.d(TAG, "signInWithEmail:success");
-              BoromiModule.user = userDB.getUserByUUID(auth.getCurrentUser().getUid());
+              FirebaseUser fUser = auth.getCurrentUser();
+              assert fUser != null;
+              BoromiModule.user = userDB.getUserByUUID(fUser.getUid());
               authCallback.onSuccess(task.getResult());
             } else {
               // If sign in fails, display a message to the user.
@@ -61,17 +62,33 @@ public class AuthenticationController {
         });
   }
 
-
   /**
    * Makes a request to sign a user up. Fails on certain conditions such as the user already has an
    * account and request sign up. More details can be found https://firebase.google.com/docs/reference/js/firebase.auth.Auth#createuserwithemailandpassword
    * This needs to be run in executor because getting the user is synchronous.
-   * @param email
-   * @param password
-   * @return a user object if successful
+   *
+   * @param username The username entered  by the user
+   * @param email    The email entered by the user
+   * @param password The password entered by the user
    */
-  public void makeSignUpRequest(final String username, String email, String password,
-      final AuthCallback authCallback) {
+  public void makeSignUpRequest(
+      final String username,
+      String email,
+      String password,
+      final AuthCallback authCallback
+  ) {
+    // Ensures that the username is unique before signing up
+    if (userDB.getUserByUsername(username) != null) {
+
+      // Takes two string params but I have no clue what they need to be
+      authCallback.onFailure(new FirebaseAuthUserCollisionException(
+          "The username '" + username + "' is taken",
+          "The username '" + username + "' is taken"
+      ));
+
+      return;
+    }
+
     auth.createUserWithEmailAndPassword(email, password)
         .addOnCompleteListener(executor, new OnCompleteListener<AuthResult>() {
           public void onComplete(@NonNull Task<AuthResult> task) {
@@ -92,13 +109,70 @@ public class AuthenticationController {
   /**
    * Pushes information to login
    *
-   * @param username
+   * @param username The username to create an account for
    */
   private void createUser(String username) {
     FirebaseUser fUser = auth.getCurrentUser();
-    User user = new User(fUser.getUid(), fUser.getEmail(), username);
+    assert fUser != null;
+
+    User user = new User(fUser.getUid(), username, fUser.getEmail());
+    userDB.pushUser(user);
+    BoromiModule.user = user;   // set user in signup process
+  }
+
+  /**
+   * Sends a request to update a user's password
+   * @param email email to update
+   * @param authCallback callback function to execute success or failure
+   */
+  public void resetPassword(String email, AuthNoResultCallback authCallback) {
+    auth.sendPasswordResetEmail(email)
+        .addOnCompleteListener(executor, new OnCompleteListener<Void>() {
+          @Override
+          public void onComplete(@NonNull Task<Void> task) {
+            if (task.isSuccessful()) {
+              authCallback.onSuccess();
+            } else {
+              authCallback.onFailure(task.getException());
+            }
+          }
+        });
+  }
+
+  /**
+   * Changes the users email address in firebase auth If successful, persists the change to
+   * firestore If unsuccessful, neither operation will happen
+   *
+   * @param user The modified user information
+   */
+  public void changeEmail(User user, AuthNoResultCallback authResult) {
+    FirebaseUser fUser = auth.getCurrentUser();
+    assert fUser != null;
+    fUser.updateEmail(user.getEmail())
+        .addOnCompleteListener(executor, task -> {
+          if (task.isSuccessful()) {
+            userDB.pushUser(user);
+            authResult.onSuccess();
+          } else {
+            Log.e(TAG, "Failed to update users email");
+            authResult.onFailure(task.getException());
+          }
+        });
+  }
+
+  /**
+   * Updates the user
+   * @param user User object to be updated
+   */
+  public void updateUser(User user) {
     userDB.pushUser(user);
   }
 
+  /**
+   * Signs out of the app
+   */
+  public void signOut() {
+    auth.signOut();
+  }
 
 }

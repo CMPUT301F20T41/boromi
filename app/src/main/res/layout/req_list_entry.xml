@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:orientation="horizontal"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:paddingTop="8dp"
+  android:paddingHorizontal="8dp">
+
+  <TextView
+    android:id="@+id/req_list_entry_user"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+    android:layout_weight="1"
+    android:gravity="center_vertical"
+    android:text="blchelle"/>
+
+  <ImageButton
+    android:id="@+id/accept"
+    android:layout_width="32dp"
+    android:layout_height="32dp"
+    android:scaleType="fitXY"
+    android:layout_marginEnd="5dp"
+    android:background="@color/colorIconLight"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toStartOf="@+id/cancel"
+    app:layout_constraintTop_toTopOf="parent"
+    app:srcCompat="@drawable/check_icon" />
+
+  <ImageButton
+    android:id="@+id/cancel"
+    android:layout_width="32dp"
+    android:layout_height="32dp"
+    android:scaleType="fitXY"
+    android:background="@color/colorIconLight"
+    app:srcCompat="@drawable/cancel_icon" />
+
+</LinearLayout>

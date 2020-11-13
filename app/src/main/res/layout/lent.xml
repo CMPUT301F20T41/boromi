@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
+
+  <androidx.cardview.widget.CardView
+    android:layout_width="320dp"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="10dp"
+    android:clipToPadding="false"
+    android:layout_centerHorizontal="true"
+    android:layout_margin="10dp">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:padding="12dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent">
+
+      <ImageButton
+        android:id="@+id/lent_book_image"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="12dp"
+        android:layout_gravity="center"
+        android:background="@drawable/camera_circle"
+        app:srcCompat="@drawable/book_icon" />
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+          android:id="@+id/lent_title"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="The Hobbit"
+          android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
+
+        <TextView
+          android:id="@+id/lent_author"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="J.R.R. Tolkein"
+          android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+
+        <LinearLayout
+          android:id="@+id/lent_to"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content">
+
+          <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lent to: "
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"/>
+
+          <TextView
+            android:id="@+id/lent_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="blchelle"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"/>
+        </LinearLayout>
+
+        <TextView
+          android:id="@+id/lent_isbn"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="ISBN: #1234567890123"
+          android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"/>
+
+      </LinearLayout>
+
+      <ImageButton
+        android:id="@+id/right_button"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:backgroundTint="@color/colorIconLight"
+        android:tint="@color/colorIconDark"
+        app:srcCompat="@drawable/more_horizontal_icon"
+        tools:srcCompat="@drawable/more_horizontal_icon" />
+
+    </LinearLayout>
+
+  </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
