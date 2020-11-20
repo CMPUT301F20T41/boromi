@@ -159,7 +159,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
       } else {
         requesters = (ArrayList<BookRequest>) bookWithRequests.get(book);
       }
-      SubListAdapter subListAdapter = new SubListAdapter(requesters, book, bookRequestController,
+      SubListAdapter subListAdapter = new SubListAdapter(requesters, book, bookActivity,
           this);
       recyclerView.setLayoutManager(new LinearLayoutManager(parent.getContext()));
       recyclerView.setAdapter(subListAdapter);

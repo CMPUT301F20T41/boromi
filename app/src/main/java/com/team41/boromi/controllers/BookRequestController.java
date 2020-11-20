@@ -89,6 +89,8 @@ public class BookRequestController {
       acceptedBook.setWorkflow(BookWorkflowStage.PENDINGBORROW);
       acceptedBook.setBorrower(bookRequest.getRequestor());
       acceptedBook.setBorrowerName(bookRequest.getRequestorName());
+      acceptedBook.setLocationLat(bookRequest.getLocation().latitude);
+      acceptedBook.setLocationLon(bookRequest.getLocation().longitude);
       bookDB.pushBook(acceptedBook);
       bookRequestCallback.onComplete(null);
     });

@@ -101,7 +101,6 @@ public class BookActivity extends AppCompatActivity implements
     TabItem tabSearch = findViewById(R.id.tab_search);
     TabItem tabMap = findViewById(R.id.tab_location);
     TabItem tabSettings = findViewById(R.id.tab_settings);
-
     // Add fragments for each tab
     pagerAdapter
         .addFragment(new Pair<Class<? extends Fragment>, Bundle>(OwnedFragment.class, null));
@@ -110,7 +109,7 @@ public class BookActivity extends AppCompatActivity implements
     pagerAdapter
         .addFragment(new Pair<Class<? extends Fragment>, Bundle>(SearchFragment.class, null));
     Bundle bundle = new Bundle();
-    bundle.putInt("Mode", 1);
+    bundle.putInt("Mode", 0);
     pagerAdapter.addFragment(new Pair<Class<? extends Fragment>, Bundle>(MapFragment.class, bundle));
     pagerAdapter
         .addFragment(new Pair<Class<? extends Fragment>, Bundle>(SettingsFragment.class, null));
@@ -191,6 +190,17 @@ public class BookActivity extends AppCompatActivity implements
     }
   }
 
+  public void switchTabs(int index) {
+    tabLayout.getTabAt(index).select();
+  }
+
+  public TabLayout.Tab getTab(int index) {
+    return tabLayout.getTabAt(index);
+  }
+
+  public Fragment getMainFragment(String pos) {
+    return getSupportFragmentManager().findFragmentByTag(pos);
+  }
 
   /**
    * Sets up bundle for GenericListFragment

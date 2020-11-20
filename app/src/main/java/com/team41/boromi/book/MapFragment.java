@@ -26,7 +26,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
+import com.team41.boromi.BookActivity;
 import com.team41.boromi.R;
+import com.team41.boromi.adapters.SubListAdapter;
 import java.security.Permission;
 import java.util.ArrayList;
 
@@ -48,6 +51,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
   private Marker currentMarker;
 
   private int mode; // 0 viewing, 1 add
+  private SubListAdapter adapter;
 
   public MapFragment() {
     // Required empty public constructor
@@ -87,12 +91,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
       @Override
       public void onClick(View view) {
         // TODO LOGIC TO SAVE DROPPED PIN
+        SelectedLocation location = (SelectedLocation) adapter;
+        adapter.onLocationSelected(currentMarker.getPosition());
+
+        TabLayout.Tab tab = ((BookActivity) getActivity()).getTab(0);
+        tab.select();
       }
     });
     if (mode == 0) {
       confirmButton.hide();
     }
     return view;
+  }
+
+  @Override
+  public void onPause() {
+    setMode(0);
+    super.onPause();
   }
 
   @Override
@@ -155,5 +170,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     // TODO request permissions
   }
 
+  public void setMode(int mode) {
+    this.mode = mode;
+    if (mode == 0) {
+      confirmButton.hide();
+    } else {
+      confirmButton.show();
+    }
+  }
 
+  public void setAdapterCallback(SubListAdapter subListAdapter) {
+    adapter = subListAdapter;
+  }
+
+  public interface SelectedLocation {
+    void onLocationSelected(LatLng location);
+  }
 }
