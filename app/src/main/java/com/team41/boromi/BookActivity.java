@@ -21,6 +21,7 @@ import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
 import com.google.android.material.tabs.TabLayout.Tab;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.team41.boromi.adapters.PagerAdapter;
 import com.team41.boromi.book.AddBookFragment;
 import com.team41.boromi.book.BorrowedFragment;
@@ -90,6 +91,9 @@ public class BookActivity extends AppCompatActivity implements
     pagerAdapter = new PagerAdapter(getSupportFragmentManager(), getLifecycle());
     Toolbar toolbar = (Toolbar) findViewById(R.id.book_toolbar);
     setSupportActionBar(toolbar);
+
+    // Subscribes to the pushNotifications topic
+    FirebaseMessaging.getInstance().subscribeToTopic(user.getUUID());
 
     // Prevents the keyboard from moving the entire screen up
     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);

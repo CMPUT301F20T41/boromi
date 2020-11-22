@@ -20,7 +20,12 @@ public abstract class FirestoreModule {
   @Singleton
   @Provides
   static FirebaseFirestore provideFirestore() {
-    return FirebaseFirestore.getInstance();
+    FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+    // Leave this commented out to use the production db
+    // Uncomment it out to use an emulated db
+    // firestore.useEmulator("10.0.2.2", 8080);
+    return firestore;
   }
 
   /**
@@ -31,7 +36,12 @@ public abstract class FirestoreModule {
   @Singleton
   @Provides
   static FirebaseAuth provideAuth() {
-    return FirebaseAuth.getInstance();
-  }
+    FirebaseAuth auth = FirebaseAuth.getInstance();
 
+    // Leave this commented out to use the production auth server
+    // Uncomment it out to use an emulated auth server
+    // auth.useEmulator("10.0.2.2", 9099);
+
+    return auth;
+  }
 }
