@@ -2,7 +2,6 @@ package com.team41.boromi.utility;
 
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,6 +38,7 @@ public class CustomClickListener implements View.OnClickListener,
 
   /**
    * Expand the more button and show the dropdown menu
+   *
    * @param view
    */
   @Override
@@ -86,6 +86,7 @@ public class CustomClickListener implements View.OnClickListener,
 
   /**
    * onClick functionality for individual menu items
+   *
    * @param menuItem
    * @return
    */
@@ -107,11 +108,14 @@ public class CustomClickListener implements View.OnClickListener,
           public void onSuccess(ArrayList<Book> books) {
             genericListFragment.getActivity().runOnUiThread(() -> {
               if (genericListFragment.getParent().equals("Owned")) {
-                ((BookActivity) genericListFragment.getActivity())
-                    .updateFragment("OwnedFragment", genericListFragment.tag);
+                // TODO temp solution just update both
+                genericListFragment.getBookViewModel().getOwnerAvailable();
+                genericListFragment.getBookViewModel().getOwnerAccepted();
+//                ((BookActivity) genericListFragment.getActivity())
+//                    .updateFragment("OwnedFragment", genericListFragment.tag);
               } else if (genericListFragment.getParent().equals("Borrowed")) {
-                ((BookActivity) genericListFragment.getActivity())
-                    .updateFragment("BorrowedFragment", genericListFragment.tag);
+//                ((BookActivity) genericListFragment.getActivity())
+//                    .updateFragment("BorrowedFragment", genericListFragment.tag);
               }
             });
           }

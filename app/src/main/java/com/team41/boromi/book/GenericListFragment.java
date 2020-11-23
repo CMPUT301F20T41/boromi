@@ -6,14 +6,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.team41.boromi.BookActivity;
+import com.team41.boromi.BookViewModel;
 import com.team41.boromi.R;
 import com.team41.boromi.adapters.GenericListAdapter;
 import com.team41.boromi.callbacks.BookCallback;
 import com.team41.boromi.constants.CommonConstants.BookStatus;
-import com.team41.boromi.constants.CommonConstants.ExchangeStage;
 import com.team41.boromi.models.Book;
 import com.team41.boromi.models.BookRequest;
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ import java.util.Map;
  * that it has been provided with
  */
 public class GenericListFragment extends Fragment {
+
   // Bundle tags
   private static final String LAYOUT_PARAM1 = "LayoutID";
   private static final String DATA_PARAM2 = "Data";
@@ -41,6 +44,7 @@ public class GenericListFragment extends Fragment {
   private String tempMsg;
   private String parent;
   private Map<Book, List<BookRequest>> bookWithRequests;
+  private BookViewModel bookViewModel;
 
   public GenericListFragment() {
     // Required empty public constructor
@@ -61,11 +65,13 @@ public class GenericListFragment extends Fragment {
 
   /**
    * Initialize any values/unpack bundle
+   *
    * @param savedInstanceState
    */
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    bookViewModel = new ViewModelProvider(requireActivity()).get(BookViewModel.class);
     if (getArguments() != null) {
       layoutID = getArguments().getInt(LAYOUT_PARAM1);
       bookDataList = (ArrayList<Book>) getArguments().getSerializable(DATA_PARAM2);
@@ -78,6 +84,7 @@ public class GenericListFragment extends Fragment {
   /**
    * Gets the parent tag. Example if this instance of GenericListFragment is the sub tab of Owner
    * books, then the parent would be "Owner"
+   *
    * @return String tag of the parent fragment
    */
   public String getParent() {
@@ -86,6 +93,7 @@ public class GenericListFragment extends Fragment {
 
   /**
    * Bind any listeners and initialize any values. This will also set up the GenericListAdapter
+   *
    * @param inflater
    * @param container
    * @param savedInstanceState
@@ -103,51 +111,45 @@ public class GenericListFragment extends Fragment {
     recyclerView.setAdapter(listAdapter);
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     tempMsgView.setText(tempMsg);
-    if (parent.equals("Owned")) {
-      ((OwnedFragment) getParentFragment()).getData(tag, this);
-    } else if (parent.equals("Borrowed")) {
-      ((BorrowedFragment) getParentFragment()).getData(tag, this);
+
+    final Observer<ArrayList<Book>> bookDataObserver = new Observer<ArrayList<Book>>() {
+      @Override
+      public void onChanged(ArrayList<Book> books) {
+        if (books == null) {
+          books = new ArrayList<>();
+        }
+        bookDataList.clear();
+        bookDataList.addAll(books);
+        listAdapter.notifyDataSetChanged();
+      }
+    };
+    final Observer<Map<Book, List<BookRequest>>> bookRequestDataObserver = new Observer<Map<Book, List<BookRequest>>>() {
+      @Override
+      public void onChanged(Map<Book, List<BookRequest>> bookListMap) {
+        bookDataList.clear();
+        bookDataList.addAll(bookListMap.keySet());
+        bookWithRequests = bookListMap;
+        listAdapter.setBookWithRequests(bookWithRequests);
+        listAdapter.notifyDataSetChanged();
+        listAdapter.notifySubAdapters();
+      }
+    };
+    if (tag.equals("Requested")) {
+      bookViewModel.getRequested(this).observe(getViewLifecycleOwner(), bookRequestDataObserver);
+    } else {
+      bookViewModel.getData(this).observe(getViewLifecycleOwner(), bookDataObserver);
     }
     return view;
   }
 
-  /**
-   * This function will be called from the parent fragment to update the data of this
-   * GenericListFragment by updating the adapter list
-   * @param books books to update
-   */
-  public void updateData(ArrayList<Book> books) {
-    this.bookDataList.clear();
-    this.bookDataList.addAll(books);
-    getActivity().runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        listAdapter.notifyDataSetChanged();
-      }
-    });
+  public BookViewModel getBookViewModel() {
+    return bookViewModel;
   }
 
   /**
-   * Polymorphism to accept a map. Request tabs use a map of Book and BookRequest.
-   * @param bookWithRequests Map of Book and List of BookRequests
-   */
-  public void updateData(Map<Book, List<BookRequest>> bookWithRequests) {
-    this.bookDataList.clear();
-    this.bookDataList.addAll(bookWithRequests.keySet());
-    this.bookWithRequests = bookWithRequests;
-    listAdapter.setBookWithRequests(bookWithRequests);
-    getActivity().runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        listAdapter.notifyDataSetChanged();
-        listAdapter.notifySubAdapters();
-      }
-    });
-  }
-
-  /**
-   * Used in the Accepted tabs to process the exchanging of the book. It will also refresh the
-   * lent, accepted, borrowed, requested subtabs
+   * Used in the Accepted tabs to process the exchanging of the book. It will also refresh the lent,
+   * accepted, borrowed, requested subtabs
+   *
    * @param book Book to be exchanged
    */
   public void bookExchangeRequest(Book book) {
@@ -157,11 +159,10 @@ public class GenericListFragment extends Fragment {
           @Override
           public void onSuccess(ArrayList<Book> books) {
             if (books.get(0).getStatus() == BookStatus.BORROWED) {
-              bookActivity.updateFragment("OwnedFragment", "Lent");
-              bookActivity.updateFragment("OwnedFragment", "Accepted");
-              bookActivity.updateFragment("BorrowedFragment", "Borrowed");
-              bookActivity.updateFragment("BorrowedFragment", "Requested");
-
+              bookViewModel.getOwnerLent();
+              bookViewModel.getOwnerAccepted();
+              bookViewModel.getBorrowedBorrowed();
+              bookViewModel.getBorrowedRequested();
             }
           }
 

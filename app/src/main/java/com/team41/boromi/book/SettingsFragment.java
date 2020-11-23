@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import com.team41.boromi.BookActivity;
@@ -51,6 +49,7 @@ public class SettingsFragment extends Fragment implements EditUserFragment.Chang
 
   /**
    * Initialize any values
+   *
    * @param savedInstanceState
    */
   @Override
@@ -61,6 +60,7 @@ public class SettingsFragment extends Fragment implements EditUserFragment.Chang
 
   /**
    * Binds any listeners or values
+   *
    * @param inflater
    * @param container
    * @param savedInstanceState
@@ -116,8 +116,9 @@ public class SettingsFragment extends Fragment implements EditUserFragment.Chang
 
   /**
    * Updates the UI with the new information
+   *
    * @param username username of the user
-   * @param email email of the user
+   * @param email    email of the user
    */
   @Override
   public void changeUserInformation(String username, String email) {

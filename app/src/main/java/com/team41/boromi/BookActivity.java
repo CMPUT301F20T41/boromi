@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener;
 import androidx.viewpager2.widget.ViewPager2;
@@ -26,7 +26,6 @@ import com.team41.boromi.adapters.PagerAdapter;
 import com.team41.boromi.book.AddBookFragment;
 import com.team41.boromi.book.BorrowedFragment;
 import com.team41.boromi.book.EditBookFragment;
-import com.team41.boromi.book.GenericListFragment;
 import com.team41.boromi.book.MapFragment;
 import com.team41.boromi.book.OwnedFragment;
 import com.team41.boromi.book.SearchFragment;
@@ -36,21 +35,16 @@ import com.team41.boromi.controllers.BookController;
 import com.team41.boromi.controllers.BookRequestController;
 import com.team41.boromi.controllers.BookReturnController;
 import com.team41.boromi.models.Book;
-import com.team41.boromi.models.BookRequest;
 import com.team41.boromi.models.User;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import javax.inject.Inject;
 
 /**
  * BookActivity is the main activity that will house all of the fragments. It creates the fragments
- * for the main tabs (OwnedFragment, BorrowedFragment, SearchFragment, MapFragment, SettingsFragment)
- * It uses PagerAdapter, ViewPager2, TabsLayout to switch betwen the tabs and fragments.
- * Each SubFragment may create more fragments. For example, OwnedFragment, BorrowedFragment,
- * SearchFragment will be creating GenericListFragments to house lists
+ * for the main tabs (OwnedFragment, BorrowedFragment, SearchFragment, MapFragment,
+ * SettingsFragment) It uses PagerAdapter, ViewPager2, TabsLayout to switch betwen the tabs and
+ * fragments. Each SubFragment may create more fragments. For example, OwnedFragment,
+ * BorrowedFragment, SearchFragment will be creating GenericListFragments to house lists
  */
 public class BookActivity extends AppCompatActivity implements
     AddBookFragment.AddBookFragmentListener, EditBookFragment.EditBookFragmentListener {
@@ -75,12 +69,12 @@ public class BookActivity extends AppCompatActivity implements
   private ViewPager2 viewPager2;
   private PagerAdapter pagerAdapter;
   private TabLayout tabLayout;
-  private Map<String, ArrayList<Book>> collections = new HashMap<>();
-  private Map<Book, List<BookRequest>> requestsCollections = new HashMap<>();
   private MenuItem addButton;
+  private BookViewModel bookViewModel;
 
   /**
    * Initialize any values, create the fragments, link pagerAdapter, ViewPager2, and tabLayout
+   *
    * @param savedInstanceState
    */
   @Override
@@ -88,6 +82,10 @@ public class BookActivity extends AppCompatActivity implements
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_book);
     ((BoromiApp) getApplicationContext()).appComponent.inject(this);
+    bookViewModel = new ViewModelProvider(this, new ViewModelFactory(this))
+        .get(BookViewModel.class);
+    bookViewModel.queryAllData();
+    bookViewModel.temp = "hello";
     pagerAdapter = new PagerAdapter(getSupportFragmentManager(), getLifecycle());
     Toolbar toolbar = (Toolbar) findViewById(R.id.book_toolbar);
     setSupportActionBar(toolbar);
@@ -105,7 +103,6 @@ public class BookActivity extends AppCompatActivity implements
     TabItem tabSearch = findViewById(R.id.tab_search);
     TabItem tabMap = findViewById(R.id.tab_location);
     TabItem tabSettings = findViewById(R.id.tab_settings);
-
     // Add fragments for each tab
     pagerAdapter
         .addFragment(new Pair<Class<? extends Fragment>, Bundle>(OwnedFragment.class, null));
@@ -113,7 +110,10 @@ public class BookActivity extends AppCompatActivity implements
         .addFragment(new Pair<Class<? extends Fragment>, Bundle>(BorrowedFragment.class, null));
     pagerAdapter
         .addFragment(new Pair<Class<? extends Fragment>, Bundle>(SearchFragment.class, null));
-    pagerAdapter.addFragment(new Pair<Class<? extends Fragment>, Bundle>(MapFragment.class, null));
+    Bundle bundle = new Bundle();
+    bundle.putInt("Mode", 0);
+    pagerAdapter
+        .addFragment(new Pair<Class<? extends Fragment>, Bundle>(MapFragment.class, bundle));
     pagerAdapter
         .addFragment(new Pair<Class<? extends Fragment>, Bundle>(SettingsFragment.class, null));
 
@@ -122,12 +122,18 @@ public class BookActivity extends AppCompatActivity implements
     viewPager2.setOffscreenPageLimit(tabLayout.getTabCount());
     viewPager2.setUserInputEnabled(false);
     viewPager2.setAdapter(pagerAdapter);
+    final SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_refresh);
     /**
      * Switch fragments depending on the selected tab
      */
     tabLayout.addOnTabSelectedListener(new OnTabSelectedListener() {
       @Override
       public void onTabSelected(Tab tab) {
+        if (tab.getPosition() == 3) {
+          swipeRefreshLayout.setEnabled(false);
+        } else {
+          swipeRefreshLayout.setEnabled(true);
+        }
         viewPager2.setCurrentItem(tab.getPosition());
       }
 
@@ -145,17 +151,10 @@ public class BookActivity extends AppCompatActivity implements
     /**
      * Pull down refresh updates OwnedFragment tab and BorrowedFragment tab.
      */
-    final SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_refresh);
     swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
       @Override
       public void onRefresh() {
-        updateFragment("OwnedFragment", "Available");
-        updateFragment("OwnedFragment", "Requested");
-        updateFragment("OwnedFragment", "Accepted");
-        updateFragment("OwnedFragment", "Lent");
-        updateFragment("BorrowedFragment", "Borrowed");
-        updateFragment("BorrowedFragment", "Requested");
-        updateFragment("BorrowedFragment", "Accepted");
+        bookViewModel.queryAllData();
         swipeRefreshLayout.setRefreshing(false);
       }
     });
@@ -163,6 +162,7 @@ public class BookActivity extends AppCompatActivity implements
 
   /**
    * Custom toolbar to house add/scan buttons
+   *
    * @param menu
    * @return
    */
@@ -174,6 +174,7 @@ public class BookActivity extends AppCompatActivity implements
 
   /**
    * Logic when toolbar buttons are clicked
+   *
    * @param item selected menu item
    * @return
    */
@@ -193,14 +194,30 @@ public class BookActivity extends AppCompatActivity implements
     }
   }
 
+  public BookViewModel getBookViewModel() {
+    return bookViewModel;
+  }
+
+  public void switchTabs(int index) {
+    tabLayout.getTabAt(index).select();
+  }
+
+  public TabLayout.Tab getTab(int index) {
+    return tabLayout.getTabAt(index);
+  }
+
+  public Fragment getMainFragment(String pos) {
+    return getSupportFragmentManager().findFragmentByTag(pos);
+  }
 
   /**
    * Sets up bundle for GenericListFragment
-   * @param layout model to inject
-   * @param data book data to inject
+   *
+   * @param layout  model to inject
+   * @param data    book data to inject
    * @param messsge description of the tab
-   * @param parent parent fragment tag
-   * @param tag genericlistfragment tag
+   * @param parent  parent fragment tag
+   * @param tag     genericlistfragment tag
    * @return Bundle
    */
   public Bundle setupBundle(
@@ -221,6 +238,7 @@ public class BookActivity extends AppCompatActivity implements
 
   /**
    * Gets the bookReturnController
+   *
    * @return BookReturnController
    */
   public BookReturnController getBookReturnController() {
@@ -229,6 +247,7 @@ public class BookActivity extends AppCompatActivity implements
 
   /**
    * Gets the BookController
+   *
    * @return BookController
    */
   public BookController getBookController() {
@@ -237,6 +256,7 @@ public class BookActivity extends AppCompatActivity implements
 
   /**
    * Gets the BookRequestController
+   *
    * @return BookRequestController
    */
   public BookRequestController getBookRequestController() {
@@ -245,35 +265,11 @@ public class BookActivity extends AppCompatActivity implements
 
   /**
    * Gets logged in user
+   *
    * @return User
    */
   public User getUser() {
     return user;
-  }
-
-  /**
-   * get Collections that stores data fetched from firebase locally
-   * @return
-   */
-  public Map<String, ArrayList<Book>> getCollections() {
-    return collections;
-  }
-
-  /**
-   * get Collections that stores request data obtained from firebase
-   * @return
-   */
-  public Map<Book, List<BookRequest>> getRequestsCollections() {
-    return requestsCollections;
-  }
-
-  /**
-   * Sets the request collection
-   * @param requestsCollections
-   */
-  public void setRequestsCollections(
-      Map<Book, List<BookRequest>> requestsCollections) {
-    this.requestsCollections = requestsCollections;
   }
 
   @Override
@@ -283,17 +279,18 @@ public class BookActivity extends AppCompatActivity implements
 
   /**
    * Logic when a book is added. Call the controller method then update the fragment
+   *
    * @param author author of the book
-   * @param title title of the book
-   * @param isbn isbn of the book
-   * @param image image of the book
+   * @param title  title of the book
+   * @param isbn   isbn of the book
+   * @param image  image of the book
    */
   @Override
   public void onComplete(String author, String title, String isbn, Bitmap image) {
     bookController.addBook(author, isbn, title, image, new BookCallback() {
       @Override
       public void onSuccess(ArrayList<Book> books) {
-        updateFragment("OwnedFragment", "Available");
+        bookViewModel.getOwnerAvailable();
       }
 
       @Override
@@ -305,11 +302,12 @@ public class BookActivity extends AppCompatActivity implements
 
   /**
    * Callback for editing a book. When the book dialog closes
+   *
    * @param BookID id of the edited book
    * @param author new author
-   * @param title new title
-   * @param isbn new isbn
-   * @param image new image
+   * @param title  new title
+   * @param isbn   new isbn
+   * @param image  new image
    */
   @Override
   public void onEditComplete(String BookID, String author, String title, String isbn,
@@ -317,44 +315,13 @@ public class BookActivity extends AppCompatActivity implements
     bookController.editBook(BookID, author, isbn, title, image, new BookCallback() {
       @Override
       public void onSuccess(ArrayList<Book> books) {
-        updateFragment("OwnedFragment", "Available");
+        bookViewModel.getOwnerAvailable();
       }
 
       @Override
       public void onFailure(Exception e) {
       }
     });
-  }
-
-  /**
-   * This function updates an individual subfragment
-   * @param mainTab Class name of the parent fragment (main tab)
-   * @param subTab Tag of the sub fragment (GenericListFragment)
-   */
-  public void updateFragment(String mainTab, String subTab) {
-    Optional<Fragment> f = getSupportFragmentManager().getFragments().stream()
-        .filter(fragment -> fragment.getClass().getSimpleName().equals(mainTab)).findFirst();
-    if (f.isPresent()) {
-      if (mainTab.equals("OwnedFragment")) {
-        OwnedFragment ownedFragment = OwnedFragment.class.cast(f.get());
-        Optional<Fragment> subFragment = ownedFragment.getChildFragmentManager().getFragments()
-            .stream().filter(fragment -> ((GenericListFragment) fragment).tag.equals(subTab))
-            .findFirst();
-        if (subFragment.isPresent()) {
-          ownedFragment.getData(subTab, (GenericListFragment) subFragment.get());
-        }
-      } else if (mainTab.equals("BorrowedFragment")) {
-        BorrowedFragment borrowedFragment = BorrowedFragment.class.cast(f.get());
-        Optional<Fragment> subFragment = borrowedFragment.getChildFragmentManager().getFragments()
-            .stream().filter(fragment -> ((GenericListFragment) fragment).tag.equals(subTab))
-            .findFirst();
-        if (subFragment.isPresent()) {
-          borrowedFragment.getData(subTab, (GenericListFragment) subFragment.get());
-        }
-      } else {
-        return;
-      }
-    }
   }
 
   @Override

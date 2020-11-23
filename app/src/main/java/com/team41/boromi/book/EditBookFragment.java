@@ -18,7 +18,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -37,6 +36,32 @@ public class EditBookFragment extends DialogFragment {
   private EditText author;
   private EditText title;
   private EditText isbn;
+  /**
+   * Used to validate input fields
+   */
+  TextWatcher allFieldsWatcher = new TextWatcher() {
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+      // Empty method, required for text watcher
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+      String authorText = author.getText().toString().trim();
+      String titleText = title.getText().toString().trim();
+      String isbnText = isbn.getText().toString().trim();
+
+      // Sets the button if all the text fields have content and the ISBN is 13 characters
+      editBook.setEnabled(
+          isNotNullOrEmpty(authorText) && isNotNullOrEmpty(titleText) && isNotNullOrEmpty(isbnText)
+              && returnIfISBNGood(isbnText));
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+      // Empty method, required for text watcher
+    }
+  };
   private ImageButton addImage;
   private Bitmap imageBitmap;
 
@@ -46,6 +71,7 @@ public class EditBookFragment extends DialogFragment {
 
   /**
    * Factory method to create EditBookFragment
+   *
    * @param book
    * @return
    */
@@ -58,6 +84,7 @@ public class EditBookFragment extends DialogFragment {
 
   /**
    * Initialize any values
+   *
    * @param inflater
    * @param container
    * @param savedInstanceState
@@ -77,6 +104,7 @@ public class EditBookFragment extends DialogFragment {
 
   /**
    * Bind any listeners or values
+   *
    * @param view
    * @param savedInstanceState
    */
@@ -113,18 +141,19 @@ public class EditBookFragment extends DialogFragment {
     editBook.setOnClickListener(view1 -> {
       EditBookFragmentListener listener = (EditBookFragmentListener) getActivity();
 
-        assert listener != null;
+      assert listener != null;
 
-        if (imageBitmap == null && editingBook.getImg64() != null) {
-          imageBitmap = ((BookActivity) getActivity()).getBookController().decodeBookImage(editingBook);
-        }
-        listener.onEditComplete(
-                editingBook.getBookId(),
-                author.getText().toString(),
-                title.getText().toString(),
-                isbn.getText().toString(),
-            imageBitmap);
-        dismiss();
+      if (imageBitmap == null && editingBook.getImg64() != null) {
+        imageBitmap = ((BookActivity) getActivity()).getBookController()
+            .decodeBookImage(editingBook);
+      }
+      listener.onEditComplete(
+          editingBook.getBookId(),
+          author.getText().toString(),
+          title.getText().toString(),
+          isbn.getText().toString(),
+          imageBitmap);
+      dismiss();
     });
 
     addImage.setOnClickListener(view2 -> dispatchTakePictureIntent());
@@ -138,6 +167,7 @@ public class EditBookFragment extends DialogFragment {
 
   /**
    * Called when returning from Camera Activity and stores the photo taken.
+   *
    * @param requestCode
    * @param resultCode
    * @param data
@@ -166,36 +196,12 @@ public class EditBookFragment extends DialogFragment {
   }
 
   /**
-   * Used to validate input fields
-   */
-  TextWatcher allFieldsWatcher = new TextWatcher() {
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-      // Empty method, required for text watcher
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-      String authorText = author.getText().toString().trim();
-      String titleText = title.getText().toString().trim();
-      String isbnText = isbn.getText().toString().trim();
-
-      // Sets the button if all the text fields have content and the ISBN is 13 characters
-      editBook.setEnabled(isNotNullOrEmpty(authorText) && isNotNullOrEmpty(titleText) && isNotNullOrEmpty(isbnText) && returnIfISBNGood(isbnText));
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-      // Empty method, required for text watcher
-    }
-  };
-
-  /**
    * returns true if isbn is length 10 or 13.
+   *
    * @param isbn
    * @return
    */
-  public boolean returnIfISBNGood(String isbn){
+  public boolean returnIfISBNGood(String isbn) {
     return isbn.length() == 13 || isbn.length() == 10;
   }
 

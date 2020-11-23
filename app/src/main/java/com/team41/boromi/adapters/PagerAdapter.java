@@ -22,8 +22,9 @@ public class PagerAdapter extends FragmentStateAdapter {
 
   /**
    * Initialize with a fragment manager and lifecycle object
+   *
    * @param fragmentManager fragment manager
-   * @param lifecycle lifecycle
+   * @param lifecycle       lifecycle
    */
   public PagerAdapter(@NonNull FragmentManager fragmentManager,
       @NonNull Lifecycle lifecycle) {
@@ -34,6 +35,7 @@ public class PagerAdapter extends FragmentStateAdapter {
 
   /**
    * This function is used to create the fragments by using a FragmentFactory
+   *
    * @param position
    * @return
    */
@@ -52,6 +54,7 @@ public class PagerAdapter extends FragmentStateAdapter {
 
   /**
    * Returns the number of fragments
+   *
    * @return number of fragments
    */
   @Override
@@ -61,6 +64,7 @@ public class PagerAdapter extends FragmentStateAdapter {
 
   /**
    * Adds a fragment
+   *
    * @param f Fragment.Class with a Bundle to pass in any objects
    */
   public void addFragment(Pair<Class<? extends Fragment>, Bundle> f) {

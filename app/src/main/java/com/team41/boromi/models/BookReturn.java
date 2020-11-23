@@ -1,6 +1,6 @@
 package com.team41.boromi.models;
 
-import com.google.type.LatLng;
+import com.google.android.gms.maps.model.LatLng;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -71,4 +71,7 @@ public class BookReturn implements Serializable {
     return location;
   }
 
+  public void setLocation(LatLng location) {
+    this.location = location;
+  }
 }

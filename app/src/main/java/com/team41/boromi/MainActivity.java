@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
   /**
    * Initialize variables, inject app, show WelcomeFragment
+   *
    * @param savedInstanceState
    */
   @Override
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
   /**
    * Custom back button in the auth pages
+   *
    * @param view
    */
   public void customBack(View view) {
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
   /**
    * Gets the authController
+   *
    * @return AuthenticationController
    */
   public AuthenticationController getAuthController() {

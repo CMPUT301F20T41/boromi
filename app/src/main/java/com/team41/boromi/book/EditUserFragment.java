@@ -133,6 +133,7 @@ public class EditUserFragment extends DialogFragment {
 
   /**
    * Initialize values
+   *
    * @param savedInstanceState
    * @return
    */

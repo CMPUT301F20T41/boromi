@@ -86,6 +86,7 @@ public class UserDB {
 
   /**
    * async pushes a user to a db merges data only in case of conflicts
+   *
    * @param user User to add
    * @return User if successful, null otherwise
    */

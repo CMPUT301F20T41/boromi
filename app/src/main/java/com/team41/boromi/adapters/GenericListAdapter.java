@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class is an adapter class for a recycler view. This class is meant to be used together
- * with GenericListFragment to store the individual model cards for each tab
+ * This class is an adapter class for a recycler view. This class is meant to be used together with
+ * GenericListFragment to store the individual model cards for each tab
  */
 public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.ViewHolder> {
 
@@ -73,7 +73,8 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
 
   /**
    * This function overrides onCreateViewHolder and is mainly used to initialize onClickListeners
-   * @param parent ViewGroup parent
+   *
+   * @param parent   ViewGroup parent
    * @param viewType int viewType
    * @return GenericListAdapter.ViewHolder
    */
@@ -92,7 +93,11 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
             Book requested = books.get(pos);
             bookRequestController.makeRequestOnBook(requested);
             books.remove(requested);
-            bookActivity.updateFragment("BorrowedFragment", "Requested");
+            if (resource == R.layout.searched) {
+              bookActivity.getBookViewModel().getBorrowedRequested();
+            } else {
+              genericListFragment.getBookViewModel().getBorrowedRequested();
+            }
             notifyDataSetChanged();
           }
         }
@@ -118,6 +123,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
 
   /**
    * This function is used to update viewmodel with the correct information
+   *
    * @param holder
    * @param position
    */
@@ -159,7 +165,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
       } else {
         requesters = (ArrayList<BookRequest>) bookWithRequests.get(book);
       }
-      SubListAdapter subListAdapter = new SubListAdapter(requesters, book, bookRequestController,
+      SubListAdapter subListAdapter = new SubListAdapter(requesters, book, bookActivity,
           this);
       recyclerView.setLayoutManager(new LinearLayoutManager(parent.getContext()));
       recyclerView.setAdapter(subListAdapter);
@@ -170,10 +176,9 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
           .setOnClickListener(new CustomClickListener(book, bookActivity, genericListFragment));
     }
     if (holder.status != null) {
-      if (book.getStatus() ==  CommonConstants.BookStatus.AVAILABLE) {
+      if (book.getStatus() == CommonConstants.BookStatus.AVAILABLE) {
         holder.status.setText("AVAILABLE");
-      }
-      else if(book.getStatus() == CommonConstants.BookStatus.REQUESTED){
+      } else if (book.getStatus() == CommonConstants.BookStatus.REQUESTED) {
         holder.status.setText("REQUESTED");
       }
     }
@@ -181,6 +186,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
 
   /**
    * Returns the number of elements in the list
+   *
    * @return
    */
   @Override
@@ -190,6 +196,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
 
   /**
    * Sets the books that have requests. Used for request tabs
+   *
    * @param bookWithRequests Map of key: Book, value: List<BookRequest>
    */
   public void setBookWithRequests(
@@ -198,8 +205,8 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
   }
 
   /**
-   * This function notifies subAdapters used in the Owner book requests tab that the data has
-   * been changed
+   * This function notifies subAdapters used in the Owner book requests tab that the data has been
+   * changed
    */
   public void notifySubAdapters() {
     for (SubListAdapter subListAdapter : subListAdapters) {
@@ -211,7 +218,8 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
 
   /**
    * This function deletes a book request when a request has been accepted
-   * @param book Book to be deleted
+   *
+   * @param book           Book to be deleted
    * @param subListAdapter Adapter for sub lists
    */
   public void deleteBookRequest(Book book, SubListAdapter subListAdapter) {
@@ -222,10 +230,13 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
       @Override
       public void run() {
         notifyDataSetChanged();
-        ((BookActivity) genericListFragment.getActivity())
-            .updateFragment("OwnedFragment", "Accepted");
+        genericListFragment.getBookViewModel().getOwnerAccepted();
       }
     });
+  }
+
+  public GenericListFragment getGenericListFragment() {
+    return genericListFragment;
   }
 
   /**
@@ -247,6 +258,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
 
     /**
      * This Constructor finds the layout elements depending on which layout is being used
+     *
      * @param itemView
      * @param layout
      */

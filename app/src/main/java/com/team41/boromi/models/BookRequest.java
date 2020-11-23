@@ -1,5 +1,6 @@
 package com.team41.boromi.models;
 
+import com.google.android.gms.maps.model.LatLng;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
@@ -17,6 +18,7 @@ public class BookRequest implements Serializable {
   private String bookId;
   private Date requestDate;
   private String owner;
+  private LatLng location;
   // TODO
   // Again I did not include the status to allow the person implementing to make the choice
   // on the logic
@@ -70,5 +72,13 @@ public class BookRequest implements Serializable {
 
   public void setRequestorName(String requestorName) {
     this.requestorName = requestorName;
+  }
+
+  public LatLng getLocation() {
+    return location;
+  }
+
+  public void setLocation(LatLng location) {
+    this.location = location;
   }
 }

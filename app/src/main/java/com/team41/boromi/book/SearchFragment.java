@@ -13,15 +13,16 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.team41.boromi.BookActivity;
+import com.team41.boromi.BookViewModel;
 import com.team41.boromi.R;
 import com.team41.boromi.adapters.GenericListAdapter;
-import com.team41.boromi.callbacks.BookCallback;
 import com.team41.boromi.models.Book;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 /**
  * SearchFragment is used to manage the search tab. It will create one GenericListFragment to house
@@ -38,6 +39,7 @@ public class SearchFragment extends Fragment {
   ArrayList<Book> searchResults;
   private BookActivity bookActivity;
   private GenericListFragment genericListFragment;
+  private BookViewModel bookViewModel;
 
   public SearchFragment() {
     // Required empty public constructor
@@ -59,6 +61,7 @@ public class SearchFragment extends Fragment {
 
   /**
    * Create the GenericListAdapter
+   *
    * @param savedInstanceState
    */
   @Override
@@ -68,10 +71,12 @@ public class SearchFragment extends Fragment {
     searchResults = new ArrayList<>();
     listAdapter = new GenericListAdapter(searchResults, R.layout.searched,
         (BookActivity) getActivity());
+    bookViewModel = new ViewModelProvider(requireActivity()).get(BookViewModel.class);
   }
 
   /**
    * Bind any listeners, values
+   *
    * @param inflater
    * @param container
    * @param savedInstanceState
@@ -92,7 +97,7 @@ public class SearchFragment extends Fragment {
     spinner.setVisibility(View.GONE);
 
     search.setOnKeyListener((v, keyCode, event) -> {
-      if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode ==  KeyEvent.KEYCODE_ENTER)) {
+      if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
         searchForBooks();
         return true;
       }
@@ -102,53 +107,39 @@ public class SearchFragment extends Fragment {
     recyclerView.setAdapter(listAdapter);
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     search_butt.setOnClickListener(v -> searchForBooks());
+
+    final Observer<ArrayList<Book>> searchResultsObserver = new Observer<ArrayList<Book>>() {
+      @Override
+      public void onChanged(ArrayList<Book> books) {
+        searchResults.clear();
+        if (books != null) {
+          searchResults.addAll(books);
+          listAdapter.notifyDataSetChanged();
+          spinner.setVisibility(View.GONE);
+          if (searchResults.isEmpty() == false) {
+            Results.setText("Results");
+          } else {
+            Results.setText("No results found, please try a different title");
+          }
+        } else {
+          Results.setText("No results found, please try a different title");
+          spinner.setVisibility(View.GONE);
+          listAdapter.notifyDataSetChanged();
+        }
+      }
+    };
+    bookViewModel.getSearchResults().observe(getViewLifecycleOwner(), searchResultsObserver);
     return view;
   }
 
   public void searchForBooks() {
-    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+    InputMethodManager imm = (InputMethodManager) getActivity()
+        .getSystemService(Activity.INPUT_METHOD_SERVICE);
     imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
     String keywords = search.getText().toString();
 
     spinner.setVisibility(View.VISIBLE);
-    bookActivity.getBookController().findBooks(keywords, new BookCallback() {
-      @Override
-      public void onSuccess(ArrayList<Book> books) {
-        ArrayList<Book> filtered = (ArrayList<Book>) books.stream().filter(
-                book -> !book.getOwner().equals(((BookActivity) getActivity()).getUser().getUUID()))
-                .collect(Collectors.toList());
-        bookActivity.getCollections().put("Searched", filtered);
-
-        searchResults.clear();
-        searchResults.addAll(filtered);
-        getActivity().runOnUiThread(new Runnable() {
-          @Override
-          public void run() {
-            listAdapter.notifyDataSetChanged();
-            spinner.setVisibility(View.GONE);
-            if(searchResults.isEmpty() == false) {
-              Results.setText("Results");
-            }
-            else{
-              Results.setText("No results found, please try a different title");
-            }
-          }
-        });
-      }
-
-      @Override
-      public void onFailure(Exception e) {
-        searchResults.clear();
-        getActivity().runOnUiThread(new Runnable() {
-          @Override
-          public void run() {
-            Results.setText("No results found, please try a different title");
-            spinner.setVisibility(View.GONE);
-            listAdapter.notifyDataSetChanged();
-          }
-        });
-      }
-    });
+    bookViewModel.searchBooks(keywords);
   }
 }

@@ -18,7 +18,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -71,6 +70,7 @@ public class AddBookFragment extends DialogFragment {
 
   /**
    * Factory method to create model
+   *
    * @return
    */
   public static AddBookFragment newInstance() {
@@ -82,6 +82,7 @@ public class AddBookFragment extends DialogFragment {
 
   /**
    * onCreateView to initialize any values
+   *
    * @param inflater
    * @param container
    * @param savedInstanceState
@@ -101,6 +102,7 @@ public class AddBookFragment extends DialogFragment {
 
   /**
    * onViewCreated to bind any listeners or values
+   *
    * @param view
    * @param savedInstanceState
    */
@@ -149,6 +151,7 @@ public class AddBookFragment extends DialogFragment {
 
   /**
    * Returns from Camera Activity to attach a image to the book
+   *
    * @param requestCode
    * @param resultCode
    * @param data
@@ -178,10 +181,11 @@ public class AddBookFragment extends DialogFragment {
 
   /**
    * returns true if isbn is length 10 or 13.
+   *
    * @param isbn
    * @return
    */
-  public boolean returnIfISBNGood(String isbn){
+  public boolean returnIfISBNGood(String isbn) {
     return isbn.length() == 13 || isbn.length() == 10;
   }
 
@@ -192,10 +196,11 @@ public class AddBookFragment extends DialogFragment {
 
     /**
      * onComplete called when addBook Button is clicked
+     *
      * @param author author of the book
-     * @param title title of the book
-     * @param isbn isbn of the book
-     * @param image image of the book
+     * @param title  title of the book
+     * @param isbn   isbn of the book
+     * @param image  image of the book
      */
     void onComplete(String author, String title, String isbn, Bitmap image);
   }
