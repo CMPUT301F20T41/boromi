@@ -6,21 +6,8 @@ import admin = require('firebase-admin')
 
 admin.initializeApp()
 
-interface BookRequest {
-	bookId: string
-	owner: string
-	requestDate: Date
-	requestId: string
-	requestor: string
-	requestorName: string
-}
-
-export const notifyOnOwnerRequest = functions.firestore.document('/bookrequests/{documentId}').onCreate((snapshot, context) => {
-	const documentId = context.params.documentId
-
-	console.log(`New Book Request was placed: ${documentId}`)
-
-	const bookRequestData: BookRequest = <BookRequest> snapshot.data()
+export const notifyOnOwnerRequest = functions.firestore.document('/bookrequests/{documentId}').onCreate((snapshot) => {
+	const bookRequestData = snapshot.data()
 	const { requestorName, owner } = bookRequestData
 
 	const payload = {
@@ -37,4 +24,34 @@ export const notifyOnOwnerRequest = functions.firestore.document('/bookrequests/
 	};
 
 	return admin.messaging().sendToTopic(owner, payload, options)
+})
+
+export const notifyRequesterOnAcceptedRequest = functions.firestore.document('/books/{documentId}').onUpdate((snapshot) => {
+	// Gets the state of the book before the change
+	const prevBookData = snapshot.before.data()
+	const prevStatus = prevBookData.status
+
+	// Gets the state of the book after the change
+	const bookData = snapshot.after.data()
+	const {borrower, ownerName, status} = bookData
+
+	// Validates that the change occurred in the status of the book, from requested to accepted
+	if (prevStatus !== 'REQUESTED' || status !== 'ACCEPTED') return null
+
+	const payload = {
+		notification: {
+			title: 'Accepted Book Request',
+			body: `${ownerName} accepted your book request`,
+			sound: 'default',
+		},
+	}
+
+	const options = {
+		priority: "high",
+		timeToLive: 60 * 60 * 24,
+	};
+
+
+	// Sends a push notifcation to the borrower
+	return admin.messaging().sendToTopic(borrower, payload, options)
 })
