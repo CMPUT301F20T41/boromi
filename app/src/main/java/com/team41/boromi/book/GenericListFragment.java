@@ -1,15 +1,23 @@
 package com.team41.boromi.book;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.team41.boromi.BookActivity;
 import com.team41.boromi.BookViewModel;
 import com.team41.boromi.R;
@@ -21,6 +29,8 @@ import com.team41.boromi.models.BookRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.team41.boromi.constants.CommonConstants.REQUEST_IMAGE_CAPTURE;
 
 /**
  * GenericListFragment is used for each of the subtabs and the search. It will inflate the model
@@ -45,6 +55,7 @@ public class GenericListFragment extends Fragment {
   private String parent;
   private Map<Book, List<BookRequest>> bookWithRequests;
   private BookViewModel bookViewModel;
+  private Book bookToExchange;
 
   public GenericListFragment() {
     // Required empty public constructor
@@ -172,4 +183,39 @@ public class GenericListFragment extends Fragment {
           }
         });
   }
+
+  public void verifyBarcode(Book book) {
+    bookToExchange = book;
+    dispatchTakeBarcodeIntent();
+  }
+
+  private void dispatchTakeBarcodeIntent() {
+    IntentIntegrator.forSupportFragment(this).initiateScan();
+  }
+
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+      IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+      if(result != null) {
+        if(result.getContents() == null) {
+          Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_LONG).show();
+        } else {
+          Toast.makeText(getActivity(), "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+          completeBookExchange(result.getContents());
+        }
+      } else {
+        super.onActivityResult(requestCode, resultCode, data);
+      }
+  }
+
+  public void completeBookExchange(String scannedISBN) {
+    if(scannedISBN.compareTo(bookToExchange.getISBN()) != 0) {
+      Toast.makeText(this.getContext(), "Verification Failed, this isn't the proper book!", Toast.LENGTH_LONG).show();
+      return;
+    }
+
+    bookExchangeRequest(bookToExchange);
+  }
+
+
 }

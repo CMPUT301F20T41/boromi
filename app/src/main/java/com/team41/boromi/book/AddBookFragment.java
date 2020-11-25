@@ -18,9 +18,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.team41.boromi.R;
 
 /**
@@ -33,6 +38,10 @@ public class AddBookFragment extends DialogFragment {
   private EditText editTextAuthor;
   private EditText editTextTitle;
   private EditText editTextIsbn;
+  private ImageButton addISBNButton;
+  private ImageButton addImage;
+  private Bitmap imageBitmap;
+
   /**
    * Used to validate input fields
    */
@@ -62,8 +71,6 @@ public class AddBookFragment extends DialogFragment {
       // Empty method, required for text watcher
     }
   };
-  private ImageButton addImage;
-  private Bitmap imageBitmap;
 
   public AddBookFragment() {
   }
@@ -114,6 +121,7 @@ public class AddBookFragment extends DialogFragment {
     editTextTitle = (EditText) view.findViewById(R.id.add_book_title);
     editTextIsbn = (EditText) view.findViewById(R.id.add_book_isbn);
     addImage = (ImageButton) view.findViewById(R.id.add_book_image);
+    addISBNButton = (ImageButton) view.findViewById(R.id.add_isbn_img);
 
     // Disables the button to start since the fields are all empty
     buttonAddBook.setEnabled(false);
@@ -141,6 +149,13 @@ public class AddBookFragment extends DialogFragment {
         dismiss();
       }
     });
+    addISBNButton.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        dispatchTakeBarcodeIntent();
+      }
+    });
+
     addImage.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -164,6 +179,18 @@ public class AddBookFragment extends DialogFragment {
       addImage.setImageBitmap(imageBitmap);
       addImage.setScaleType(ImageView.ScaleType.FIT_XY);
       this.imageBitmap = imageBitmap;
+    } else { // else this was a barcode scan (ps this is lazy, shouldnt do an else but idk result code)
+      IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+      if(result != null) {
+        if(result.getContents() == null) {
+          Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_LONG).show();
+        } else {
+          editTextIsbn.setText(result.getContents());
+          Toast.makeText(getActivity(), "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+        }
+      } else {
+        super.onActivityResult(requestCode, resultCode, data);
+      }
     }
   }
 
@@ -177,6 +204,10 @@ public class AddBookFragment extends DialogFragment {
     } catch (ActivityNotFoundException e) {
       // display error state to the user
     }
+  }
+
+  private void dispatchTakeBarcodeIntent() {
+    IntentIntegrator.forSupportFragment(this).initiateScan();
   }
 
   /**

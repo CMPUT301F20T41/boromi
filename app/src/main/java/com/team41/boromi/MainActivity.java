@@ -1,5 +1,6 @@
 package com.team41.boromi;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
       ft = manager.beginTransaction();
       ft.add(R.id.auth_fragment, welcomeFragment).commit();
     }
+
+//    startActivity(new Intent(this, TestActivity.class));
   }
 
   /**

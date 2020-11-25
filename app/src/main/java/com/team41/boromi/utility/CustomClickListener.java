@@ -6,6 +6,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
+import android.widget.Toast;
+
 import androidx.fragment.app.FragmentManager;
 import com.team41.boromi.BookActivity;
 import com.team41.boromi.R;
@@ -125,7 +127,9 @@ public class CustomClickListener implements View.OnClickListener,
           }
         });
       case R.id.exchange_book:
-        genericListFragment.bookExchangeRequest(book);
+        genericListFragment.verifyBarcode(book);
+//          genericListFragment.bookExchangeRequest(book);
+
     }
     return false;
   }
