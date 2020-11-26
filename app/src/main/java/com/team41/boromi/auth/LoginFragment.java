@@ -23,16 +23,14 @@ import com.team41.boromi.MainActivity;
 import com.team41.boromi.R;
 import com.team41.boromi.callbacks.AuthCallback;
 
-import java.text.BreakIterator;
-
 /**
  * Login Fragment handles the logic used in the login page and redirect the user to the book
  * activity
  */
 public class LoginFragment extends Fragment {
 
-  private static EditText emailInput;
-  private static EditText passwordInput;
+  private EditText emailInput;
+  private EditText passwordInput;
   private Button loginButton;
   /**
    * Disables the login button is email or password fields are empty
