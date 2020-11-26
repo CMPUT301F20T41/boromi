@@ -23,14 +23,16 @@ import com.team41.boromi.MainActivity;
 import com.team41.boromi.R;
 import com.team41.boromi.callbacks.AuthCallback;
 
+import java.text.BreakIterator;
+
 /**
  * Login Fragment handles the logic used in the login page and redirect the user to the book
  * activity
  */
 public class LoginFragment extends Fragment {
 
-  private EditText emailInput;
-  private EditText passwordInput;
+  private static EditText emailInput;
+  private static EditText passwordInput;
   private Button loginButton;
   /**
    * Disables the login button is email or password fields are empty
@@ -136,6 +138,9 @@ public class LoginFragment extends Fragment {
               @Override
               public void run() {
                 spinner.setVisibility(View.GONE);
+                emailInput.setText("");
+                passwordInput.setText("");
+                Toast.makeText(activity, "Login Successful, Welcome", Toast.LENGTH_LONG).show();
               }
             });
             Intent intent = new Intent(getActivity(), BookActivity.class);
@@ -158,4 +163,5 @@ public class LoginFragment extends Fragment {
     });
     return view;
   }
+
 }
