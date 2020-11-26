@@ -15,7 +15,9 @@ import androidx.fragment.app.DialogFragment;
 import com.team41.boromi.R;
 import com.team41.boromi.models.User;
 
-
+/**
+ * Fragment to display other users' profiles
+ */
 public class DisplayOtherUserFragment extends DialogFragment {
     User displayingUser;
 
@@ -27,7 +29,12 @@ public class DisplayOtherUserFragment extends DialogFragment {
         this.displayingUser = displayingUser;
     }
 
-
+    /**
+     * Use this factory method to create a new instance of this fragment using the provided
+     * parameters.
+     *
+     * @return A new instance of fragment SettingsFragment.
+     */
     public static DisplayOtherUserFragment newInstance(User displayUser) {
         DisplayOtherUserFragment displayOtherUserFragment = new DisplayOtherUserFragment(displayUser);
         Bundle args = new Bundle();
@@ -43,6 +50,11 @@ public class DisplayOtherUserFragment extends DialogFragment {
         return inflater.inflate(R.layout.fragment_other_users, null);
     }
 
+    /**
+     * Setting up details for the card views
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
