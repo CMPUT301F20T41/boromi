@@ -416,7 +416,7 @@ public class BookActivity extends AppCompatActivity implements
     bookToDisplay.setISBN(isbn);
     spinner.setVisibility(View.GONE);
     DisplayBookFragment displayBookFragment = DisplayBookFragment.newInstance(bookToDisplay);
-    displayBookFragment.show(getSupportFragmentManager(), "displayUsers");
+    displayBookFragment.show(getSupportFragmentManager(), "displayBooks");
   }
 
 
