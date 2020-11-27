@@ -182,6 +182,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
         holder.imageButton.setScaleType(ImageView.ScaleType.FIT_XY);
         holder.imageButton.setImageBitmap(b);
       } else {
+        holder.imageButton.setScaleType(ImageView.ScaleType.CENTER);
         holder.imageButton.setImageResource(R.drawable.book_icon);
       }
     }
