@@ -54,5 +54,5 @@
                 android:resource="@color/colorPrimary" />
         </service>
     </application>
-    
+
 </manifest>

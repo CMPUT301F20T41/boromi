@@ -111,6 +111,8 @@ public class BookReturnController {
           book.setWorkflow(BookWorkflowStage.AVAILABLE);
           book.setStatus(BookStatus.AVAILABLE);
           book.setBorrower(null);
+          book.setLocationLat(null);
+          book.setLocationLon(null);
           if (bookDB.pushBook(book) == null) {
             returnCallback.onFailure();
             return;
