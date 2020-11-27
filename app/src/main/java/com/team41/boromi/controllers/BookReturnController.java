@@ -38,15 +38,12 @@ public class BookReturnController {
    * Adds an entry to bookreturn db and updated book workflow to pending return
    *
    * @param book           book to return
-   * @param returnDate     return date
-   * @param location       location to return
    * @param returnCallback callback to execute success or failure
    */
-  public void addReturnRequest(Book book, Date returnDate, LatLng location,
+  public void addReturnRequest(Book book,
       final ReturnCallback returnCallback) {
     final BookReturn bookReturn = new BookReturn(book.getBookId(), book.getOwner(),
-        currentUser.getUUID().toString(),
-        returnDate, location);
+        currentUser.getUUID());
     executor.execute(() -> {
       if (returnDB.addReturnRequest(bookReturn)) {
         // RETURN REQUEST SUCCESS
@@ -61,7 +58,7 @@ public class BookReturnController {
           returnCallback.onFailure();
           return;
         }
-        returnCallback.onSuccess();
+        returnCallback.onSuccess(book);
       } else {
         // RETURN REQUEST FAIL
         returnCallback.onFailure();
@@ -90,7 +87,7 @@ public class BookReturnController {
           returnCallback.onFailure();
           return;
         }
-        returnCallback.onSuccess();
+        returnCallback.onSuccess(book);
 
       } else {
         // RETURN CANCEL REQUEST FAIL
@@ -122,7 +119,7 @@ public class BookReturnController {
           returnCallback.onFailure();
           return;
         }
-        returnCallback.onSuccess();
+        returnCallback.onSuccess(book);
       } else {
         // RETURN ACCEPT RETURN FAIL
         returnCallback.onFailure();

@@ -14,6 +14,7 @@ import com.team41.boromi.R;
 import com.team41.boromi.book.EditBookFragment;
 import com.team41.boromi.book.GenericListFragment;
 import com.team41.boromi.callbacks.BookCallback;
+import com.team41.boromi.constants.CommonConstants;
 import com.team41.boromi.controllers.BookController;
 import com.team41.boromi.models.Book;
 import java.lang.reflect.Method;
@@ -60,6 +61,10 @@ public class CustomClickListener implements View.OnClickListener,
           MenuItem exchange = popup.getMenu().findItem(R.id.exchange_book);
           exchange.setVisible(true);
           exchange.setTitle("Give");
+        } else if (genericListFragment.tag.equals("Lent") && book.getWorkflow() == CommonConstants.BookWorkflowStage.PENDINGRETURN) {
+          MenuItem receive = popup.getMenu().findItem(R.id.regain_book);
+          receive.setVisible(true);
+          receive.setTitle("Regain");
         }
       } else if (genericListFragment.getParent().equals("Borrowed")) {
         if (genericListFragment.tag.equals("Accepted")) {
@@ -71,6 +76,7 @@ public class CustomClickListener implements View.OnClickListener,
         popup.getMenu().findItem(R.id.delete_book).setVisible(false);
         popup.getMenu().findItem(R.id.exchange_book).setVisible(false);
         popup.getMenu().findItem(R.id.edit_book).setVisible(false);
+        popup.getMenu().findItem(R.id.regain_book).setVisible(false);
       }
       Method method = popup.getMenu().getClass()
           .getDeclaredMethod("setOptionalIconsVisible", boolean.class);
@@ -126,7 +132,11 @@ public class CustomClickListener implements View.OnClickListener,
           public void onFailure(Exception e) {
           }
         });
-        return true;
+      case R.id.regain_book:
+        genericListFragment.verifyBarcode(book);
+        //genericListFragment.bookReturnRequest(book);
+
+
       case R.id.exchange_book:
         genericListFragment.verifyBarcode(book);
 //          genericListFragment.bookExchangeRequest(book);

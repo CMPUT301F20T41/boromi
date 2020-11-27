@@ -14,8 +14,6 @@ public class BookReturn implements Serializable {
   private String returnee;
   private String owner;
   private String bookId;
-  private Date returnDate;
-  private LatLng location;
 
   /**
    * Constructor that generates random returnId
@@ -23,25 +21,20 @@ public class BookReturn implements Serializable {
    * @param returnee
    * @param bookId
    */
-  public BookReturn(String bookId, String owner, String returnee, Date returnDate,
-      LatLng location) {
+  public BookReturn(String bookId, String owner, String returnee) {
     this.returnee = returnee;
     this.bookId = bookId;
     this.owner = owner;
     // TODO change to date of meetup
-    this.returnDate = new Date();
     // TODO change to actual location later
-    this.location = null;
   }
 
-  public BookReturn(Book book, String returnee, Date returnDate, LatLng location) {
+  public BookReturn(Book book, String returnee) {
     this.bookId = book.getBookId();
     this.owner = book.getOwner();
     this.returnee = returnee;
     // TODO change to date of meetup
-    this.returnDate = new Date();
     // TODO change to actual location later
-    this.location = null;
   }
 
   public BookReturn() {
@@ -63,15 +56,4 @@ public class BookReturn implements Serializable {
     return bookId;
   }
 
-  public Date getReturnDate() {
-    return returnDate;
-  }
-
-  public LatLng getLocation() {
-    return location;
-  }
-
-  public void setLocation(LatLng location) {
-    this.location = location;
-  }
 }

@@ -23,6 +23,8 @@ import com.team41.boromi.BookViewModel;
 import com.team41.boromi.R;
 import com.team41.boromi.adapters.GenericListAdapter;
 import com.team41.boromi.callbacks.BookCallback;
+import com.team41.boromi.callbacks.ReturnCallback;
+import com.team41.boromi.constants.CommonConstants;
 import com.team41.boromi.constants.CommonConstants.BookStatus;
 import com.team41.boromi.models.Book;
 import com.team41.boromi.models.BookRequest;
@@ -47,6 +49,7 @@ public class GenericListFragment extends Fragment {
   private static final String TAG = "GenericListFrag";
 
   public String tag;
+  public boolean cancelled_scan;
   RecyclerView recyclerView;
   GenericListAdapter listAdapter;
   private ArrayList<Book> bookDataList = new ArrayList<>();
@@ -184,6 +187,24 @@ public class GenericListFragment extends Fragment {
         });
   }
 
+  public void bookReturnRequest(Book book) {
+    BookActivity bookActivity = (BookActivity) getActivity();
+    bookActivity.getBookReturnController().acceptReturnRequest(book.getBookId(), new ReturnCallback() {
+      @Override
+      public void onSuccess(Book book) {
+        if (book.getStatus()== BookStatus.AVAILABLE) {
+          bookViewModel.getOwnerAvailable();
+          bookViewModel.getOwnerLent();
+          bookViewModel.getOwnerAccepted();
+          bookViewModel.getBorrowedBorrowed();
+          bookViewModel.getBorrowedRequested();
+        }
+      }
+      @Override
+      public void onFailure() {
+      }
+    });
+  }
   public void verifyBarcode(Book book) {
     bookToExchange = book;
     dispatchTakeBarcodeIntent();
@@ -209,13 +230,26 @@ public class GenericListFragment extends Fragment {
   }
 
   public void completeBookExchange(String scannedISBN) {
+    BookActivity bookActivity = (BookActivity) getActivity();
     if(scannedISBN.compareTo(bookToExchange.getISBN()) != 0) {
       Toast.makeText(this.getContext(), "Verification Failed, this isn't the proper book!", Toast.LENGTH_LONG).show();
       return;
     }
-
-    bookExchangeRequest(bookToExchange);
+    if(bookToExchange.getStatus() == BookStatus.ACCEPTED) {
+      bookExchangeRequest(bookToExchange);
+    }
+    else if (bookToExchange.getStatus() == BookStatus.BORROWED && bookToExchange.getWorkflow() == CommonConstants.BookWorkflowStage.BORROWED){
+      bookActivity.getBookReturnController().addReturnRequest(bookToExchange, new ReturnCallback() {
+        @Override
+        public void onSuccess(Book books) {
+        }
+        @Override
+        public void onFailure() {
+        }
+      });
+    }
+    else if(bookToExchange.getStatus() == BookStatus.BORROWED && bookToExchange.getWorkflow() == CommonConstants.BookWorkflowStage.PENDINGRETURN){
+      bookReturnRequest(bookToExchange);
+    }
   }
-
-
 }
