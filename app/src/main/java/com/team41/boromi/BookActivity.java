@@ -6,7 +6,11 @@ import android.os.Bundle;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,14 +21,26 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener;
 import androidx.viewpager2.widget.ViewPager2;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
 import com.google.android.material.tabs.TabLayout.Tab;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.team41.boromi.adapters.PagerAdapter;
 import com.team41.boromi.book.AddBookFragment;
 import com.team41.boromi.book.BorrowedFragment;
+import com.team41.boromi.book.DisplayBookFragment;
+import com.team41.boromi.book.DisplayOtherUserFragment;
 import com.team41.boromi.book.EditBookFragment;
 import com.team41.boromi.book.MapFragment;
 import com.team41.boromi.book.OwnedFragment;
@@ -35,6 +51,7 @@ import com.team41.boromi.controllers.BookController;
 import com.team41.boromi.controllers.BookRequestController;
 import com.team41.boromi.controllers.BookReturnController;
 import com.team41.boromi.models.Book;
+import com.team41.boromi.models.GoogleBook;
 import com.team41.boromi.models.User;
 import java.util.ArrayList;
 import javax.inject.Inject;
@@ -71,6 +88,11 @@ public class BookActivity extends AppCompatActivity implements
   private TabLayout tabLayout;
   private MenuItem addButton;
   private BookViewModel bookViewModel;
+  private ProgressBar spinner;
+  String bookAPIURL = "https://www.googleapis.com/books/v1/volumes?q=+isbn=";
+  String key = "&key=AIzaSyB2TMW4SaN9uQyABkPkJTfE77YWaLYMWGo"; // should never do this but lazy
+  RequestQueue rq;
+  Gson gson = new Gson();
 
   /**
    * Initialize any values, create the fragments, link pagerAdapter, ViewPager2, and tabLayout
@@ -89,6 +111,9 @@ public class BookActivity extends AppCompatActivity implements
     pagerAdapter = new PagerAdapter(getSupportFragmentManager(), getLifecycle());
     Toolbar toolbar = (Toolbar) findViewById(R.id.book_toolbar);
     setSupportActionBar(toolbar);
+    spinner = findViewById(R.id.progress_loading);
+    spinner.setVisibility(View.GONE);
+    rq = Volley.newRequestQueue(this);
 
     // Subscribes to the pushNotifications topic
     FirebaseMessaging.getInstance().subscribeToTopic(user.getUUID());
@@ -188,6 +213,7 @@ public class BookActivity extends AppCompatActivity implements
         return true;
       case R.id.toolbar_scan:
         // TODO add toolbar scan logic
+        scanForBook();
         return true;
       default:
         return super.onOptionsItemSelected(item);
@@ -274,8 +300,21 @@ public class BookActivity extends AppCompatActivity implements
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
+    if(requestCode == 49374) {
+      IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+      if(result != null) {
+        if (result.getContents() == null) {
+          Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+        } else {
+          Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+          queryBookData(result.getContents());
+        }
+      }
+    } else {
+      super.onActivityResult(requestCode, resultCode, data);
+    }
   }
+
 
   /**
    * Logic when a book is added. Call the controller method then update the fragment
@@ -328,4 +367,58 @@ public class BookActivity extends AppCompatActivity implements
   public void onBackPressed() {
 
   }
+
+  private void scanForBook() {
+    IntentIntegrator intentIntegrator = new IntentIntegrator(this);
+    intentIntegrator.setRequestCode(49374);
+    intentIntegrator.initiateScan();
+  }
+
+  private void queryBookData(String isbn) {
+    spinner.setVisibility(View.VISIBLE);
+    StringRequest stringRequest = new StringRequest(Request.Method.GET, formatQuery(isbn),
+        new Response.Listener<String>() {
+          @Override
+          public void onResponse(String response) {
+            // Display the first 500 characters of the response string.
+            displayBookData(response, isbn);
+          }
+        }, new Response.ErrorListener() {
+      @Override
+      public void onErrorResponse(VolleyError error) {
+        spinner.setVisibility(View.GONE);
+        makeToast("NETWORK ERROR OCCURRED ON REQUEST FOR BOOK");
+      }
+    });
+
+// Add the request to the RequestQueue.
+    rq.add(stringRequest);
+  }
+
+  private String formatQuery(String isbn) {
+    String formattedQuery = bookAPIURL;
+    formattedQuery += isbn;
+    formattedQuery += key;
+    return formattedQuery;
+  }
+
+  private void makeToast(String msg) {
+    Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+  }
+
+  private void displayBookData(String book, String isbn) {
+    System.out.println("DISPLAYING BOOKS");
+
+    GoogleBook gb = gson.fromJson(book, GoogleBook.class);
+    Book bookToDisplay = new Book();
+    bookToDisplay.setTitle(gb.getTitle(0));
+    bookToDisplay.setAuthor(gb.getFirstAuthor(0));
+    bookToDisplay.setISBN(isbn);
+    spinner.setVisibility(View.GONE);
+    DisplayBookFragment displayBookFragment = DisplayBookFragment.newInstance(bookToDisplay);
+    displayBookFragment.show(getSupportFragmentManager(), "displayUsers");
+  }
+
+
+
 }

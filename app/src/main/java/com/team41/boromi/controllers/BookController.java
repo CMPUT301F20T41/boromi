@@ -1,27 +1,34 @@
 package com.team41.boromi.controllers;
 
-import static com.team41.boromi.constants.CommonConstants.BookStatus;
-import static com.team41.boromi.utility.Utility.isNotNullOrEmpty;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
+
+import com.google.gson.Gson;
 import com.team41.boromi.callbacks.BookCallback;
 import com.team41.boromi.constants.CommonConstants.BookWorkflowStage;
 import com.team41.boromi.constants.CommonConstants.ExchangeStage;
 import com.team41.boromi.dbs.BookDB;
 import com.team41.boromi.models.Book;
 import com.team41.boromi.models.User;
+
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.apache.commons.lang3.StringUtils;
+
+import static com.team41.boromi.constants.CommonConstants.BookStatus;
+import static com.team41.boromi.utility.Utility.isNotNullOrEmpty;
+
 
 /**
  * Class that handles requests that involves the book collection
@@ -33,7 +40,7 @@ public class BookController {
   protected BookStatus status;
   protected BookWorkflowStage workflow;
   protected Executor executor;
-
+  Gson gson = new Gson();
   BookDB bookDB;
   User user;
 
@@ -54,7 +61,7 @@ public class BookController {
    * @param title  title of the book
    */
   public void addBook(String owner, String author, String ISBN, String title, String image,
-      final BookCallback bookCallback) {
+                      final BookCallback bookCallback) {
     if (isNotNullOrEmpty(author) && isNotNullOrEmpty(ISBN) && isNotNullOrEmpty(title)) {
       Book addingBook = new Book(owner, title, author, ISBN);
       addingBook.setStatus(status.AVAILABLE);
@@ -88,7 +95,7 @@ public class BookController {
    * @param bookCallback callback to execute success or failure
    */
   public void addBook(String author, String ISBN, String title, Bitmap image,
-      final BookCallback bookCallback) {
+                      final BookCallback bookCallback) {
     if (isNotNullOrEmpty(author) && isNotNullOrEmpty(ISBN) && isNotNullOrEmpty(title)) {
       Book addingBook = new Book(user.getUUID(), title, author, ISBN);
       addingBook.setOwnerName(user.getUsername());
@@ -119,7 +126,7 @@ public class BookController {
    * Just some polymorphism to have less UI handling logic
    */
   public void addBook(String author, String ISBN, String title, String image,
-      final BookCallback bookCallback) {
+                      final BookCallback bookCallback) {
     if (isNotNullOrEmpty(author) && isNotNullOrEmpty(ISBN) && isNotNullOrEmpty(title)) {
       Book addingBook = new Book(user.getUUID(), title, author, ISBN);
       addingBook.setOwnerName(user.getUsername());
@@ -156,7 +163,7 @@ public class BookController {
    * @param bookCallback callback to execute success or failure
    */
   public void editBook(String bookID, String author, String ISBN, String title, Bitmap image,
-      final BookCallback bookCallback) {
+                       final BookCallback bookCallback) {
     if (isNotNullOrEmpty(author) && isNotNullOrEmpty(ISBN) && isNotNullOrEmpty(title)) {
       executor.execute(() -> {
         ArrayList<Book> edited = new ArrayList<>();
