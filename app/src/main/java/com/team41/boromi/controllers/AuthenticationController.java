@@ -122,7 +122,8 @@ public class AuthenticationController {
 
   /**
    * Sends a request to update a user's password
-   * @param email email to update
+   *
+   * @param email        email to update
    * @param authCallback callback function to execute success or failure
    */
   public void resetPassword(String email, AuthNoResultCallback authCallback) {
@@ -162,6 +163,7 @@ public class AuthenticationController {
 
   /**
    * Updates the user
+   *
    * @param user User object to be updated
    */
   public void updateUser(User user) {

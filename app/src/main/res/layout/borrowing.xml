@@ -84,13 +84,14 @@
       </LinearLayout>
 
       <ImageButton
-        android:id="@+id/right_button"
+        android:id="@+id/return_button"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginStart="12dp"
         android:layout_gravity="center"
         android:background="@drawable/return_circle"
         android:tint="@color/colorIconLight"
+        app:srcCompat="@drawable/return_icon"
         tools:srcCompat="@drawable/return_icon" />
 
     </LinearLayout>

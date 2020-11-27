@@ -2,17 +2,19 @@ package com.team41.boromi.utility;
 
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
+import android.widget.Toast;
+
 import androidx.fragment.app.FragmentManager;
 import com.team41.boromi.BookActivity;
 import com.team41.boromi.R;
 import com.team41.boromi.book.EditBookFragment;
 import com.team41.boromi.book.GenericListFragment;
 import com.team41.boromi.callbacks.BookCallback;
+import com.team41.boromi.constants.CommonConstants;
 import com.team41.boromi.controllers.BookController;
 import com.team41.boromi.models.Book;
 import java.lang.reflect.Method;
@@ -39,6 +41,7 @@ public class CustomClickListener implements View.OnClickListener,
 
   /**
    * Expand the more button and show the dropdown menu
+   *
    * @param view
    */
   @Override
@@ -58,6 +61,10 @@ public class CustomClickListener implements View.OnClickListener,
           MenuItem exchange = popup.getMenu().findItem(R.id.exchange_book);
           exchange.setVisible(true);
           exchange.setTitle("Give");
+        } else if (genericListFragment.tag.equals("Lent") && book.getWorkflow() == CommonConstants.BookWorkflowStage.PENDINGRETURN) {
+          MenuItem receive = popup.getMenu().findItem(R.id.regain_book);
+          receive.setVisible(true);
+          receive.setTitle("Regain");
         }
       } else if (genericListFragment.getParent().equals("Borrowed")) {
         if (genericListFragment.tag.equals("Accepted")) {
@@ -69,6 +76,7 @@ public class CustomClickListener implements View.OnClickListener,
         popup.getMenu().findItem(R.id.delete_book).setVisible(false);
         popup.getMenu().findItem(R.id.exchange_book).setVisible(false);
         popup.getMenu().findItem(R.id.edit_book).setVisible(false);
+        popup.getMenu().findItem(R.id.regain_book).setVisible(false);
       }
       Method method = popup.getMenu().getClass()
           .getDeclaredMethod("setOptionalIconsVisible", boolean.class);
@@ -86,6 +94,7 @@ public class CustomClickListener implements View.OnClickListener,
 
   /**
    * onClick functionality for individual menu items
+   *
    * @param menuItem
    * @return
    */
@@ -107,11 +116,14 @@ public class CustomClickListener implements View.OnClickListener,
           public void onSuccess(ArrayList<Book> books) {
             genericListFragment.getActivity().runOnUiThread(() -> {
               if (genericListFragment.getParent().equals("Owned")) {
-                ((BookActivity) genericListFragment.getActivity())
-                    .updateFragment("OwnedFragment", genericListFragment.tag);
+                // TODO temp solution just update both
+                genericListFragment.getBookViewModel().getOwnerAvailable();
+                genericListFragment.getBookViewModel().getOwnerAccepted();
+//                ((BookActivity) genericListFragment.getActivity())
+//                    .updateFragment("OwnedFragment", genericListFragment.tag);
               } else if (genericListFragment.getParent().equals("Borrowed")) {
-                ((BookActivity) genericListFragment.getActivity())
-                    .updateFragment("BorrowedFragment", genericListFragment.tag);
+//                ((BookActivity) genericListFragment.getActivity())
+//                    .updateFragment("BorrowedFragment", genericListFragment.tag);
               }
             });
           }
@@ -120,8 +132,16 @@ public class CustomClickListener implements View.OnClickListener,
           public void onFailure(Exception e) {
           }
         });
+      case R.id.regain_book:
+        genericListFragment.verifyBarcode(book);
+        //genericListFragment.bookReturnRequest(book);
+
+
       case R.id.exchange_book:
-        genericListFragment.bookExchangeRequest(book);
+        genericListFragment.verifyBarcode(book);
+//          genericListFragment.bookExchangeRequest(book);
+        return true;
+
     }
     return false;
   }

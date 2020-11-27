@@ -1,26 +1,25 @@
 package com.team41.boromi.book;
 
 import android.Manifest.permission;
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
-import android.content.pm.PermissionInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -28,9 +27,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.team41.boromi.BookActivity;
+import com.team41.boromi.BookViewModel;
 import com.team41.boromi.R;
 import com.team41.boromi.adapters.SubListAdapter;
-import java.security.Permission;
+import com.team41.boromi.models.Book;
 import java.util.ArrayList;
 
 /**
@@ -39,19 +39,20 @@ import java.util.ArrayList;
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
   private static final String MODE_KEY = "Mode";
-
-  private GoogleMap googleMap;
-  private UiSettings mapUiSettings;
   private static final int MY_LOCATION_PERMISSION_REQUEST_CODE = 1;
   private static final int LOCATION_LAYER_PERMISSION_REQUEST_CODE = 2;
-
+  private GoogleMap googleMap;
+  private UiSettings mapUiSettings;
   private FloatingActionButton confirmButton;
+  private TextView tooltip;
 
   private ArrayList<Marker> markers;
   private Marker currentMarker;
 
   private int mode; // 0 viewing, 1 add
   private SubListAdapter adapter;
+  private BookViewModel bookViewModel;
+  private ArrayList<Book> bookLocations;
 
   public MapFragment() {
     // Required empty public constructor
@@ -73,6 +74,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    bookViewModel = new ViewModelProvider(requireActivity()).get(BookViewModel.class);
+    bookLocations = new ArrayList<>();
     if (getArguments() != null) {
       mode = getArguments().getInt(MODE_KEY);
     }
@@ -86,27 +89,48 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
         .findFragmentById(R.id.map);
     mapFragment.getMapAsync(this);
+    tooltip = view.findViewById(R.id.map_tooltip);
     confirmButton = view.findViewById(R.id.map_confirm_pin);
     confirmButton.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
         // TODO LOGIC TO SAVE DROPPED PIN
-        SelectedLocation location = (SelectedLocation) adapter;
-        adapter.onLocationSelected(currentMarker.getPosition());
-
+        bookViewModel.setExchangeLocation(currentMarker.getPosition());
         TabLayout.Tab tab = ((BookActivity) getActivity()).getTab(0);
         tab.select();
       }
     });
     if (mode == 0) {
       confirmButton.hide();
+      tooltip.setVisibility(View.INVISIBLE);
     }
     return view;
+  }
+
+  private void updateMarkers() {
+    googleMap.clear();
+    for (Book book : bookLocations) {
+      if (book.getLocationLat() == null || book.getLocationLon() == null) {
+        continue;
+      }
+      LatLng location = new LatLng(book.getLocationLat(), book.getLocationLon());
+      if (book.getOwner().equals(bookViewModel.getUser().getUUID())) {
+        googleMap.addMarker(new MarkerOptions().position(location).title(book.getTitle()));
+      } else {
+        googleMap.addMarker(new MarkerOptions().position(location).title(book.getTitle()))
+            .setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
+      }
+    }
   }
 
   @Override
   public void onPause() {
     setMode(0);
+    bookViewModel.setExchangeBook(null);
+    bookViewModel.setExchangeBookRequest(null);
+    if (currentMarker != null) {
+      currentMarker.remove();
+    }
     super.onPause();
   }
 
@@ -126,10 +150,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (currentMarker != null) {
           currentMarker.remove();
         }
-        currentMarker = googleMap.addMarker(new MarkerOptions().position(latLng).draggable(true).icon(
-            BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+        currentMarker = googleMap
+            .addMarker(new MarkerOptions().position(latLng).draggable(true).icon(
+                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
       }
     });
+    final Observer<ArrayList<Book>> locationObserver = new Observer<ArrayList<Book>>() {
+      @Override
+      public void onChanged(ArrayList<Book> books) {
+
+        bookLocations.clear();
+        bookLocations.addAll(books);
+        updateMarkers();
+      }
+    };
+    bookViewModel.getLocations().observe(getViewLifecycleOwner(), locationObserver);
 
     mapUiSettings.setMyLocationButtonEnabled(true);
     if (ActivityCompat.checkSelfPermission(getContext(), permission.ACCESS_FINE_LOCATION)
@@ -139,6 +174,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
       return;
     }
     this.googleMap.setMyLocationEnabled(true);
+
   }
 
   @SuppressLint("MissingPermission")
@@ -174,8 +210,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     this.mode = mode;
     if (mode == 0) {
       confirmButton.hide();
+      tooltip.setVisibility(View.INVISIBLE);
     } else {
       confirmButton.show();
+      tooltip.setVisibility(View.VISIBLE);
     }
   }
 
@@ -184,6 +222,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
   }
 
   public interface SelectedLocation {
+
     void onLocationSelected(LatLng location);
   }
 }

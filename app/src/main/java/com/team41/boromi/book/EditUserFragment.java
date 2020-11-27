@@ -47,7 +47,6 @@ public class EditUserFragment extends DialogFragment {
     public void onTextChanged(CharSequence s, int start, int before, int count) {
       String email = editTextEmail.getText().toString().trim();
       String username = editTextUsername.getText().toString().trim();
-
       // Enables the button if both text fields are not null
       buttonSaveChanges.setEnabled(
           isNotNullOrEmpty(email) && isNotNullOrEmpty(username)
@@ -133,6 +132,7 @@ public class EditUserFragment extends DialogFragment {
 
   /**
    * Initialize values
+   *
    * @param savedInstanceState
    * @return
    */
@@ -174,10 +174,12 @@ public class EditUserFragment extends DialogFragment {
   @Override
   public void onDestroy() {
     super.onDestroy();
-
     if (successfulWrite) {
+      user = ((BookActivity) getActivity()).getUser();
       String username = editTextUsername.getText().toString();
       String email = editTextEmail.getText().toString();
+      user.setEmail(email);
+      user.setUsername(username);
       ((SettingsFragment) getParentFragment()).changeUserInformation(username, email);
     }
   }

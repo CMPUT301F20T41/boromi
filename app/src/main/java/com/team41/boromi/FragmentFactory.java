@@ -6,8 +6,8 @@ import com.team41.boromi.book.GenericListFragment;
 import com.team41.boromi.book.MapFragment;
 
 /**
- * This function creates Fragments based on their class name. For GenericListFragments, it will
- * pass in a bundle, for other fragments such as OwnedFragment, it will pass in nothing
+ * This function creates Fragments based on their class name. For GenericListFragments, it will pass
+ * in a bundle, for other fragments such as OwnedFragment, it will pass in nothing
  */
 public class FragmentFactory {
 

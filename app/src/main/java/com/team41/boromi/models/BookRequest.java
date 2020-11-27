@@ -74,11 +74,12 @@ public class BookRequest implements Serializable {
     this.requestorName = requestorName;
   }
 
+  public LatLng getLocation() {
+    return location;
+  }
+
   public void setLocation(LatLng location) {
     this.location = location;
   }
 
-  public LatLng getLocation() {
-    return location;
-  }
 }

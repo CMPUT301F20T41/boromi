@@ -1,5 +1,6 @@
 package com.team41.boromi;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
   /**
    * Initialize variables, inject app, show WelcomeFragment
+   *
    * @param savedInstanceState
    */
   @Override
@@ -37,10 +39,13 @@ public class MainActivity extends AppCompatActivity {
       ft = manager.beginTransaction();
       ft.add(R.id.auth_fragment, welcomeFragment).commit();
     }
+
+//    startActivity(new Intent(this, TestActivity.class));
   }
 
   /**
    * Custom back button in the auth pages
+   *
    * @param view
    */
   public void customBack(View view) {
@@ -49,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
   /**
    * Gets the authController
+   *
    * @return AuthenticationController
    */
   public AuthenticationController getAuthController() {

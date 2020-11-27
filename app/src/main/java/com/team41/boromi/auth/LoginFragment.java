@@ -24,7 +24,8 @@ import com.team41.boromi.R;
 import com.team41.boromi.callbacks.AuthCallback;
 
 /**
- * Login Fragment handles the logic used in the login page and redirect the user to the book activity
+ * Login Fragment handles the logic used in the login page and redirect the user to the book
+ * activity
  */
 public class LoginFragment extends Fragment {
 
@@ -64,6 +65,7 @@ public class LoginFragment extends Fragment {
 
   /**
    * Factory method to create this fragment
+   *
    * @return created fragment
    */
   public static LoginFragment newInstance() {
@@ -75,6 +77,7 @@ public class LoginFragment extends Fragment {
 
   /**
    * OnCreate method to initialize any values
+   *
    * @param savedInstanceState
    */
   @Override
@@ -85,6 +88,7 @@ public class LoginFragment extends Fragment {
 
   /**
    * OnCreateView to bind any listeners and set values to any layout elements
+   *
    * @param inflater
    * @param container
    * @param savedInstanceState
@@ -132,6 +136,9 @@ public class LoginFragment extends Fragment {
               @Override
               public void run() {
                 spinner.setVisibility(View.GONE);
+                emailInput.setText("");
+                passwordInput.setText("");
+                Toast.makeText(activity, "Login Successful, Welcome", Toast.LENGTH_LONG).show();
               }
             });
             Intent intent = new Intent(getActivity(), BookActivity.class);
@@ -154,4 +161,5 @@ public class LoginFragment extends Fragment {
     });
     return view;
   }
+
 }

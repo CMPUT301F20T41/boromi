@@ -23,8 +23,8 @@ import com.team41.boromi.R;
 import com.team41.boromi.callbacks.AuthCallback;
 
 /**
- * SignupFragment manages the signup page and creates an account for the user and redirects the
- * user to the book activity when their account is created.
+ * SignupFragment manages the signup page and creates an account for the user and redirects the user
+ * to the book activity when their account is created.
  */
 public class SignupFragment extends Fragment {
 
@@ -71,6 +71,7 @@ public class SignupFragment extends Fragment {
 
   /**
    * Use this factory method to create a new instance of this fragment
+   *
    * @return A new instance of fragment SignupFragment.
    */
   // TODO: Rename and change types and number of parameters
@@ -83,6 +84,7 @@ public class SignupFragment extends Fragment {
 
   /**
    * onCreate method to initialize any variables
+   *
    * @param savedInstanceState
    */
   @Override
@@ -93,6 +95,7 @@ public class SignupFragment extends Fragment {
 
   /**
    * onCreateView to bind any listeners or values
+   *
    * @param inflater
    * @param container
    * @param savedInstanceState

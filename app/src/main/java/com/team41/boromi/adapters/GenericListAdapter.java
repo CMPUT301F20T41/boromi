@@ -1,6 +1,8 @@
 package com.team41.boromi.adapters;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,30 +12,41 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.team41.boromi.BookActivity;
 import com.team41.boromi.R;
+import com.team41.boromi.book.DisplayOtherUserFragment;
 import com.team41.boromi.book.GenericListFragment;
+import com.team41.boromi.callbacks.ReturnCallback;
 import com.team41.boromi.constants.CommonConstants;
 import com.team41.boromi.controllers.BookController;
 import com.team41.boromi.controllers.BookRequestController;
+import com.team41.boromi.dbs.UserDB;
 import com.team41.boromi.models.Book;
 import com.team41.boromi.models.BookRequest;
+import com.team41.boromi.models.User;
 import com.team41.boromi.utility.CustomClickListener;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+
 /**
- * This class is an adapter class for a recycler view. This class is meant to be used together
- * with GenericListFragment to store the individual model cards for each tab
+ * This class is an adapter class for a recycler view. This class is meant to be used together with
+ * GenericListFragment to store the individual model cards for each tab
  */
 public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.ViewHolder> {
 
   private static final String TAG = "Adapter Tag";
   BookController bookController;
   BookRequestController bookRequestController;
+  UserDB userDB;
   private ArrayList<Book> books;
   private int resource;
   private ViewGroup parent;
@@ -41,6 +54,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
   private ArrayList<SubListAdapter> subListAdapters;
   private GenericListFragment genericListFragment;
   private BookActivity bookActivity;
+  FirebaseFirestore db;
 
   public GenericListAdapter(ArrayList<Book> books, int id, BookController bookController,
       GenericListFragment genericListFragment) {
@@ -73,7 +87,8 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
 
   /**
    * This function overrides onCreateViewHolder and is mainly used to initialize onClickListeners
-   * @param parent ViewGroup parent
+   *
+   * @param parent   ViewGroup parent
    * @param viewType int viewType
    * @return GenericListAdapter.ViewHolder
    */
@@ -92,7 +107,11 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
             Book requested = books.get(pos);
             bookRequestController.makeRequestOnBook(requested);
             books.remove(requested);
-            bookActivity.updateFragment("BorrowedFragment", "Requested");
+            if (resource == R.layout.searched) {
+              bookActivity.getBookViewModel().getBorrowedRequested();
+            } else {
+              genericListFragment.getBookViewModel().getBorrowedRequested();
+            }
             notifyDataSetChanged();
           }
         }
@@ -113,11 +132,26 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
         }
       });
     }
+
+    if (holder.user != null) {
+      holder.user.setOnClickListener(view1 -> {
+        db = FirebaseFirestore.getInstance();
+        String usernameClicked = holder.user.getText().toString();
+        UserDB userDB = new UserDB(db);
+        new Thread(() -> {
+          AppCompatActivity activity = (AppCompatActivity) view1.getContext();
+          User userToDisplay = userDB.getUserByUsername(usernameClicked);
+          DisplayOtherUserFragment displayOtherUserFragment = DisplayOtherUserFragment.newInstance(userToDisplay);
+          displayOtherUserFragment.show(activity.getSupportFragmentManager(), "displayUsers");
+        }).start();
+      });
+    }
     return holder;
   }
 
   /**
    * This function is used to update viewmodel with the correct information
+   *
    * @param holder
    * @param position
    */
@@ -166,14 +200,45 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
       subListAdapters.add(subListAdapter);
     }
     if (holder.rightButton != null) {
+      if (book.getWorkflow() == CommonConstants.BookWorkflowStage.PENDINGRETURN || book.getWorkflow() == CommonConstants.BookWorkflowStage.PENDINGBORROW){
+        holder.rightButton.setImageResource(R.drawable.more_horizontal_notified);
+      }
       holder.rightButton
           .setOnClickListener(new CustomClickListener(book, bookActivity, genericListFragment));
     }
-    if (holder.status != null) {
-      if (book.getStatus() ==  CommonConstants.BookStatus.AVAILABLE) {
-        holder.status.setText("AVAILABLE");
+    if (holder.returnButton != null){
+      if (book.getWorkflow() == CommonConstants.BookWorkflowStage.PENDINGRETURN){
+        holder.returnButton.setBackgroundResource(R.drawable.cancel_circle);
       }
-      else if(book.getStatus() == CommonConstants.BookStatus.REQUESTED){
+      else if (book.getWorkflow() == CommonConstants.BookWorkflowStage.BORROWED){
+        holder.returnButton.setBackgroundResource(R.drawable.return_circle); 
+      }
+      holder.returnButton.setOnClickListener(new OnClickListener(){
+        @Override
+        public void onClick(View v) {
+          if (book.getWorkflow() == CommonConstants.BookWorkflowStage.BORROWED) {
+            holder.returnButton.setBackgroundResource(R.drawable.cancel_circle);
+            genericListFragment.verifyBarcode(book);
+          }
+          else if (book.getWorkflow() == CommonConstants.BookWorkflowStage.PENDINGRETURN) {
+              holder.returnButton.setBackgroundResource(R.drawable.return_circle);
+              bookActivity.getBookReturnController().cancelReturnRequest(book.getBookId(), new ReturnCallback() {
+                @Override
+                public void onSuccess(Book books) {
+                }
+
+                @Override
+                public void onFailure() {
+                }
+              });
+          }
+        }
+      });
+    }
+    if (holder.status != null) {
+      if (book.getStatus() == CommonConstants.BookStatus.AVAILABLE) {
+        holder.status.setText("AVAILABLE");
+      } else if (book.getStatus() == CommonConstants.BookStatus.REQUESTED) {
         holder.status.setText("REQUESTED");
       }
     }
@@ -181,6 +246,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
 
   /**
    * Returns the number of elements in the list
+   *
    * @return
    */
   @Override
@@ -190,6 +256,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
 
   /**
    * Sets the books that have requests. Used for request tabs
+   *
    * @param bookWithRequests Map of key: Book, value: List<BookRequest>
    */
   public void setBookWithRequests(
@@ -198,8 +265,8 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
   }
 
   /**
-   * This function notifies subAdapters used in the Owner book requests tab that the data has
-   * been changed
+   * This function notifies subAdapters used in the Owner book requests tab that the data has been
+   * changed
    */
   public void notifySubAdapters() {
     for (SubListAdapter subListAdapter : subListAdapters) {
@@ -211,7 +278,8 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
 
   /**
    * This function deletes a book request when a request has been accepted
-   * @param book Book to be deleted
+   *
+   * @param book           Book to be deleted
    * @param subListAdapter Adapter for sub lists
    */
   public void deleteBookRequest(Book book, SubListAdapter subListAdapter) {
@@ -222,11 +290,15 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
       @Override
       public void run() {
         notifyDataSetChanged();
-        ((BookActivity) genericListFragment.getActivity())
-            .updateFragment("OwnedFragment", "Accepted");
+        genericListFragment.getBookViewModel().getOwnerAccepted();
       }
     });
   }
+
+  public GenericListFragment getGenericListFragment() {
+    return genericListFragment;
+  }
+
 
   /**
    * This class holds the models used in the recyclerView
@@ -241,12 +313,14 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
     View view;
     ImageButton imageButton;
     ImageButton rightButton;
+    ImageButton returnButton;
     Button request_button;
     TextView withdrawButton;
     TextView status;
 
     /**
      * This Constructor finds the layout elements depending on which layout is being used
+     *
      * @param itemView
      * @param layout
      */
@@ -261,9 +335,11 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
           isbn = itemView.findViewById(R.id.available_isbn);
           imageButton = itemView.findViewById(R.id.available_book_image);
           rightButton = itemView.findViewById(R.id.right_button);
+          returnButton = null;
           request_button = null;
           status = null;
           reqom = null;
+          user = null;
           break;
         case (R.layout.accepted):
           title = itemView.findViewById(R.id.accepted_title);
@@ -272,6 +348,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
           user = itemView.findViewById(R.id.accepted_user);
           imageButton = itemView.findViewById(R.id.accepted_book_image);
           rightButton = itemView.findViewById(R.id.right_button);
+          returnButton = null;
           request_button = null;
           status = null;
           reqom = null;
@@ -283,6 +360,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
           user = itemView.findViewById(R.id.accepted_request_user);
           imageButton = itemView.findViewById(R.id.accepted_request_book_image);
           rightButton = itemView.findViewById(R.id.right_button);
+          returnButton = null;
           request_button = null;
           status = null;
           reqom = null;
@@ -295,6 +373,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
           imageButton = itemView.findViewById(R.id.borrowing_book_image);
           rightButton = null;
           request_button = null;
+          returnButton = itemView.findViewById(R.id.return_button);
           status = null;
           reqom = null;
           break;
@@ -305,6 +384,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
           user = itemView.findViewById(R.id.lent_user);
           imageButton = itemView.findViewById(R.id.lent_book_image);
           rightButton = itemView.findViewById(R.id.right_button);
+          returnButton = null;
           request_button = null;
           status = null;
           reqom = null;
@@ -316,6 +396,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
           user = itemView.findViewById(R.id.reqbm_user);
           imageButton = itemView.findViewById(R.id.reqbm_book_image);
           rightButton = null;
+          returnButton = null;
 //          withdrawButton = itemView.findViewById(R.id.reqbm_withdraw);
           request_button = null;
           status = itemView.findViewById(R.id.reqbm_status);
@@ -328,6 +409,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
           reqom = itemView.findViewById(R.id.reqom_request_list);
           imageButton = itemView.findViewById(R.id.reqom_book_image);
           rightButton = null;
+          returnButton = null;
           request_button = null;
           status = null;
           break;
@@ -338,6 +420,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
           user = itemView.findViewById(R.id.searched_user);
           imageButton = itemView.findViewById(R.id.searched_bookImage);
           rightButton = null;
+          returnButton = null;
           request_button = itemView.findViewById(R.id.searched_request);
           status = itemView.findViewById(R.id.searched_status);
           reqom = null;
@@ -347,5 +430,6 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
       // Makes the circular
       imageButton.setClipToOutline(true);
     }
+
   }
 }
