@@ -27,33 +27,36 @@
           android:textColor="@color/colorTextLight"
           android:textSize="28sp"
           android:layout_marginEnd="16dp"/>
+
       <LinearLayout
-          android:layout_width="wrap_content"
+          android:layout_width="105dp"
           android:layout_height="match_parent"
-          android:orientation="vertical"
           android:layout_marginEnd="8dp"
-          android:layout_weight="1">
+          android:layout_weight="1"
+          android:orientation="vertical">
+
         <TextView
             android:id="@+id/settings_text_view_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="username"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
         <TextView
             android:id="@+id/settings_text_view_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="emailaddress@email.com"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
       </LinearLayout>
-<!--      <ImageView-->
-<!--          android:id="@+id/settings_button_edit_user"-->
-<!--          android:layout_width="wrap_content"-->
-<!--          android:layout_height="wrap_content"-->
-<!--          android:layout_gravity="center"-->
-<!--          android:src="@drawable/edit_icon"-->
-<!--          android:padding="8dp"-->
-<!--          app:tint="@color/colorIconDark" />-->
+            <ImageView
+          android:id="@+id/settings_button_edit_user"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:src="@drawable/edit_icon"
+          android:padding="8dp"
+          app:tint="@color/colorIconDark" />
 
     </LinearLayout>
 
@@ -64,27 +67,27 @@
         android:src="@drawable/undraw_book_reader_2"
         android:padding="16dp"/>
 
-<!--    <LinearLayout-->
-<!--        android:id="@+id/settings_button_logout"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="70dp"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:padding="16dp"-->
-<!--        android:layout_marginBottom="16dp">-->
-<!--      <ImageView-->
-<!--          android:layout_width="44dp"-->
-<!--          android:layout_height="match_parent"-->
-<!--          android:src="@drawable/logout_icon"-->
-<!--          app:tint="@color/colorIconDark"-->
-<!--          android:layout_marginRight="16dp"/>-->
-<!--      <TextView-->
-<!--          android:layout_width="wrap_content"-->
-<!--          android:layout_height="match_parent"-->
-<!--          android:text="Log Out"-->
-<!--          android:gravity="center"-->
-<!--          android:textAppearance="@style/TextAppearance.AppCompat.Title"/>-->
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp">
+      <ImageView
+          android:id="@+id/settings_button_logout"
+          android:layout_width="44dp"
+          android:layout_height="match_parent"
+          android:src="@drawable/logout_icon"
+          app:tint="@color/colorIconDark"
+          android:layout_marginRight="16dp"/>
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:text="Log Out"
+          android:gravity="center"
+          android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
 
-<!--    </LinearLayout>-->
+    </LinearLayout>
 
   </LinearLayout>
 

@@ -136,6 +136,9 @@ public class LoginFragment extends Fragment {
               @Override
               public void run() {
                 spinner.setVisibility(View.GONE);
+                emailInput.setText("");
+                passwordInput.setText("");
+                Toast.makeText(activity, "Login Successful, Welcome", Toast.LENGTH_LONG).show();
               }
             });
             Intent intent = new Intent(getActivity(), BookActivity.class);
@@ -158,4 +161,5 @@ public class LoginFragment extends Fragment {
     });
     return view;
   }
+
 }
