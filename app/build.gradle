@@ -5,6 +5,10 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
 
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+    }
+
     defaultConfig {
         applicationId "com.team41.boromi"
         minSdkVersion 26
@@ -66,4 +70,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:20.0.1'
     implementation 'com.google.firebase:firebase-messaging:21.0.0'
     implementation 'com.journeyapps:zxing-android-embedded:4.1.0'
+    implementation 'com.android.volley:volley:1.1.1'
 }
