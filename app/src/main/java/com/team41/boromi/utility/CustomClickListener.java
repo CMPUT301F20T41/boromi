@@ -126,9 +126,11 @@ public class CustomClickListener implements View.OnClickListener,
           public void onFailure(Exception e) {
           }
         });
+        return true;
       case R.id.exchange_book:
         genericListFragment.verifyBarcode(book);
 //          genericListFragment.bookExchangeRequest(book);
+        return true;
 
     }
     return false;
