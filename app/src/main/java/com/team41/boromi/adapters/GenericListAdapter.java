@@ -10,20 +10,27 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.team41.boromi.BookActivity;
 import com.team41.boromi.R;
+import com.team41.boromi.book.DisplayOtherUserFragment;
 import com.team41.boromi.book.GenericListFragment;
 import com.team41.boromi.constants.CommonConstants;
 import com.team41.boromi.controllers.BookController;
 import com.team41.boromi.controllers.BookRequestController;
+import com.team41.boromi.dbs.UserDB;
 import com.team41.boromi.models.Book;
 import com.team41.boromi.models.BookRequest;
+import com.team41.boromi.models.User;
 import com.team41.boromi.utility.CustomClickListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * This class is an adapter class for a recycler view. This class is meant to be used together with
@@ -34,6 +41,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
   private static final String TAG = "Adapter Tag";
   BookController bookController;
   BookRequestController bookRequestController;
+  UserDB userDB;
   private ArrayList<Book> books;
   private int resource;
   private ViewGroup parent;
@@ -41,6 +49,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
   private ArrayList<SubListAdapter> subListAdapters;
   private GenericListFragment genericListFragment;
   private BookActivity bookActivity;
+  FirebaseFirestore db;
 
   public GenericListAdapter(ArrayList<Book> books, int id, BookController bookController,
       GenericListFragment genericListFragment) {
@@ -116,6 +125,20 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
             notifyDataSetChanged();
           }
         }
+      });
+    }
+
+    if (holder.user != null) {
+      holder.user.setOnClickListener(view1 -> {
+        db = FirebaseFirestore.getInstance();
+        String usernameClicked = holder.user.getText().toString();
+        UserDB userDB = new UserDB(db);
+        new Thread(() -> {
+          AppCompatActivity activity = (AppCompatActivity) view1.getContext();
+          User userToDisplay = userDB.getUserByUsername(usernameClicked);
+          DisplayOtherUserFragment displayOtherUserFragment = DisplayOtherUserFragment.newInstance(userToDisplay);
+          displayOtherUserFragment.show(activity.getSupportFragmentManager(), "displayUsers");
+        }).start();
       });
     }
     return holder;
@@ -276,6 +299,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
           request_button = null;
           status = null;
           reqom = null;
+          user = null;
           break;
         case (R.layout.accepted):
           title = itemView.findViewById(R.id.accepted_title);
