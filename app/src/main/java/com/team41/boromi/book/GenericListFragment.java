@@ -242,6 +242,7 @@ public class GenericListFragment extends Fragment {
       bookActivity.getBookReturnController().addReturnRequest(bookToExchange, new ReturnCallback() {
         @Override
         public void onSuccess(Book books) {
+          GenericListAdapter.ViewHolder.returnButton.setBackgroundResource(R.drawable.cancel_circle);
         }
         @Override
         public void onFailure() {
