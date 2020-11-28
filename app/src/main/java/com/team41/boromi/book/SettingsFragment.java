@@ -93,18 +93,11 @@ public class SettingsFragment extends Fragment implements EditUserFragment.Chang
     textViewUsername = view.findViewById(R.id.settings_text_view_username);
     textViewEmail = view.findViewById(R.id.settings_text_view_email);
     imageViewEditUserIcon = view.findViewById(R.id.settings_button_edit_user);
-    buttonLogout = view.findViewById(R.id.settings_button_logout);
+//    buttonLogout = view.findViewById(R.id.settings_button_logout);
     // Sets the text in the email and password field
     textViewUsername.setText(user.getUsername());
     textViewEmail.setText(user.getEmail());
     imageViewAvatar.setText(Character.toString(user.getUsername().charAt(0)).toUpperCase());
-
-        buttonLogout.setOnClickListener(v -> {
-          authenticationController.signOut();
-          BoromiModule.user = null;
-          Toast.makeText(activity, "Logged Out", Toast.LENGTH_LONG).show();
-          activity.finish();
-        });
 
     SettingsFragment settingsFragment = this;
 

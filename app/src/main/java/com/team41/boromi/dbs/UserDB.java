@@ -71,7 +71,6 @@ public class UserDB {
       Log.w(TAG, e.getCause());
       return null;
     }
-
     if (res.isEmpty()) { // No user found
       return null;
     } else if (res.size() > 1) { // This shouldn't happen but is a good check
@@ -101,5 +100,28 @@ public class UserDB {
       Log.w(TAG, e.getCause());
       return null;
     }
+  }
+
+  /**
+   * async gets result whether if username is unique or not.
+   * @param username
+   * @return
+   */
+
+  public Boolean isUsernameUnique(String username){
+    QuerySnapshot res;
+
+    // Queries firestore for the username
+    try {
+      res = Tasks.await(
+              usersRef.whereEqualTo("username", username).get(),
+              DB_TIMEOUT,
+              TimeUnit.MILLISECONDS
+      );
+    } catch (Exception e) { // Request failed
+      Log.w(TAG, e.getCause());
+      return null;
+    }
+    return res.isEmpty();
   }
 }

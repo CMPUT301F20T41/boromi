@@ -18,9 +18,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.team41.boromi.BookActivity;
 import com.team41.boromi.R;
 import com.team41.boromi.models.Book;
@@ -36,6 +41,7 @@ public class EditBookFragment extends DialogFragment {
   private EditText author;
   private EditText title;
   private EditText isbn;
+  private ImageButton editISBNImg;
   /**
    * Used to validate input fields
    */
@@ -116,6 +122,8 @@ public class EditBookFragment extends DialogFragment {
     title = (EditText) view.findViewById(R.id.edit_book_title);
     isbn = (EditText) view.findViewById(R.id.edit_book_isbn);
     addImage = (ImageButton) view.findViewById(R.id.edit_book_book_image);
+    editISBNImg = (ImageButton) view.findViewById(R.id.edit_isbn_img);
+
 
     // Makes the image rounded
     addImage.setClipToOutline(true);
@@ -160,8 +168,16 @@ public class EditBookFragment extends DialogFragment {
     addImage.setOnLongClickListener(view3 -> {
       addImage.setImageResource(R.drawable.add_photo_icon);
       this.imageBitmap = null;
+      editingBook.setImg64(null);
       addImage.setScaleType(ImageView.ScaleType.CENTER);
       return true;
+    });
+
+    editISBNImg.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        dispatchTakeBarcodeIntent();
+      }
     });
   }
 
@@ -180,6 +196,18 @@ public class EditBookFragment extends DialogFragment {
       addImage.setImageBitmap(imageBitmap);
       addImage.setScaleType(ImageView.ScaleType.FIT_XY);
       this.imageBitmap = imageBitmap;
+    }else{
+      IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+      if(result != null) {
+        if(result.getContents() == null) {
+          Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_LONG).show();
+        } else {
+          isbn.setText(result.getContents());
+          Toast.makeText(getActivity(), "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+        }
+      } else {
+        super.onActivityResult(requestCode, resultCode, data);
+      }
     }
   }
 
@@ -193,6 +221,10 @@ public class EditBookFragment extends DialogFragment {
     } catch (Exception e) {
       // display error state to the user
     }
+  }
+
+  private void dispatchTakeBarcodeIntent() {
+    IntentIntegrator.forSupportFragment(this).initiateScan();
   }
 
   /**

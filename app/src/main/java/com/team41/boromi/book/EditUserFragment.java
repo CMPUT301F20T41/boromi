@@ -10,17 +10,20 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.team41.boromi.BookActivity;
 import com.team41.boromi.BoromiApp;
 import com.team41.boromi.R;
 import com.team41.boromi.callbacks.AuthNoResultCallback;
 import com.team41.boromi.controllers.AuthenticationController;
 import com.team41.boromi.dagger.BoromiModule;
+import com.team41.boromi.dbs.UserDB;
 import com.team41.boromi.models.User;
 import javax.inject.Inject;
 
@@ -34,6 +37,9 @@ public class EditUserFragment extends DialogFragment {
   private TextInputEditText editTextUsername;
   private TextInputEditText editTextEmail;
   private Button buttonSaveChanges;
+  FirebaseFirestore db;
+  private ProgressBar spinner;
+
   /**
    * Validate input fields have been filled
    */
@@ -58,6 +64,7 @@ public class EditUserFragment extends DialogFragment {
       // Empty method, required for text watcher
     }
   };
+  private User modifiedUser;
   private User user;
   private BookActivity activity;
   private Boolean successfulWrite = false;
@@ -68,65 +75,125 @@ public class EditUserFragment extends DialogFragment {
 
     @Override
     public void onClick(View v) {
+      spinner.setVisibility(View.VISIBLE);
       String username = editTextUsername.getText().toString();
       String email = editTextEmail.getText().toString();
+      db = FirebaseFirestore.getInstance();
+      UserDB userDB = new UserDB(db);
 
       // Attempts to write to the database
       // Neither fields were change so do nothing
       if (username.equals(user.getUsername()) && email.equals(user.getEmail())) {
+        spinner.setVisibility(View.GONE);
         Toast.makeText(activity, "No Changes Were Made to Your Information", Toast.LENGTH_LONG)
-            .show();
+                .show();
         return;
       }
 
+      modifiedUser = new User(user.getUUID(), username, email);
       // A change was made, prepare an updated user
-      User modifiedUser = new User(user.getUUID(), username, email);
-
       // If the email was changed, then the change needs to made in both auth and firestore
-      if (!email.equals(user.getEmail())) {
-        authenticationController.changeEmail(modifiedUser, new AuthNoResultCallback() {
-          @Override
-          public void onSuccess() {
-            activity.runOnUiThread(new Runnable() {
+      new Thread(new Runnable() {
+        @Override
+        public void run() {
+          if(!username.equals(user.getUsername()) && email.equals((user.getEmail()))) { // if only username is changed and email unchanged
+            if (userDB.isUsernameUnique(username)) {
+              authenticationController.updateUser(modifiedUser);
+              activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                  spinner.setVisibility(View.GONE);
+                  Toast.makeText(activity, "Successfully Updated Your Information", Toast.LENGTH_LONG)
+                          .show();
+                }
+              });
+              successfulWrite = true;
+              BoromiModule.user = modifiedUser;
+              dismiss();
+            } else {
+              activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                  spinner.setVisibility(View.GONE);
+                  Toast.makeText(activity, "User name taken", Toast.LENGTH_LONG)
+                          .show();
+                }
+              });
+            }
+          } else if (!email.equals(user.getEmail()) && username.equals(user.getUsername())) { // if only username is changed and email unchanged
+            authenticationController.changeEmail(modifiedUser, new AuthNoResultCallback() {
               @Override
-              public void run() {
-                Toast.makeText(activity, "Successfully Updated Your Information", Toast.LENGTH_LONG)
-                    .show();
+              public void onSuccess() {
+                activity.runOnUiThread(new Runnable() {
+                  @Override
+                  public void run() {
+                    spinner.setVisibility(View.GONE);
+                    Toast.makeText(activity, "Successfully Updated Your Information", Toast.LENGTH_LONG)
+                            .show();
+                  }
+                });
+
+                BoromiModule.user = modifiedUser;
+                successfulWrite = true;
+                dismiss();
+              }
+
+              @Override
+              public void onFailure(Exception exception) {
+                activity.runOnUiThread(new Runnable() {
+                  @Override
+                  public void run() {
+                    spinner.setVisibility(View.GONE);
+                    Toast.makeText(activity, "Failed to Update Your Information", Toast.LENGTH_LONG)
+                            .show();
+                  }
+                });
               }
             });
+          } else {  // if both are changed
+            if ((userDB.isUsernameUnique(username))) {
+              authenticationController.changeEmail(modifiedUser, new AuthNoResultCallback() {
+                @Override
+                public void onSuccess() {
+                  activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                      spinner.setVisibility(View.GONE);
+                      Toast.makeText(activity, "Successfully Updated Your Information", Toast.LENGTH_LONG)
+                              .show();
+                    }
+                  });
 
-            BoromiModule.user = modifiedUser;
-            successfulWrite = true;
-            dismiss();
+                  BoromiModule.user = modifiedUser;
+                  successfulWrite = true;
+                  dismiss();
+                }
+
+                @Override
+                public void onFailure(Exception exception) {
+                  activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                      spinner.setVisibility(View.GONE);
+                      Toast.makeText(activity, "Failed to Update Your Information", Toast.LENGTH_LONG)
+                              .show();
+                    }
+                  });
+                }
+              });
+            } else {
+              activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                  spinner.setVisibility(View.GONE);
+                  Toast.makeText(activity, "User name taken", Toast.LENGTH_LONG)
+                          .show();
+                }
+              });
+            }
           }
-
-          @Override
-          public void onFailure(Exception exception) {
-            activity.runOnUiThread(new Runnable() {
-              @Override
-              public void run() {
-                Toast.makeText(activity, "Failed to Update Your Information", Toast.LENGTH_LONG)
-                    .show();
-              }
-            });
-          }
-        });
-      } else {
-        // If only the username was changed, then we only need to update firestore
-        authenticationController.updateUser(modifiedUser);
-
-        activity.runOnUiThread(new Runnable() {
-          @Override
-          public void run() {
-            Toast.makeText(activity, "Successfully Updated Your Information", Toast.LENGTH_LONG)
-                .show();
-          }
-        });
-
-        successfulWrite = true;
-        BoromiModule.user = modifiedUser;
-        dismiss();
-      }
+        }
+      }).start();
     }
   };
 
@@ -142,7 +209,8 @@ public class EditUserFragment extends DialogFragment {
     View view = LayoutInflater
         .from(getActivity())
         .inflate(R.layout.fragment_edit_user, null);
-
+    spinner = view.findViewById(R.id.edit_user_loader);
+    spinner.setVisibility(View.GONE);
     activity = (BookActivity) getActivity();
 
     ((BoromiApp) getActivity().getApplicationContext())

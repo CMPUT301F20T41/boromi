@@ -3,6 +3,7 @@ package com.team41.boromi.adapters;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +24,7 @@ import com.team41.boromi.BookActivity;
 import com.team41.boromi.R;
 import com.team41.boromi.book.DisplayOtherUserFragment;
 import com.team41.boromi.book.GenericListFragment;
+import com.team41.boromi.book.ImageExpandFragment;
 import com.team41.boromi.callbacks.ReturnCallback;
 import com.team41.boromi.constants.CommonConstants;
 import com.team41.boromi.controllers.BookController;
@@ -132,15 +135,14 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
         }
       });
     }
-
     if (holder.user != null) {
       holder.user.setOnClickListener(view1 -> {
+        String usernameClicked = books.get(holder.getAdapterPosition()).getOwner();
         db = FirebaseFirestore.getInstance();
-        String usernameClicked = holder.user.getText().toString();
         UserDB userDB = new UserDB(db);
         new Thread(() -> {
           AppCompatActivity activity = (AppCompatActivity) view1.getContext();
-          User userToDisplay = userDB.getUserByUsername(usernameClicked);
+          User userToDisplay = userDB.getUserByUUID(usernameClicked);
           DisplayOtherUserFragment displayOtherUserFragment = DisplayOtherUserFragment.newInstance(userToDisplay);
           displayOtherUserFragment.show(activity.getSupportFragmentManager(), "displayUsers");
         }).start();
@@ -182,8 +184,20 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
         holder.imageButton.setScaleType(ImageView.ScaleType.FIT_XY);
         holder.imageButton.setImageBitmap(b);
       } else {
+        holder.imageButton.setScaleType(ImageView.ScaleType.CENTER);
         holder.imageButton.setImageResource(R.drawable.book_icon);
       }
+      holder.imageButton.setOnClickListener( new OnClickListener(){
+        @Override
+        public void onClick(View v) {
+          if (book.getImg64() != null) {
+            FragmentManager fragmentManager = (genericListFragment.getActivity())
+                    .getSupportFragmentManager();
+            ImageExpandFragment showImageExpandFragment = ImageExpandFragment.newInstance(book);
+            showImageExpandFragment.show(fragmentManager, "image_expanded");
+          }
+        }
+      });
     }
     if (holder.reqom != null) {
       RecyclerView recyclerView = holder.view.findViewById(R.id.reqom_request_list);
