@@ -148,12 +148,18 @@ public class SignupFragment extends Fragment {
 
               @Override
               public void onFailure(Exception exception) {
-                Log.d("Create Account", "Creation failed");
                 activity.runOnUiThread(new Runnable() {
                   @Override
                   public void run() {
                     spinner.setVisibility(View.GONE);
-                    Toast.makeText(activity, "Account Creation Failed", Toast.LENGTH_LONG).show();
+                    String message;
+                    Log.d("Failed", exception.toString());
+                    if (exception.toString().indexOf("taken") != -1) {
+                      message = "Username " + username + " is Already Taken, Try Another One.";
+                    } else {
+                      message = "Account Creation Failed";
+                    }
+                    Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
                   }
                 });
               }

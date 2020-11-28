@@ -3,6 +3,7 @@ package com.team41.boromi.adapters;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -132,15 +133,14 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
         }
       });
     }
-
     if (holder.user != null) {
       holder.user.setOnClickListener(view1 -> {
+        String usernameClicked = books.get(holder.getAdapterPosition()).getOwner();
         db = FirebaseFirestore.getInstance();
-        String usernameClicked = holder.user.getText().toString();
         UserDB userDB = new UserDB(db);
         new Thread(() -> {
           AppCompatActivity activity = (AppCompatActivity) view1.getContext();
-          User userToDisplay = userDB.getUserByUsername(usernameClicked);
+          User userToDisplay = userDB.getUserByUUID(usernameClicked);
           DisplayOtherUserFragment displayOtherUserFragment = DisplayOtherUserFragment.newInstance(userToDisplay);
           displayOtherUserFragment.show(activity.getSupportFragmentManager(), "displayUsers");
         }).start();
