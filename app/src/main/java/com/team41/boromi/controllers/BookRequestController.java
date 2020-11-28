@@ -54,7 +54,7 @@ public class BookRequestController {
   public void makeRequestOnBook(Book book) {
     BookRequest request = new BookRequest(user.getUsername(), user.getUUID(), book.getBookId(),
         book.getOwner());
-    book.setStatus(CommonConstants.BookStatus.REQUESTED);
+//    book.setStatus(CommonConstants.BookStatus.REQUESTED);
     executor.execute(() -> {
       bookDB.pushBook(book);    // update the books status
       brDB.pushBookRequest(request);

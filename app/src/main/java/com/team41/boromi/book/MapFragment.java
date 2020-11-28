@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -29,6 +32,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.team41.boromi.BookActivity;
 import com.team41.boromi.BookViewModel;
 import com.team41.boromi.R;
+import com.team41.boromi.adapters.MapInfoWindowAdapter;
 import com.team41.boromi.adapters.SubListAdapter;
 import com.team41.boromi.models.Book;
 import java.util.ArrayList;
@@ -45,6 +49,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
   private UiSettings mapUiSettings;
   private FloatingActionButton confirmButton;
   private TextView tooltip;
+  private RadioGroup radioGroup;
 
   private ArrayList<Marker> markers;
   private Marker currentMarker;
@@ -91,6 +96,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     mapFragment.getMapAsync(this);
     tooltip = view.findViewById(R.id.map_tooltip);
     confirmButton = view.findViewById(R.id.map_confirm_pin);
+    radioGroup = view.findViewById(R.id.map_radio_group);
+    radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(RadioGroup radioGroup, int i) {
+        if (i == R.id.map_filter_all)
+          updateMarkers(0);
+        else if (i == R.id.map_filter_owner)
+          updateMarkers(1);
+        else if (i == R.id.map_filter_borrower)
+          updateMarkers(2);
+      }
+    });
     confirmButton.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -107,19 +124,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     return view;
   }
 
-  private void updateMarkers() {
+  private void updateMarkers(int options) {
     googleMap.clear();
     for (Book book : bookLocations) {
       if (book.getLocationLat() == null || book.getLocationLon() == null) {
         continue;
       }
       LatLng location = new LatLng(book.getLocationLat(), book.getLocationLon());
-      if (book.getOwner().equals(bookViewModel.getUser().getUUID())) {
-        googleMap.addMarker(new MarkerOptions().position(location).title(book.getTitle()));
-      } else {
-        googleMap.addMarker(new MarkerOptions().position(location).title(book.getTitle()))
+      String snipit = book.getTitle() + ",";
+      if (book.getOwner().equals(bookViewModel.getUser().getUUID()) && (options==0||options==1)) {
+        snipit += "1," + book.getBorrowerName();
+        googleMap.addMarker(new MarkerOptions().position(location).snippet(snipit));
+      } else if (book.getBorrower().equals(bookViewModel.getUser().getUUID()) && (options==0||options==2)) {
+        snipit += "0," + book.getOwnerName();
+        googleMap.addMarker(new MarkerOptions().position(location).snippet(snipit))
             .setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
       }
+    }
+    if (currentMarker != null) {
+      currentMarker = googleMap
+          .addMarker(new MarkerOptions().position(currentMarker.getPosition()).draggable(true).icon(
+              BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
     }
   }
 
@@ -130,6 +155,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     bookViewModel.setExchangeBookRequest(null);
     if (currentMarker != null) {
       currentMarker.remove();
+      currentMarker = null;
     }
     super.onPause();
   }
@@ -141,6 +167,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     mapUiSettings.setZoomControlsEnabled(true);
     mapUiSettings.setMapToolbarEnabled(false);
     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(53.5231923, -113.5), 11.0f));
+    googleMap.setInfoWindowAdapter(new MapInfoWindowAdapter(this));
     this.googleMap.setOnMapClickListener(new OnMapClickListener() {
       @Override
       public void onMapClick(LatLng latLng) {
@@ -149,6 +176,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
         if (currentMarker != null) {
           currentMarker.remove();
+          currentMarker = null;
         }
         currentMarker = googleMap
             .addMarker(new MarkerOptions().position(latLng).draggable(true).icon(
@@ -161,49 +189,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         bookLocations.clear();
         bookLocations.addAll(books);
-        updateMarkers();
+        updateMarkers(0);
+        radioGroup.check(R.id.map_filter_all);
       }
     };
     bookViewModel.getLocations().observe(getViewLifecycleOwner(), locationObserver);
-
-    mapUiSettings.setMyLocationButtonEnabled(true);
-    if (ActivityCompat.checkSelfPermission(getContext(), permission.ACCESS_FINE_LOCATION)
-        != PackageManager.PERMISSION_GRANTED
-        && ActivityCompat.checkSelfPermission(getContext(), permission.ACCESS_COARSE_LOCATION)
-        != PackageManager.PERMISSION_GRANTED) {
-      return;
-    }
-    this.googleMap.setMyLocationEnabled(true);
-
-  }
-
-  @SuppressLint("MissingPermission")
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-      @NonNull int[] grantResults) {
-    if (requestCode == MY_LOCATION_PERMISSION_REQUEST_CODE) {
-      if (checkPermissions(permission.ACCESS_FINE_LOCATION, permissions, grantResults)) {
-        googleMap.setMyLocationEnabled(true);
-      }
-    } else if (requestCode == LOCATION_LAYER_PERMISSION_REQUEST_CODE) {
-      if (checkPermissions(permission.ACCESS_FINE_LOCATION, permissions, grantResults)) {
-        googleMap.setMyLocationEnabled(true);
-      }
-    }
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-  }
-
-  private boolean checkPermissions(String p, String[] permissions, int[] grantResults) {
-    for (int i = 0; i < permissions.length; i++) {
-      if (p.equals(permissions[i])) {
-        return grantResults[i] == PackageManager.PERMISSION_GRANTED;
-      }
-    }
-    return false;
-  }
-
-  private void requestPermissions(int code) {
-    // TODO request permissions
   }
 
   public void setMode(int mode) {
@@ -215,14 +205,5 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
       confirmButton.show();
       tooltip.setVisibility(View.VISIBLE);
     }
-  }
-
-  public void setAdapterCallback(SubListAdapter subListAdapter) {
-    adapter = subListAdapter;
-  }
-
-  public interface SelectedLocation {
-
-    void onLocationSelected(LatLng location);
   }
 }

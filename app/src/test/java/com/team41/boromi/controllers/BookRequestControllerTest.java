@@ -2,6 +2,7 @@ package com.team41.boromi.controllers;
 
 import com.team41.boromi.callbacks.BookRequestCallback;
 import com.team41.boromi.constants.CommonConstants;
+import com.team41.boromi.constants.CommonConstants.BookStatus;
 import com.team41.boromi.dbs.BookDB;
 import com.team41.boromi.dbs.BookRequestDB;
 import com.team41.boromi.models.Book;
@@ -92,7 +93,7 @@ public class BookRequestControllerTest {
   @Test
   public void test_makeRequestOnBook() {
     dut.makeRequestOnBook(mockBook);
-    assertEquals(mockBook.getStatus(), CommonConstants.BookStatus.REQUESTED);
+    assertEquals(mockBook.getStatus(), BookStatus.AVAILABLE);
   }
 
   @Test

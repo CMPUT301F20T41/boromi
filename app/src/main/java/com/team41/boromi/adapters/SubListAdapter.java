@@ -24,8 +24,7 @@ import java.util.Map;
  * This class is recyclerview adapter that is used on the owner requests tab to show the user
  * request for each book
  */
-public class SubListAdapter extends RecyclerView.Adapter<SubListAdapter.ViewHolder> implements
-    MapFragment.SelectedLocation {
+public class SubListAdapter extends RecyclerView.Adapter<SubListAdapter.ViewHolder> {
 
   private final SubListAdapter _this = this;
   private ArrayList<BookRequest> usersRequested;
@@ -83,6 +82,9 @@ public class SubListAdapter extends RecyclerView.Adapter<SubListAdapter.ViewHold
         bookRequestController.declineBookRequest((usersRequested.get(idx)));
         usersRequested.remove(usersRequested.get(idx));
         notifyDataSetChanged();
+        if (usersRequested.isEmpty()) {
+          bookViewModel.getOwnerRequests();
+        }
       }
     });
 
@@ -126,19 +128,6 @@ public class SubListAdapter extends RecyclerView.Adapter<SubListAdapter.ViewHold
    */
   public void setUsersRequested(ArrayList<BookRequest> usersRequested) {
     this.usersRequested = usersRequested;
-  }
-
-  @Override
-  public void onLocationSelected(LatLng location) {
-    BookRequest bookRequest = usersRequested.get(selectedBookIndex);
-    bookRequest.setLocation(location);
-    bookRequestController.acceptBookRequest(bookRequest, new BookRequestCallback() {
-      @Override
-      public void onComplete(Map<Book, List<BookRequest>> bookWithRequests) {
-        usersRequested = new ArrayList<>();
-        parentAdapter.deleteBookRequest(book, _this);
-      }
-    });
   }
 
   /**

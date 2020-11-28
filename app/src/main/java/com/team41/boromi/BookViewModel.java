@@ -301,7 +301,6 @@ public class BookViewModel extends ViewModel {
     bookController.getOwnerBorrowerLocations(new BookCallback() {
       @Override
       public void onSuccess(ArrayList<Book> books) {
-        System.out.println("BOOKSLENGTH: " + books.size());
         bookActivity.runOnUiThread(new Runnable() {
           @Override
           public void run() {
@@ -337,6 +336,9 @@ public class BookViewModel extends ViewModel {
             Map<Book, List<BookRequest>> tempM = ownedRequestedCollection.getValue();
             tempM.remove(exchangeBook);
             ownedRequestedCollection.setValue(tempM);
+            getBookLocations();
+            getOwnerAccepted();
+            getOwnerAvailable();
             exchangeBook = null;
             exchangeBookRequest = null;
           }
