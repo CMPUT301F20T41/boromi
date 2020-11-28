@@ -122,10 +122,6 @@ public class UserDB {
       Log.w(TAG, e.getCause());
       return null;
     }
-    if (res.isEmpty()) { // No user found
-      return true;
-    } else {
-      return false;
-    }
+    return res.isEmpty();
   }
 }
