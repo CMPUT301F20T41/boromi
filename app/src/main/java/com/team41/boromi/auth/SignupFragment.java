@@ -131,7 +131,7 @@ public class SignupFragment extends Fragment {
         String username = userNameInput.getText().toString();
         String password = passwordInput.getText().toString();
         spinner.setVisibility(View.VISIBLE);
-        activity.getAuthController().makeSignUpRequest(username, email, password,
+        activity.getAuthController().makeSignUpRequest(username.toLowerCase(), email, password,
             new AuthCallback() {
               @Override
               public void onSuccess(AuthResult authResult) {

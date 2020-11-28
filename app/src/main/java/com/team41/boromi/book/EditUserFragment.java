@@ -76,7 +76,7 @@ public class EditUserFragment extends DialogFragment {
     @Override
     public void onClick(View v) {
       spinner.setVisibility(View.VISIBLE);
-      String username = editTextUsername.getText().toString();
+      String username = editTextUsername.getText().toString().toLowerCase();
       String email = editTextEmail.getText().toString();
       db = FirebaseFirestore.getInstance();
       UserDB userDB = new UserDB(db);
@@ -244,7 +244,7 @@ public class EditUserFragment extends DialogFragment {
     super.onDestroy();
     if (successfulWrite) {
       user = ((BookActivity) getActivity()).getUser();
-      String username = editTextUsername.getText().toString();
+      String username = editTextUsername.getText().toString().toLowerCase();
       String email = editTextEmail.getText().toString();
       user.setEmail(email);
       user.setUsername(username);
