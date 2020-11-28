@@ -37,4 +37,7 @@
     <string name="owned_accepted">Accepted</string>
     <string name="owned_lent">Lent</string>
 
+    <!--notification channels-->
+    <string name="channel_name">PostNotifications</string>
+    <string name="channel_description">Used for post notifications</string>
 </resources>
