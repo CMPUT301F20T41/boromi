@@ -78,32 +78,28 @@ public class AuthenticationController {
       final AuthCallback authCallback
   ) {
     // Ensures that the username is unique before signing up
-    if (userDB.getUserByUsername(username) != null) {
-
-      // Takes two string params but I have no clue what they need to be
-      authCallback.onFailure(new FirebaseAuthUserCollisionException(
-          "The username '" + username + "' is taken",
-          "The username '" + username + "' is taken"
-      ));
-
-      return;
-    }
-
-    auth.createUserWithEmailAndPassword(email, password)
-        .addOnCompleteListener(executor, new OnCompleteListener<AuthResult>() {
-          public void onComplete(@NonNull Task<AuthResult> task) {
-            if (task.isSuccessful()) {
-              // Sign in success, update UI with the signed-in user's information
-              Log.d(TAG, "createUserWithEmail:success");
-              createUser(username);
-              authCallback.onSuccess(task.getResult());
-            } else {
-              // If sign in fails, display a message to the user.
-              Log.w(TAG, "createUserWithEmail:failure", task.getException());
-              authCallback.onFailure(task.getException());
-            }
+    new Thread(() -> {
+      if (userDB.isUsernameUnique(username)) {
+        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(executor, task -> {
+          if (task.isSuccessful()) {
+            // Sign in success, update UI with the signed-in user's information
+            Log.d(TAG, "createUserWithEmail:success");
+            createUser(username);
+            authCallback.onSuccess(task.getResult());
+          } else {
+            // If sign in fails, display a message to the user.
+            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+            authCallback.onFailure(task.getException());
           }
         });
+      } else {
+        authCallback.onFailure(new FirebaseAuthUserCollisionException(
+          "The username '" + username + "' is taken",
+          "The username '" + username + "' is taken"
+        ));
+      }
+    }).start();
+
   }
 
   /**
