@@ -51,10 +51,6 @@ public class SubListAdapter extends RecyclerView.Adapter<SubListAdapter.ViewHold
 
   /**
    * Overrides onCreateViewHolder to set listeners and get layout elements and inflate the layout
-   *
-   * @param parent
-   * @param viewType
-   * @return
    */
   @NonNull
   @Override
@@ -93,9 +89,6 @@ public class SubListAdapter extends RecyclerView.Adapter<SubListAdapter.ViewHold
 
   /**
    * Update the model with the correct values
-   *
-   * @param holder
-   * @param position
    */
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
@@ -123,8 +116,6 @@ public class SubListAdapter extends RecyclerView.Adapter<SubListAdapter.ViewHold
 
   /**
    * Sets the users that requested the book
-   *
-   * @param usersRequested
    */
   public void setUsersRequested(ArrayList<BookRequest> usersRequested) {
     this.usersRequested = usersRequested;

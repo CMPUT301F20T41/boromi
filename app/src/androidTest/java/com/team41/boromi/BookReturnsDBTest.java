@@ -24,6 +24,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+/**
+ * Test for BookReturnsDB
+ */
 public class BookReturnsDBTest {
 
   BookReturnDB bookReturnDB;

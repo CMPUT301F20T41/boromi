@@ -46,7 +46,6 @@ public class SettingsFragment extends Fragment implements EditUserFragment.Chang
    *
    * @return A new instance of fragment SettingsFragment.
    */
-  // TODO: Rename and change types and number of parameters
   public static SettingsFragment newInstance() {
     SettingsFragment fragment = new SettingsFragment();
     Bundle args = new Bundle();

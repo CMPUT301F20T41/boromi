@@ -4,6 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+/**
+ * Creates a ViewModel
+ */
 public class ViewModelFactory implements ViewModelProvider.Factory {
 
   private BookActivity bookActivity;

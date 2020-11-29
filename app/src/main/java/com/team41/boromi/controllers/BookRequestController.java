@@ -99,8 +99,6 @@ public class BookRequestController {
     });
   }
 
-  // TODO : NOTIFY USER THEIR BOOK REQUEST WAS CANCELLED
-
   /**
    * Declines a book request or cancel a book request
    *

@@ -25,16 +25,12 @@ public class BookReturn implements Serializable {
     this.returnee = returnee;
     this.bookId = bookId;
     this.owner = owner;
-    // TODO change to date of meetup
-    // TODO change to actual location later
   }
 
   public BookReturn(Book book, String returnee) {
     this.bookId = book.getBookId();
     this.owner = book.getOwner();
     this.returnee = returnee;
-    // TODO change to date of meetup
-    // TODO change to actual location later
   }
 
   public BookReturn() {

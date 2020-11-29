@@ -71,6 +71,10 @@ public class EditBookFragment extends DialogFragment {
   private ImageButton addImage;
   private Bitmap imageBitmap;
 
+  /**
+   * Sets the editing book
+   * @param editingBook Book to be edited
+   */
   public EditBookFragment(Book editingBook) {
     this.editingBook = editingBook;
   }
@@ -231,7 +235,7 @@ public class EditBookFragment extends DialogFragment {
    * returns true if isbn is length 10 or 13.
    *
    * @param isbn
-   * @return
+   * @return true if length is correct, else false
    */
   public boolean returnIfISBNGood(String isbn) {
     return isbn.length() == 13 || isbn.length() == 10;

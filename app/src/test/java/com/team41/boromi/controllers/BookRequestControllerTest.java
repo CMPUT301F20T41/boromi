@@ -31,6 +31,9 @@ import static com.team41.boromi.constants.CommonConstants.DB_TIMEOUT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Test for BookRequestController
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class BookRequestControllerTest {
 

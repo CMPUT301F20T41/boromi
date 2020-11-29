@@ -116,14 +116,8 @@ public class CustomClickListener implements View.OnClickListener,
           public void onSuccess(ArrayList<Book> books) {
             genericListFragment.getActivity().runOnUiThread(() -> {
               if (genericListFragment.getParent().equals("Owned")) {
-                // TODO temp solution just update both
                 genericListFragment.getBookViewModel().getOwnerAvailable();
                 genericListFragment.getBookViewModel().getOwnerAccepted();
-//                ((BookActivity) genericListFragment.getActivity())
-//                    .updateFragment("OwnedFragment", genericListFragment.tag);
-              } else if (genericListFragment.getParent().equals("Borrowed")) {
-//                ((BookActivity) genericListFragment.getActivity())
-//                    .updateFragment("BorrowedFragment", genericListFragment.tag);
               }
             });
           }

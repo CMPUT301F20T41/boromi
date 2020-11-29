@@ -19,9 +19,6 @@ public class BookRequest implements Serializable {
   private Date requestDate;
   private String owner;
   private LatLng location;
-  // TODO
-  // Again I did not include the status to allow the person implementing to make the choice
-  // on the logic
 
 
   /**

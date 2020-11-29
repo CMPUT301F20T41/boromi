@@ -413,8 +413,4 @@ public class BookDB {
 
     return borrowingBooks;
   }
-
-  // TODO:
-  // Add a method to query for all the books a user has
-  // requested, borrowed, or been accepted to be borrowed
 }

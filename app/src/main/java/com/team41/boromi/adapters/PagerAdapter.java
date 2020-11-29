@@ -35,9 +35,6 @@ public class PagerAdapter extends FragmentStateAdapter {
 
   /**
    * This function is used to create the fragments by using a FragmentFactory
-   *
-   * @param position
-   * @return
    */
   @NonNull
   @Override

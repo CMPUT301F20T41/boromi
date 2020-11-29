@@ -107,7 +107,6 @@ public class UserDB {
    * @param username
    * @return
    */
-
   public Boolean isUsernameUnique(String username){
     QuerySnapshot res;
 

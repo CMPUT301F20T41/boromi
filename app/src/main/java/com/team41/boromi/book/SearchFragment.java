@@ -132,6 +132,9 @@ public class SearchFragment extends Fragment {
     return view;
   }
 
+  /**
+   * Searches for keywords
+   */
   public void searchForBooks() {
     InputMethodManager imm = (InputMethodManager) getActivity()
         .getSystemService(Activity.INPUT_METHOD_SERVICE);

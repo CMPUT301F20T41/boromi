@@ -19,17 +19,29 @@ import com.team41.boromi.R;
 import com.team41.boromi.models.Book;
 import java.io.ByteArrayInputStream;
 
+/**
+ * Expands book image when clicked
+ */
 public class ImageExpandFragment extends DialogFragment {
     ImageView Image;
     TextView Title;
     String img64;
     String BookTitle;
 
+    /**
+     * Constructor takes in book object
+     * @param book Boook Object
+     */
     public ImageExpandFragment(Book book){
         this.img64 = book.getImg64();
         this.BookTitle = book.getTitle();
     }
 
+    /**
+     * Required static constructor
+     * @param book Book object
+     * @return Instance of ImageExpandFragment
+     */
     public static ImageExpandFragment newInstance(Book book) {
         ImageExpandFragment imageExpandFragment = new ImageExpandFragment(book);
         Bundle args = new Bundle();

@@ -18,6 +18,11 @@ public class GoogleBook {
     public String[] authors;
   }
 
+  /**
+   * Gets the title of the book
+   * @param idx
+   * @return
+   */
   public String getTitle(int idx) {
     if(idx >= totalItems || idx < 0)
       return null;
@@ -25,6 +30,11 @@ public class GoogleBook {
     return items[0].volumeInfo.title;
   }
 
+  /**
+   * Gets the first author from the api
+   * @param idx
+   * @return Author's name
+   */
   public String getFirstAuthor(int idx) {
     if(idx >= totalItems || idx < 0)
       return null;

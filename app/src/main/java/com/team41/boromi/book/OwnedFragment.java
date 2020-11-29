@@ -42,7 +42,6 @@ public class OwnedFragment extends Fragment {
    *
    * @return A new instance of fragment BookFragment.
    */
-  // TODO: Rename and change types and number of parameters
   public static OwnedFragment newInstance() {
     OwnedFragment fragment = new OwnedFragment();
     Bundle args = new Bundle();

@@ -39,6 +39,9 @@ import static dagger.internal.Preconditions.checkNotNull;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 
+/**
+ * Tests for BookActivity UI
+ */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class BookActivityUITest {

@@ -74,7 +74,6 @@ public class SignupFragment extends Fragment {
    *
    * @return A new instance of fragment SignupFragment.
    */
-  // TODO: Rename and change types and number of parameters
   public static SignupFragment newInstance() {
     SignupFragment fragment = new SignupFragment();
     Bundle args = new Bundle();
@@ -84,8 +83,6 @@ public class SignupFragment extends Fragment {
 
   /**
    * onCreate method to initialize any variables
-   *
-   * @param savedInstanceState
    */
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -95,11 +92,6 @@ public class SignupFragment extends Fragment {
 
   /**
    * onCreateView to bind any listeners or values
-   *
-   * @param inflater
-   * @param container
-   * @param savedInstanceState
-   * @return
    */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
