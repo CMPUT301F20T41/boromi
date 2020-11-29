@@ -63,23 +63,20 @@ public class BookReturnsDBTest {
   @Test
   public void addRequest() throws InterruptedException {
     for (Book b : books) {
-      BookReturn bookReturn = new BookReturn(b, "ReturnTest", null, null);
+      BookReturn bookReturn = new BookReturn(b.getBookId(), "ReturnTest", "ReturneeTest");
       bookReturnDB.addReturnRequest(bookReturn);
       BookReturn bookReturn1 = bookReturnDB.getReturnRequest(bookReturn.getBookId());
       Thread.sleep(DB_TIMEOUT);
       assertEquals(bookReturn.getBookId(), bookReturn1.getBookId());
-      assertEquals(bookReturn.getLocation(), bookReturn1.getLocation());
       assertEquals(bookReturn.getOwner(), bookReturn1.getOwner());
-      assertEquals(bookReturn.getReturnDate(), bookReturn1.getReturnDate());
       assertEquals(bookReturn.getReturnee(), bookReturn1.getReturnee());
-      assertEquals(bookReturn.getLocation(), bookReturn1.getLocation());
     }
   }
 
   @Test
   public void deleteRequest() throws InterruptedException {
     Book b = books.get(0);
-    BookReturn bookReturn = new BookReturn(b, "ReturnTest", null, null);
+    BookReturn bookReturn = new BookReturn(b.getBookId(), "ReturnTest", "ReturneeTest");
     bookReturnDB.addReturnRequest(bookReturn);
     Thread.sleep(DB_TIMEOUT);
     assertNotNull(bookReturnDB.getReturnRequest(bookReturn.getBookId()));
