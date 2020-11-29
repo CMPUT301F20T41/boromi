@@ -220,18 +220,28 @@ public class BookActivity extends AppCompatActivity implements
     }
   }
 
+  /**
+   * Returns instance of BookViewModel
+   * @return BookViewModel
+   */
   public BookViewModel getBookViewModel() {
     return bookViewModel;
   }
 
-  public void switchTabs(int index) {
-    tabLayout.getTabAt(index).select();
-  }
-
+  /**
+   * Returns Tab specified at position
+   * @param index position of tab
+   * @return Tab specified at location
+   */
   public TabLayout.Tab getTab(int index) {
     return tabLayout.getTabAt(index);
   }
 
+  /**
+   * Returns main fragment
+   * @param pos position of the main fragments
+   * @return Fragment
+   */
   public Fragment getMainFragment(String pos) {
     return getSupportFragmentManager().findFragmentByTag(pos);
   }
@@ -363,17 +373,27 @@ public class BookActivity extends AppCompatActivity implements
     });
   }
 
+  /**
+   * Disable back button
+   */
   @Override
   public void onBackPressed() {
 
   }
 
+  /**
+   * Start book scan
+   */
   private void scanForBook() {
     IntentIntegrator intentIntegrator = new IntentIntegrator(this);
     intentIntegrator.setRequestCode(49374);
     intentIntegrator.initiateScan();
   }
 
+  /**
+   * Find book data using isbn
+   * @param isbn isbn of the book
+   */
   private void queryBookData(String isbn) {
     spinner.setVisibility(View.VISIBLE);
     StringRequest stringRequest = new StringRequest(Request.Method.GET, formatQuery(isbn),

@@ -16,6 +16,9 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.team41.boromi.BookActivity;
 import com.team41.boromi.R;
 
+/**
+ * Sends and receives a push notification
+ */
 public class BoromiFirebaseMessaging extends FirebaseMessagingService {
 
   private static final String TAG = "BoromiFirebaseMessaging";
@@ -37,6 +40,11 @@ public class BoromiFirebaseMessaging extends FirebaseMessagingService {
     sendLocalNotification(notificationTitle, notificationBody);
   }
 
+  /**
+   * Sends a local notification
+   * @param notificationTitle Title of the notification
+   * @param notificationBody Body of the notification
+   */
   private void sendLocalNotification(String notificationTitle, String notificationBody) {
     Intent intent = new Intent(this, BookActivity.class);
     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

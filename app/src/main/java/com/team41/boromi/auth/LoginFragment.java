@@ -88,11 +88,6 @@ public class LoginFragment extends Fragment {
 
   /**
    * OnCreateView to bind any listeners and set values to any layout elements
-   *
-   * @param inflater
-   * @param container
-   * @param savedInstanceState
-   * @return
    */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -23,6 +23,8 @@ export const notifyOnOwnerRequest = functions.firestore.document('/bookrequests/
 		timeToLive: 60 * 60 * 24,
 	};
 
+	functions.logger.log(`Sending incoming request notification to ${owner}`)
+
 	return admin.messaging().sendToTopic(owner, payload, options)
 })
 
@@ -36,7 +38,7 @@ export const notifyRequesterOnAcceptedRequest = functions.firestore.document('/b
 	const {borrower, ownerName, status} = bookData
 
 	// Validates that the change occurred in the status of the book, from requested to accepted
-	if (prevStatus !== 'REQUESTED' || status !== 'ACCEPTED') return null
+	if (prevStatus !== 'AVAILABLE' || status !== 'ACCEPTED') return null
 
 	const payload = {
 		notification: {
@@ -51,6 +53,7 @@ export const notifyRequesterOnAcceptedRequest = functions.firestore.document('/b
 		timeToLive: 60 * 60 * 24,
 	};
 
+	functions.logger.log(`Sending accepted request notification to ${borrower}`)
 
 	// Sends a push notifcation to the borrower
 	return admin.messaging().sendToTopic(borrower, payload, options)

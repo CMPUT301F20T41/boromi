@@ -42,7 +42,6 @@ public class BorrowedFragment extends Fragment {
    *
    * @return A new instance of fragment BorrowedFragment.
    */
-  // TODO: Rename and change types and number of parameters
   public static BorrowedFragment newInstance() {
     BorrowedFragment fragment = new BorrowedFragment();
     Bundle args = new Bundle();

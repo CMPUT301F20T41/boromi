@@ -1,5 +1,7 @@
 package com.team41.boromi;
 
+import android.widget.ImageButton;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -22,6 +24,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * BookViewModel is used to communicate between fragments and is only created once in activity scope
+ * Used for backend calls
+ */
 public class BookViewModel extends ViewModel {
 
   public String temp;
@@ -36,6 +42,16 @@ public class BookViewModel extends ViewModel {
   private Book exchangeBook;
   private BookRequest exchangeBookRequest;
   private BookReturn exchangeBookReturn;
+
+  public ImageButton getReturnButton() {
+    return returnButton;
+  }
+
+  private ImageButton returnButton;
+
+  public void setReturnButton(ImageButton returnButton) {
+    this.returnButton = returnButton;
+  }
 
   public BookViewModel(BookActivity bookActivity) {
     this.bookActivity = bookActivity;
@@ -57,6 +73,9 @@ public class BookViewModel extends ViewModel {
 
   }
 
+  /**
+   * Refresh data on all pages
+   */
   public void queryAllData() {
     getOwnerAvailable();
     getOwnerAccepted();
@@ -68,6 +87,11 @@ public class BookViewModel extends ViewModel {
     getBookLocations();
   }
 
+  /**
+   * Get data on a page.
+   * @param fragment GenericListFragment requesting data
+   * @return LiveData that can be observed on
+   */
   public LiveData<ArrayList<Book>> getData(GenericListFragment fragment) {
     if (fragment.getParent().equals("Owned")) {
       switch (fragment.tag) {
@@ -89,6 +113,11 @@ public class BookViewModel extends ViewModel {
     return null;
   }
 
+  /**
+   * Gets Book Requests depending on which page
+   * @param fragment GenericListFragment requesting
+   * @return LiveData that can be observed on
+   */
   public LiveData<Map<Book, List<BookRequest>>> getRequested(GenericListFragment fragment) {
     MutableLiveData<Map<Book, List<BookRequest>>> data = new MutableLiveData<>();
     if (fragment.getParent().equals("Owned") && fragment.tag.equals("Requested")) {
@@ -99,14 +128,26 @@ public class BookViewModel extends ViewModel {
     return data;
   }
 
+  /**
+   * Returns search results
+   * @return LiveData that can be observed
+   */
   public LiveData<ArrayList<Book>> getSearchResults() {
     return collections.get("SearchResults");
   }
 
+  /**
+   * Get locations
+   * @return LiveData that can be observed on
+   */
   public LiveData<ArrayList<Book>> getLocations() {
     return collections.get("MapLocations");
   }
 
+  /**
+   * Returns the user
+   * @return User
+   */
   public User getUser() {
     return user;
   }
@@ -268,6 +309,11 @@ public class BookViewModel extends ViewModel {
   //*********************************************
   // Searching TAB
   //*********************************************
+
+  /**
+   * Backend call to search for books with keywords
+   * @param keywords Keywords to search for
+   */
   public void searchBooks(String keywords) {
     bookActivity.getBookController().findBooks(keywords, new BookCallback() {
       @Override
@@ -297,6 +343,10 @@ public class BookViewModel extends ViewModel {
   //*********************************************
   // Map TAB
   //*********************************************
+
+  /**
+   * Backend call to get book locations
+   */
   public void getBookLocations() {
     bookController.getOwnerBorrowerLocations(new BookCallback() {
       @Override
@@ -316,6 +366,11 @@ public class BookViewModel extends ViewModel {
     });
   }
 
+  /**
+   * Sets up book exchange request, sets book to be exchanged and navigates to map tab
+   * @param book Book to be exchanged
+   * @param bookRequest BookRequest
+   */
   public void navExchangeLocation(Book book, BookRequest bookRequest) {
     exchangeBook = book;
     exchangeBookRequest = bookRequest;
@@ -325,6 +380,10 @@ public class BookViewModel extends ViewModel {
     mapTab.select();
   }
 
+  /**
+   * Set the location to meet
+   * @param location location to meet
+   */
   public void setExchangeLocation(LatLng location) {
     exchangeBookRequest.setLocation(location);
     bookRequestController.acceptBookRequest(exchangeBookRequest, new BookRequestCallback() {

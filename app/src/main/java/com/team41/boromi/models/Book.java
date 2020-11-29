@@ -33,13 +33,6 @@ public class Book implements Serializable {
   private Double locationLat;
   private Double locationLon;
 
-  // TODO
-  // I didn't include logic for the requesters/borrowers/img/location
-  // To allow the person implementing that logic to decide how they want to do it.
-  // You can go through the BookRequests, then only do a read on DB
-  // If a user wants more info on a book, or you can store all the requester usernames here..
-  // And wipe them on each acceptance.
-
   /**
    * A no-argument constructor required by firestore to serialize data
    */
@@ -93,12 +86,6 @@ public class Book implements Serializable {
    *
    * @param owner
    */
-//  public Book(String owner) {
-//    this.bookId = UUID.randomUUID().toString();
-//    this.owner = owner;
-//    this.status = BookStatus.AVAILABLE;
-//    this.workflow = BookWorkflowStage.AVAILABLE;
-//  }
   public Book(String owner, String bookId) {
     this.bookId = bookId;
     this.owner = owner;

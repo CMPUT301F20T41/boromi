@@ -77,8 +77,6 @@ public class AddBookFragment extends DialogFragment {
 
   /**
    * Factory method to create model
-   *
-   * @return
    */
   public static AddBookFragment newInstance() {
     AddBookFragment addBookFragment = new AddBookFragment();
@@ -89,11 +87,6 @@ public class AddBookFragment extends DialogFragment {
 
   /**
    * onCreateView to initialize any values
-   *
-   * @param inflater
-   * @param container
-   * @param savedInstanceState
-   * @return
    */
   @Nullable
   @Override
@@ -109,9 +102,6 @@ public class AddBookFragment extends DialogFragment {
 
   /**
    * onViewCreated to bind any listeners or values
-   *
-   * @param view
-   * @param savedInstanceState
    */
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -166,10 +156,6 @@ public class AddBookFragment extends DialogFragment {
 
   /**
    * Returns from Camera Activity to attach a image to the book
-   *
-   * @param requestCode
-   * @param resultCode
-   * @param data
    */
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -212,9 +198,6 @@ public class AddBookFragment extends DialogFragment {
 
   /**
    * returns true if isbn is length 10 or 13.
-   *
-   * @param isbn
-   * @return
    */
   public boolean returnIfISBNGood(String isbn) {
     return isbn.length() == 13 || isbn.length() == 10;

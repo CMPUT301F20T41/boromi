@@ -156,6 +156,10 @@ public class GenericListFragment extends Fragment {
     return view;
   }
 
+  /**
+   * Returns instance of BookViewModel
+   * @return BookViewModel
+   */
   public BookViewModel getBookViewModel() {
     return bookViewModel;
   }
@@ -187,6 +191,10 @@ public class GenericListFragment extends Fragment {
         });
   }
 
+  /**
+   * Accepts return request
+   * @param book Book to be returned
+   */
   public void bookReturnRequest(Book book) {
     BookActivity bookActivity = (BookActivity) getActivity();
     bookActivity.getBookReturnController().acceptReturnRequest(book.getBookId(), new ReturnCallback() {
@@ -205,15 +213,29 @@ public class GenericListFragment extends Fragment {
       }
     });
   }
+
+  /**
+   * Verifies barcode on book
+   * @param book Book object to be verified
+   */
   public void verifyBarcode(Book book) {
     bookToExchange = book;
     dispatchTakeBarcodeIntent();
   }
 
+  /**
+   * Starts barcode scanning
+   */
   private void dispatchTakeBarcodeIntent() {
     IntentIntegrator.forSupportFragment(this).initiateScan();
   }
 
+  /**
+   * Return from barcode scanning
+   * @param requestCode
+   * @param resultCode
+   * @param data
+   */
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
       IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
@@ -229,6 +251,10 @@ public class GenericListFragment extends Fragment {
       }
   }
 
+  /**
+   * Completes book exchange by comparing the isbn and status
+   * @param scannedISBN scanned isbn
+   */
   public void completeBookExchange(String scannedISBN) {
     BookActivity bookActivity = (BookActivity) getActivity();
     if(scannedISBN.compareTo(bookToExchange.getISBN()) != 0) {
@@ -242,7 +268,7 @@ public class GenericListFragment extends Fragment {
       bookActivity.getBookReturnController().addReturnRequest(bookToExchange, new ReturnCallback() {
         @Override
         public void onSuccess(Book books) {
-          GenericListAdapter.ViewHolder.returnButton.setBackgroundResource(R.drawable.cancel_circle);
+          bookViewModel.getReturnButton().setBackgroundResource(R.drawable.cancel_circle);
         }
         @Override
         public void onFailure() {

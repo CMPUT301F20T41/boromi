@@ -11,6 +11,14 @@ import com.team41.boromi.book.MapFragment;
  */
 public class FragmentFactory {
 
+  /**
+   * Creates fragment
+   * @param c Class of fragment to be created
+   * @param bundle Bundle to be passed into the fragment
+   * @return
+   * @throws InstantiationException
+   * @throws IllegalAccessException
+   */
   public static Fragment createFragment(Class<? extends Fragment> c, Bundle bundle)
       throws InstantiationException, IllegalAccessException {
     switch (c.getSimpleName()) {
@@ -20,7 +28,6 @@ public class FragmentFactory {
         return MapFragment.newInstance(bundle);
       default:
         return c.newInstance();
-      // TODO change to dagger
 
     }
   }

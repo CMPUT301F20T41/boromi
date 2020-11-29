@@ -569,6 +569,10 @@ public class BookController {
     });
   }
 
+  /**
+   * Gets locations where user is owner of a book being borrowed or user is the borrower
+   * @param bookCallback callback when async call finishes
+   */
   public void getOwnerBorrowerLocations(final BookCallback bookCallback) {
     executor.execute(() -> {
       List<Book> bookList = bookDB.getAcceptedWithBorrower(user.getUUID());

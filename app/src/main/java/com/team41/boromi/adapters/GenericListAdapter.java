@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.team41.boromi.BookActivity;
+import com.team41.boromi.BookViewModel;
 import com.team41.boromi.R;
 import com.team41.boromi.book.DisplayOtherUserFragment;
 import com.team41.boromi.book.GenericListFragment;
@@ -59,14 +60,12 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
   private BookActivity bookActivity;
   FirebaseFirestore db;
 
-  public GenericListAdapter(ArrayList<Book> books, int id, BookController bookController,
-      GenericListFragment genericListFragment) {
-    this.books = books;
-    this.resource = id;
-    this.bookController = bookController;
-    this.genericListFragment = genericListFragment;
-  }
-
+  /**
+   * GenericListAdapter constructor without genericListFragment
+   * @param books list of books
+   * @param id layout resource id
+   * @param bookActivity instance of BookActivity
+   */
   public GenericListAdapter(ArrayList<Book> books, int id, BookActivity bookActivity) {
     this.bookActivity = bookActivity;
     this.books = books;
@@ -75,6 +74,14 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
     this.bookRequestController = bookActivity.getBookRequestController();
   }
 
+  /**
+   * GenericListAdapter constructor with genericListFragment
+   * @param books list of book
+   * @param bookWithRequests list of book requests
+   * @param id layout resource id
+   * @param bookActivity instance of BookActivity
+   * @param fragment instance of GenericListFragment
+   */
   public GenericListAdapter(ArrayList<Book> books, Map<Book, List<BookRequest>> bookWithRequests,
       int id, BookActivity bookActivity, GenericListFragment fragment) {
     this.bookActivity = bookActivity;
@@ -90,10 +97,6 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
 
   /**
    * This function overrides onCreateViewHolder and is mainly used to initialize onClickListeners
-   *
-   * @param parent   ViewGroup parent
-   * @param viewType int viewType
-   * @return GenericListAdapter.ViewHolder
    */
   @NonNull
   @Override
@@ -153,9 +156,6 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
 
   /**
    * This function is used to update viewmodel with the correct information
-   *
-   * @param holder
-   * @param position
    */
   @Override
   public void onBindViewHolder(@NonNull GenericListAdapter.ViewHolder holder, int position) {
@@ -187,11 +187,11 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
         holder.imageButton.setScaleType(ImageView.ScaleType.CENTER);
         holder.imageButton.setImageResource(R.drawable.book_icon);
       }
-      holder.imageButton.setOnClickListener( new OnClickListener(){
+      holder.imageButton.setOnClickListener(new OnClickListener(){
         @Override
         public void onClick(View v) {
           if (book.getImg64() != null) {
-            FragmentManager fragmentManager = (genericListFragment.getActivity())
+            FragmentManager fragmentManager = ((AppCompatActivity) v.getContext())
                     .getSupportFragmentManager();
             ImageExpandFragment showImageExpandFragment = ImageExpandFragment.newInstance(book);
             showImageExpandFragment.show(fragmentManager, "image_expanded");
@@ -231,6 +231,8 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
         @Override
         public void onClick(View v) {
           if (book.getWorkflow() == CommonConstants.BookWorkflowStage.BORROWED) {
+            BookViewModel bookviewmodel = genericListFragment.getBookViewModel();
+            bookviewmodel.setReturnButton(holder.returnButton);
             genericListFragment.verifyBarcode(book);
           }
           else if (book.getWorkflow() == CommonConstants.BookWorkflowStage.PENDINGRETURN) {
@@ -259,8 +261,6 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
 
   /**
    * Returns the number of elements in the list
-   *
-   * @return
    */
   @Override
   public int getItemCount() {
@@ -334,9 +334,6 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
 
     /**
      * This Constructor finds the layout elements depending on which layout is being used
-     *
-     * @param itemView
-     * @param layout
      */
     public ViewHolder(@NonNull View itemView, int layout) {
       super(itemView);

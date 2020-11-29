@@ -38,24 +38,20 @@ import com.team41.boromi.models.Book;
 import java.util.ArrayList;
 
 /**
- * Not Implemented Yet
+ * Map fragment shows google maps and the exchange locations
  */
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
   private static final String MODE_KEY = "Mode";
-  private static final int MY_LOCATION_PERMISSION_REQUEST_CODE = 1;
-  private static final int LOCATION_LAYER_PERMISSION_REQUEST_CODE = 2;
   private GoogleMap googleMap;
   private UiSettings mapUiSettings;
   private FloatingActionButton confirmButton;
   private TextView tooltip;
   private RadioGroup radioGroup;
 
-  private ArrayList<Marker> markers;
   private Marker currentMarker;
 
   private int mode; // 0 viewing, 1 add
-  private SubListAdapter adapter;
   private BookViewModel bookViewModel;
   private ArrayList<Book> bookLocations;
 
@@ -69,7 +65,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
    *
    * @return A new instance of fragment MapFragment.
    */
-  // TODO: Rename and change types and number of parameters
   public static MapFragment newInstance(Bundle bundle) {
     MapFragment fragment = new MapFragment();
     fragment.setArguments(bundle);
@@ -86,6 +81,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
   }
 
+  /**
+   * Sets up google maps and corresponding on click listeners
+   * @param inflater
+   * @param container
+   * @param savedInstanceState
+   * @return
+   */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
@@ -111,7 +113,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     confirmButton.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
-        // TODO LOGIC TO SAVE DROPPED PIN
         bookViewModel.setExchangeLocation(currentMarker.getPosition());
         TabLayout.Tab tab = ((BookActivity) getActivity()).getTab(0);
         tab.select();
@@ -124,6 +125,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     return view;
   }
 
+  /**
+   * Updates the marker based on filter options
+   * @param options 0 for all markers, 1 for books you own, 2 for books you are borrowing
+   */
   private void updateMarkers(int options) {
     googleMap.clear();
     for (Book book : bookLocations) {
@@ -148,6 +153,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
   }
 
+  /**
+   * User navigated away from map, reset to view mode
+   */
   @Override
   public void onPause() {
     setMode(0);
@@ -160,6 +168,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     super.onPause();
   }
 
+  /**
+   * When google maps is ready, set onclick listeners and observables
+   * @param googleMap
+   */
   @Override
   public void onMapReady(final GoogleMap googleMap) {
     this.googleMap = googleMap;
@@ -196,6 +208,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     bookViewModel.getLocations().observe(getViewLifecycleOwner(), locationObserver);
   }
 
+  /**
+   * Sets viewing mode.
+   * @param mode 0 for viewing mode, 1 for editing mode
+   */
   public void setMode(int mode) {
     this.mode = mode;
     if (mode == 0) {

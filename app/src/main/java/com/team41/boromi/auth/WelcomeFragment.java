@@ -44,11 +44,6 @@ public class WelcomeFragment extends Fragment {
 
   /**
    * onCreateView to bind any listeners and values
-   *
-   * @param inflater
-   * @param container
-   * @param savedInstanceState
-   * @return
    */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,

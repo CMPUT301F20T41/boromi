@@ -31,6 +31,9 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+/**
+ * Tests for BookController
+ */
 @RunWith(AndroidJUnit4.class)
 public class BookControllerTest {
   private final static String TAG = "BookControllerTest";

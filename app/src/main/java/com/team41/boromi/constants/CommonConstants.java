@@ -9,6 +9,9 @@ public class CommonConstants {
   public static final long GENERIC_TIMEOUT = 5000; // 5s
   public static final int REQUEST_IMAGE_CAPTURE = 1;
 
+  /**
+   * One of Available, Requested, Accepted, Borrowed
+   */
   public enum BookStatus {
     AVAILABLE,
     REQUESTED,
@@ -16,6 +19,9 @@ public class CommonConstants {
     BORROWED
   }
 
+  /**
+   * One of Available, Requested, Accepted, PendingBorrow, Borrowed, PendingReturn
+   */
   public enum BookWorkflowStage {
     AVAILABLE,
     REQUESTED,
@@ -25,6 +31,9 @@ public class CommonConstants {
     PENDINGRETURN
   }
 
+  /**
+   * Keep track of which user scanned during book exchange
+   */
   public enum ExchangeStage {
     OWNER,
     BORROWER
