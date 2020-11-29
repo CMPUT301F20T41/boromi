@@ -72,6 +72,8 @@ public class DisplayBookFragment extends DialogFragment {
     else
       authorTextView.setText(b.getAuthor());
 
+    view.findViewById(R.id.right_button).setVisibility(View.GONE);
+
     isbnTextView.setText(b.getISBN());
   }
 }
