@@ -113,6 +113,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     confirmButton.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
+        if (currentMarker == null) {
+          return;
+        }
         bookViewModel.setExchangeLocation(currentMarker.getPosition());
         TabLayout.Tab tab = ((BookActivity) getActivity()).getTab(0);
         tab.select();

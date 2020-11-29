@@ -259,6 +259,12 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
         holder.status.setText("REQUESTED");
       }
     }
+    if (holder.lentBackground != null) {
+      if(book.getWorkflow() == CommonConstants.BookWorkflowStage.PENDINGRETURN)
+        holder.lentBackground.setBackgroundColor(Color.parseColor("#1A00FFFF"));
+      else
+        holder.lentBackground.setBackgroundColor(Color.WHITE);
+    }
   }
 
   /**
@@ -321,6 +327,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
   public static class ViewHolder extends RecyclerView.ViewHolder {
 
 
+    View lentBackground;
     TextView title;
     TextView author;
     TextView isbn;
@@ -401,6 +408,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
           request_button = null;
           status = null;
           reqom = null;
+          lentBackground = itemView.findViewById(R.id.background);
           break;
         case (R.layout.reqbm):
           title = itemView.findViewById(R.id.reqbm_title);
