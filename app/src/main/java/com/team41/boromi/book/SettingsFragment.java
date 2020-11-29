@@ -118,5 +118,6 @@ public class SettingsFragment extends Fragment implements EditUserFragment.Chang
   public void changeUserInformation(String username, String email) {
     textViewUsername.setText(username);
     textViewEmail.setText(email);
+    imageViewAvatar.setText(username.substring(0,1).toUpperCase());
   }
 }
