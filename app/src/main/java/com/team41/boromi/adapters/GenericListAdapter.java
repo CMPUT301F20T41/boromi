@@ -237,9 +237,11 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
           }
           else if (book.getWorkflow() == CommonConstants.BookWorkflowStage.PENDINGRETURN) {
               bookActivity.getBookReturnController().cancelReturnRequest(book.getBookId(), new ReturnCallback() {
+                BookViewModel bookViewModel = genericListFragment.getBookViewModel();
                 @Override
                 public void onSuccess(Book books) {
                   holder.returnButton.setBackgroundResource(R.drawable.return_circle);
+                  bookViewModel.getBorrowedBorrowed();
                 }
 
                 @Override
@@ -327,7 +329,7 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
     View view;
     ImageButton imageButton;
     ImageButton rightButton;
-    public static ImageButton returnButton;
+    ImageButton returnButton;
     Button request_button;
     TextView withdrawButton;
     TextView status;

@@ -242,6 +242,7 @@ public class GenericListFragment extends Fragment {
       if(result != null) {
         if(result.getContents() == null) {
           Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_LONG).show();
+          bookViewModel.getBorrowedBorrowed();
         } else {
           Toast.makeText(getActivity(), "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
           completeBookExchange(result.getContents());
@@ -269,6 +270,7 @@ public class GenericListFragment extends Fragment {
         @Override
         public void onSuccess(Book books) {
           bookViewModel.getReturnButton().setBackgroundResource(R.drawable.cancel_circle);
+          bookViewModel.getBorrowedBorrowed();
         }
         @Override
         public void onFailure() {
