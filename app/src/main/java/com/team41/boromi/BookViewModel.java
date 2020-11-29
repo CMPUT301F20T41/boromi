@@ -1,5 +1,7 @@
 package com.team41.boromi;
 
+import android.widget.ImageButton;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -41,10 +43,16 @@ public class BookViewModel extends ViewModel {
   private BookRequest exchangeBookRequest;
   private BookReturn exchangeBookReturn;
 
-  /**
-   * Constructor for book view model
-   * @param bookActivity BookActivity
-   */
+  public ImageButton getReturnButton() {
+    return returnButton;
+  }
+
+  private ImageButton returnButton;
+
+  public void setReturnButton(ImageButton returnButton) {
+    this.returnButton = returnButton;
+  }
+
   public BookViewModel(BookActivity bookActivity) {
     this.bookActivity = bookActivity;
     bookRequestController = bookActivity.getBookRequestController();

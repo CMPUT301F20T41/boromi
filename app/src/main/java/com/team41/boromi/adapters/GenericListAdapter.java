@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.team41.boromi.BookActivity;
+import com.team41.boromi.BookViewModel;
 import com.team41.boromi.R;
 import com.team41.boromi.book.DisplayOtherUserFragment;
 import com.team41.boromi.book.GenericListFragment;
@@ -186,11 +187,11 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
         holder.imageButton.setScaleType(ImageView.ScaleType.CENTER);
         holder.imageButton.setImageResource(R.drawable.book_icon);
       }
-      holder.imageButton.setOnClickListener( new OnClickListener(){
+      holder.imageButton.setOnClickListener(new OnClickListener(){
         @Override
         public void onClick(View v) {
           if (book.getImg64() != null) {
-            FragmentManager fragmentManager = (genericListFragment.getActivity())
+            FragmentManager fragmentManager = ((AppCompatActivity) v.getContext())
                     .getSupportFragmentManager();
             ImageExpandFragment showImageExpandFragment = ImageExpandFragment.newInstance(book);
             showImageExpandFragment.show(fragmentManager, "image_expanded");
@@ -230,6 +231,8 @@ public class GenericListAdapter extends RecyclerView.Adapter<GenericListAdapter.
         @Override
         public void onClick(View v) {
           if (book.getWorkflow() == CommonConstants.BookWorkflowStage.BORROWED) {
+            BookViewModel bookviewmodel = genericListFragment.getBookViewModel();
+            bookviewmodel.setReturnButton(holder.returnButton);
             genericListFragment.verifyBarcode(book);
           }
           else if (book.getWorkflow() == CommonConstants.BookWorkflowStage.PENDINGRETURN) {
