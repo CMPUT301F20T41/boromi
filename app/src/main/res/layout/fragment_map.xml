@@ -1,68 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   tools:context=".book.MapFragment">
 
-
-  <fragment
-    android:id="@+id/map"
+  <!-- TODO: Update blank fragment layout -->
+  <TextView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    tools:context=".book.MapFragment" />
-  <com.google.android.material.floatingactionbutton.FloatingActionButton
-    android:id="@+id/map_confirm_pin"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="32dp"
-    android:layout_marginEnd="64dp"
-    android:clickable="true"
-    android:src="@drawable/ic_baseline_add_location_alt_24"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent" />
-  <TextView
-    android:id="@+id/map_tooltip"
-    android:layout_width="159dp"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="32dp"
-    android:layout_marginStart="32dp"
-    android:padding="5sp"
-    android:background="@color/cardview_light_background"
-    android:text="Drop a pin where you want to meet"
-    android:textSize="15sp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
-  <RadioGroup
-    android:id="@+id/map_radio_group"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="64dp"
-    android:checkedButton="@id/map_filter_all"
-    android:orientation="horizontal"
-    android:theme="@style/AppTheme"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toStartOf="parent">
-    <RadioButton
-      android:id="@+id/map_filter_all"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:text="All" />
-    <RadioButton
-      android:id="@+id/map_filter_owner"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:text="Lending" />
-    <RadioButton
-      android:id="@+id/map_filter_borrower"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:text="Borrowing" />
-  </RadioGroup>
-</androidx.constraintlayout.widget.ConstraintLayout>
+    android:text="Map" />
+
+</FrameLayout>

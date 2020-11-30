@@ -2,7 +2,6 @@ package com.team41.boromi.controllers;
 
 import com.team41.boromi.callbacks.BookRequestCallback;
 import com.team41.boromi.constants.CommonConstants;
-import com.team41.boromi.constants.CommonConstants.BookStatus;
 import com.team41.boromi.dbs.BookDB;
 import com.team41.boromi.dbs.BookRequestDB;
 import com.team41.boromi.models.Book;
@@ -31,9 +30,6 @@ import static com.team41.boromi.constants.CommonConstants.DB_TIMEOUT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Test for BookRequestController
- */
 @RunWith(MockitoJUnitRunner.class)
 public class BookRequestControllerTest {
 
@@ -96,7 +92,7 @@ public class BookRequestControllerTest {
   @Test
   public void test_makeRequestOnBook() {
     dut.makeRequestOnBook(mockBook);
-    assertEquals(mockBook.getStatus(), BookStatus.AVAILABLE);
+    assertEquals(mockBook.getStatus(), CommonConstants.BookStatus.REQUESTED);
   }
 
   @Test

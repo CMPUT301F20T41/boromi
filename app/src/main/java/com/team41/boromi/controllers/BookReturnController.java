@@ -1,6 +1,6 @@
 package com.team41.boromi.controllers;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.google.type.LatLng;
 import com.team41.boromi.callbacks.ReturnCallback;
 import com.team41.boromi.constants.CommonConstants.BookStatus;
 import com.team41.boromi.constants.CommonConstants.BookWorkflowStage;
@@ -37,20 +37,23 @@ public class BookReturnController {
   /**
    * Adds an entry to bookreturn db and updated book workflow to pending return
    *
-   * @param book           book to return
+   * @param bookID id of the book
+   * @param owner id of the owner
+   * @param returnDate return date
+   * @param location location to return
    * @param returnCallback callback to execute success or failure
    */
-  public void addReturnRequest(Book book,
+  public void addReturnRequest(String bookID, String owner, Date returnDate, LatLng location,
       final ReturnCallback returnCallback) {
-    final BookReturn bookReturn = new BookReturn(book.getBookId(), book.getOwner(),
-        currentUser.getUUID());
+    final BookReturn bookReturn = new BookReturn(bookID, owner, currentUser.getUUID().toString(),
+        returnDate, location);
     executor.execute(() -> {
       if (returnDB.addReturnRequest(bookReturn)) {
         // RETURN REQUEST SUCCESS
-        Book updatedBook = bookDB.getBook(book.getBookId());
-        if (updatedBook != null) {
-          updatedBook.setWorkflow(BookWorkflowStage.PENDINGRETURN);
-          if (bookDB.pushBook(updatedBook) == null) {
+        Book book = bookDB.getBook(bookID);
+        if (book != null) {
+          book.setWorkflow(BookWorkflowStage.PENDINGRETURN);
+          if (bookDB.pushBook(book) == null) {
             returnCallback.onFailure();
             return;
           }
@@ -58,7 +61,7 @@ public class BookReturnController {
           returnCallback.onFailure();
           return;
         }
-        returnCallback.onSuccess(book);
+        returnCallback.onSuccess();
       } else {
         // RETURN REQUEST FAIL
         returnCallback.onFailure();
@@ -69,7 +72,7 @@ public class BookReturnController {
   /**
    * Cancels a return request. Removes from bookrequest db and updates workflow to Borrowed
    *
-   * @param bookID         id of book to cancel
+   * @param bookID id of book to cancel
    * @param returnCallback callback to execute success or failure
    */
   public void cancelReturnRequest(String bookID, final ReturnCallback returnCallback) {
@@ -87,7 +90,7 @@ public class BookReturnController {
           returnCallback.onFailure();
           return;
         }
-        returnCallback.onSuccess(book);
+        returnCallback.onSuccess();
 
       } else {
         // RETURN CANCEL REQUEST FAIL
@@ -99,7 +102,7 @@ public class BookReturnController {
   /**
    * Accepts a return request. Removes from bookrequest db and updates bookdb
    *
-   * @param bookID         id of the book
+   * @param bookID id of the book
    * @param returnCallback callback to execute success or failure
    */
   public void acceptReturnRequest(String bookID, final ReturnCallback returnCallback) {
@@ -111,8 +114,6 @@ public class BookReturnController {
           book.setWorkflow(BookWorkflowStage.AVAILABLE);
           book.setStatus(BookStatus.AVAILABLE);
           book.setBorrower(null);
-          book.setLocationLat(null);
-          book.setLocationLon(null);
           if (bookDB.pushBook(book) == null) {
             returnCallback.onFailure();
             return;
@@ -121,7 +122,7 @@ public class BookReturnController {
           returnCallback.onFailure();
           return;
         }
-        returnCallback.onSuccess(book);
+        returnCallback.onSuccess();
       } else {
         // RETURN ACCEPT RETURN FAIL
         returnCallback.onFailure();

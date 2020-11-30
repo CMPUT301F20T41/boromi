@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/add_book_fragment"
     android:layout_width="340dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -64,36 +63,23 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <LinearLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="8dp">
+        android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_marginBottom="8dp"
+        app:counterMaxLength="13"
+        app:counterEnabled="true">
 
-        <ImageButton
-            android:id="@+id/add_isbn_img"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:layout_marginEnd="8dp"
-
-            android:background="@drawable/camera_circle"
-            app:srcCompat="@drawable/barcode_scan_icon" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/add_book_isbn"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:hint="ISBN"
+            android:inputType="number"
+            />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/add_book_isbn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="ISBN"
-                android:inputType="text" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-    </LinearLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/add_book_add_button"

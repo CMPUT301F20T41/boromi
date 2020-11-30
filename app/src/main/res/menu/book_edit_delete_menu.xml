@@ -23,13 +23,4 @@
       android:iconTint="@color/colorError"
       android:title="temp"
       android:visible="false"/>
-
-    <item
-        android:id="@+id/regain_book"
-        android:layout_width="10dp"
-        android:icon="@drawable/ic_baseline_autorenew_24"
-        android:iconTint="@color/colorError"
-        android:title="temp"
-        android:visible="false"/>
-
 </menu>

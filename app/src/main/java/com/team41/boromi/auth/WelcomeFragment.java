@@ -34,7 +34,6 @@ public class WelcomeFragment extends Fragment {
 
   /**
    * onCreate to initialize any variables
-   *
    * @param savedInstanceState
    */
   @Override
@@ -44,6 +43,10 @@ public class WelcomeFragment extends Fragment {
 
   /**
    * onCreateView to bind any listeners and values
+   * @param inflater
+   * @param container
+   * @param savedInstanceState
+   * @return
    */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,

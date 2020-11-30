@@ -19,9 +19,6 @@ import static com.team41.boromi.constants.CommonConstants.DB_TIMEOUT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Test for BookReturnsDB
- */
 @RunWith(AndroidJUnit4.class)
 public class BookRequestDBTest {
 

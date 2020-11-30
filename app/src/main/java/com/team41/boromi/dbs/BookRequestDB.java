@@ -68,7 +68,6 @@ public class BookRequestDB {
 
   /**
    * async push a book request to the db, if it already exists then update it
-   *
    * @param bookRequest bookRequest to be pushed
    */
   public void pushBookRequest(BookRequest bookRequest) {
@@ -77,7 +76,6 @@ public class BookRequestDB {
 
   /**
    * Gets owned books that are requested
-   *
    * @param owner
    * @return
    */
@@ -107,7 +105,6 @@ public class BookRequestDB {
 
   /**
    * Removes requests from library that have bookId sync grabs bookid, but async delete them
-   *
    * @param bid id of the book
    */
   public void deleteRequestsForBook(String bid) {
@@ -133,7 +130,6 @@ public class BookRequestDB {
 
   /**
    * Deletes a book request
-   *
    * @param rid
    */
   public void deleteBookRequest(String rid) {

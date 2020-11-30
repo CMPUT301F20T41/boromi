@@ -18,14 +18,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 import com.team41.boromi.BookActivity;
 import com.team41.boromi.R;
 import com.team41.boromi.models.Book;
@@ -41,47 +37,15 @@ public class EditBookFragment extends DialogFragment {
   private EditText author;
   private EditText title;
   private EditText isbn;
-  private ImageButton editISBNImg;
-  /**
-   * Used to validate input fields
-   */
-  TextWatcher allFieldsWatcher = new TextWatcher() {
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-      // Empty method, required for text watcher
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-      String authorText = author.getText().toString().trim();
-      String titleText = title.getText().toString().trim();
-      String isbnText = isbn.getText().toString().trim();
-
-      // Sets the button if all the text fields have content and the ISBN is 13 characters
-      editBook.setEnabled(
-          isNotNullOrEmpty(authorText) && isNotNullOrEmpty(titleText) && isNotNullOrEmpty(isbnText)
-              && returnIfISBNGood(isbnText));
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-      // Empty method, required for text watcher
-    }
-  };
   private ImageButton addImage;
   private Bitmap imageBitmap;
 
-  /**
-   * Sets the editing book
-   * @param editingBook Book to be edited
-   */
   public EditBookFragment(Book editingBook) {
     this.editingBook = editingBook;
   }
 
   /**
    * Factory method to create EditBookFragment
-   *
    * @param book
    * @return
    */
@@ -94,7 +58,6 @@ public class EditBookFragment extends DialogFragment {
 
   /**
    * Initialize any values
-   *
    * @param inflater
    * @param container
    * @param savedInstanceState
@@ -114,7 +77,6 @@ public class EditBookFragment extends DialogFragment {
 
   /**
    * Bind any listeners or values
-   *
    * @param view
    * @param savedInstanceState
    */
@@ -126,8 +88,6 @@ public class EditBookFragment extends DialogFragment {
     title = (EditText) view.findViewById(R.id.edit_book_title);
     isbn = (EditText) view.findViewById(R.id.edit_book_isbn);
     addImage = (ImageButton) view.findViewById(R.id.edit_book_book_image);
-    editISBNImg = (ImageButton) view.findViewById(R.id.edit_isbn_img);
-
 
     // Makes the image rounded
     addImage.setClipToOutline(true);
@@ -153,41 +113,31 @@ public class EditBookFragment extends DialogFragment {
     editBook.setOnClickListener(view1 -> {
       EditBookFragmentListener listener = (EditBookFragmentListener) getActivity();
 
-      assert listener != null;
+        assert listener != null;
 
-      if (imageBitmap == null && editingBook.getImg64() != null) {
-        imageBitmap = ((BookActivity) getActivity()).getBookController()
-            .decodeBookImage(editingBook);
-      }
-      listener.onEditComplete(
-          editingBook.getBookId(),
-          author.getText().toString(),
-          title.getText().toString(),
-          isbn.getText().toString(),
-          imageBitmap);
-      dismiss();
+        if (imageBitmap == null && editingBook.getImg64() != null) {
+          imageBitmap = ((BookActivity) getActivity()).getBookController().decodeBookImage(editingBook);
+        }
+        listener.onEditComplete(
+                editingBook.getBookId(),
+                author.getText().toString(),
+                title.getText().toString(),
+                isbn.getText().toString(),
+            imageBitmap);
+        dismiss();
     });
 
     addImage.setOnClickListener(view2 -> dispatchTakePictureIntent());
     addImage.setOnLongClickListener(view3 -> {
       addImage.setImageResource(R.drawable.add_photo_icon);
       this.imageBitmap = null;
-      editingBook.setImg64(null);
       addImage.setScaleType(ImageView.ScaleType.CENTER);
       return true;
-    });
-
-    editISBNImg.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        dispatchTakeBarcodeIntent();
-      }
     });
   }
 
   /**
    * Called when returning from Camera Activity and stores the photo taken.
-   *
    * @param requestCode
    * @param resultCode
    * @param data
@@ -200,18 +150,6 @@ public class EditBookFragment extends DialogFragment {
       addImage.setImageBitmap(imageBitmap);
       addImage.setScaleType(ImageView.ScaleType.FIT_XY);
       this.imageBitmap = imageBitmap;
-    }else{
-      IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-      if(result != null) {
-        if(result.getContents() == null) {
-          Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_LONG).show();
-        } else {
-          isbn.setText(result.getContents());
-          Toast.makeText(getActivity(), "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
-        }
-      } else {
-        super.onActivityResult(requestCode, resultCode, data);
-      }
     }
   }
 
@@ -227,17 +165,37 @@ public class EditBookFragment extends DialogFragment {
     }
   }
 
-  private void dispatchTakeBarcodeIntent() {
-    IntentIntegrator.forSupportFragment(this).initiateScan();
-  }
+  /**
+   * Used to validate input fields
+   */
+  TextWatcher allFieldsWatcher = new TextWatcher() {
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+      // Empty method, required for text watcher
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+      String authorText = author.getText().toString().trim();
+      String titleText = title.getText().toString().trim();
+      String isbnText = isbn.getText().toString().trim();
+
+      // Sets the button if all the text fields have content and the ISBN is 13 characters
+      editBook.setEnabled(isNotNullOrEmpty(authorText) && isNotNullOrEmpty(titleText) && isNotNullOrEmpty(isbnText) && returnIfISBNGood(isbnText));
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+      // Empty method, required for text watcher
+    }
+  };
 
   /**
    * returns true if isbn is length 10 or 13.
-   *
    * @param isbn
-   * @return true if length is correct, else false
+   * @return
    */
-  public boolean returnIfISBNGood(String isbn) {
+  public boolean returnIfISBNGood(String isbn){
     return isbn.length() == 13 || isbn.length() == 10;
   }
 

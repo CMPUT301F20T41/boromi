@@ -7,11 +7,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.gms.maps.model.LatLng;
-import com.team41.boromi.BookActivity;
-import com.team41.boromi.BookViewModel;
 import com.team41.boromi.R;
-import com.team41.boromi.book.MapFragment;
 import com.team41.boromi.callbacks.BookRequestCallback;
 import com.team41.boromi.controllers.BookRequestController;
 import com.team41.boromi.models.Book;
@@ -31,17 +27,13 @@ public class SubListAdapter extends RecyclerView.Adapter<SubListAdapter.ViewHold
   private Book book;
   private BookRequestController bookRequestController;
   private GenericListAdapter parentAdapter;
-  private BookActivity bookActivity;
-  private int selectedBookIndex;
-  private BookViewModel bookViewModel;
 
   public SubListAdapter(ArrayList<BookRequest> usersRequested, Book book,
-      BookActivity bookActivity, GenericListAdapter parentAdapter) {
+      BookRequestController bookRequestController, GenericListAdapter parentAdapter) {
     this.book = book;
-    this.bookActivity = bookActivity;
-    this.bookRequestController = bookActivity.getBookRequestController();
+    this.bookRequestController = bookRequestController;
     this.parentAdapter = parentAdapter;
-    bookViewModel = parentAdapter.getGenericListFragment().getBookViewModel();
+
     if (usersRequested == null) {
       this.usersRequested = new ArrayList<>();
     } else {
@@ -51,6 +43,9 @@ public class SubListAdapter extends RecyclerView.Adapter<SubListAdapter.ViewHold
 
   /**
    * Overrides onCreateViewHolder to set listeners and get layout elements and inflate the layout
+   * @param parent
+   * @param viewType
+   * @return
    */
   @NonNull
   @Override
@@ -66,8 +61,14 @@ public class SubListAdapter extends RecyclerView.Adapter<SubListAdapter.ViewHold
     acceptButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        selectedBookIndex = holder.getLayoutPosition();
-        bookViewModel.navExchangeLocation(book, usersRequested.get(selectedBookIndex));
+        int idx = holder.getLayoutPosition();
+        bookRequestController.acceptBookRequest(usersRequested.get(idx), new BookRequestCallback() {
+          @Override
+          public void onComplete(Map<Book, List<BookRequest>> bookWithRequests) {
+            usersRequested = new ArrayList<>();
+            parentAdapter.deleteBookRequest(book, _this);
+          }
+        });
       }
     });
 
@@ -78,9 +79,6 @@ public class SubListAdapter extends RecyclerView.Adapter<SubListAdapter.ViewHold
         bookRequestController.declineBookRequest((usersRequested.get(idx)));
         usersRequested.remove(usersRequested.get(idx));
         notifyDataSetChanged();
-        if (usersRequested.isEmpty()) {
-          bookViewModel.getOwnerRequests();
-        }
       }
     });
 
@@ -89,6 +87,8 @@ public class SubListAdapter extends RecyclerView.Adapter<SubListAdapter.ViewHold
 
   /**
    * Update the model with the correct values
+   * @param holder
+   * @param position
    */
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
@@ -97,7 +97,6 @@ public class SubListAdapter extends RecyclerView.Adapter<SubListAdapter.ViewHold
 
   /**
    * Returns number of elements (requests)
-   *
    * @return number of items in the list
    */
   @Override
@@ -107,7 +106,6 @@ public class SubListAdapter extends RecyclerView.Adapter<SubListAdapter.ViewHold
 
   /**
    * Returns the book that is being requested on
-   *
    * @return returns the book that is being requested on
    */
   public Book getBook() {
@@ -116,6 +114,7 @@ public class SubListAdapter extends RecyclerView.Adapter<SubListAdapter.ViewHold
 
   /**
    * Sets the users that requested the book
+   * @param usersRequested
    */
   public void setUsersRequested(ArrayList<BookRequest> usersRequested) {
     this.usersRequested = usersRequested;

@@ -4,7 +4,6 @@ import static com.team41.boromi.constants.CommonConstants.BookStatus;
 import static com.team41.boromi.constants.CommonConstants.BookWorkflowStage;
 
 import androidx.annotation.Nullable;
-import com.google.android.gms.maps.model.LatLng;
 import com.team41.boromi.constants.CommonConstants.ExchangeStage;
 import java.io.Serializable;
 import java.util.UUID;
@@ -30,8 +29,13 @@ public class Book implements Serializable {
   private BookStatus status;
   private BookWorkflowStage workflow;
   private ExchangeStage exchangeStage;
-  private Double locationLat;
-  private Double locationLon;
+
+  // TODO
+  // I didn't include logic for the requesters/borrowers/img/location
+  // To allow the person implementing that logic to decide how they want to do it.
+  // You can go through the BookRequests, then only do a read on DB
+  // If a user wants more info on a book, or you can store all the requester usernames here..
+  // And wipe them on each acceptance.
 
   /**
    * A no-argument constructor required by firestore to serialize data
@@ -49,8 +53,6 @@ public class Book implements Serializable {
     this.status = BookStatus.AVAILABLE;
     this.workflow = BookWorkflowStage.AVAILABLE;
     this.exchangeStage = null;
-    this.locationLat = null;
-    this.locationLon = null;
   }
 
   public Book(String owner, String title, String author, String ISBN, BookStatus status) {
@@ -63,8 +65,6 @@ public class Book implements Serializable {
     this.borrower = null;
     this.workflow = BookWorkflowStage.AVAILABLE;
     this.exchangeStage = null;
-    this.locationLat = null;
-    this.locationLon = null;
   }
 
   public Book(String owner, String title, String author, String ISBN, BookWorkflowStage workflow) {
@@ -77,8 +77,6 @@ public class Book implements Serializable {
     this.borrower = null;
     this.status = BookStatus.AVAILABLE;
     this.exchangeStage = null;
-    this.locationLat = null;
-    this.locationLon = null;
   }
 
   /**
@@ -86,13 +84,17 @@ public class Book implements Serializable {
    *
    * @param owner
    */
+//  public Book(String owner) {
+//    this.bookId = UUID.randomUUID().toString();
+//    this.owner = owner;
+//    this.status = BookStatus.AVAILABLE;
+//    this.workflow = BookWorkflowStage.AVAILABLE;
+//  }
   public Book(String owner, String bookId) {
     this.bookId = bookId;
     this.owner = owner;
     this.status = BookStatus.AVAILABLE;
     this.exchangeStage = null;
-    this.locationLat = null;
-    this.locationLon = null;
   }
 
   public Book(
@@ -112,8 +114,6 @@ public class Book implements Serializable {
     this.bookId = UUID.randomUUID().toString();
     this.borrower = null;
     this.exchangeStage = null;
-    this.locationLat = null;
-    this.locationLon = null;
   }
 
   public Book(
@@ -133,8 +133,6 @@ public class Book implements Serializable {
     this.bookId = UUID.randomUUID().toString();
     this.workflow = BookWorkflowStage.AVAILABLE;
     this.exchangeStage = null;
-    this.locationLat = null;
-    this.locationLon = null;
   }
 
   public Book(
@@ -154,8 +152,6 @@ public class Book implements Serializable {
     this.bookId = UUID.randomUUID().toString();
     this.status = BookStatus.AVAILABLE;
     this.exchangeStage = null;
-    this.locationLat = null;
-    this.locationLon = null;
   }
 
   public Book(
@@ -176,8 +172,6 @@ public class Book implements Serializable {
     this.status = status;
     this.bookId = UUID.randomUUID().toString();
     this.exchangeStage = null;
-    this.locationLat = null;
-    this.locationLon = null;
   }
 
   // Setters / Getters Start
@@ -280,22 +274,6 @@ public class Book implements Serializable {
 
   public void setOwnerName(String ownerName) {
     this.ownerName = ownerName;
-  }
-
-  public Double getLocationLat() {
-    return locationLat;
-  }
-
-  public void setLocationLat(Double locationLat) {
-    this.locationLat = locationLat;
-  }
-
-  public Double getLocationLon() {
-    return locationLon;
-  }
-
-  public void setLocationLon(Double locationLon) {
-    this.locationLon = locationLon;
   }
 
   @Override

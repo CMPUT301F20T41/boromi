@@ -69,6 +69,7 @@ public class RecoverPasswordFragment extends Fragment {
 
   /**
    * onCreate method to initialize any parameters
+   * @param savedInstanceState
    */
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -78,6 +79,10 @@ public class RecoverPasswordFragment extends Fragment {
 
   /**
    * onCreateView method to bind any listeners or values
+   * @param inflater
+   * @param container
+   * @param savedInstanceState
+   * @return
    */
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,

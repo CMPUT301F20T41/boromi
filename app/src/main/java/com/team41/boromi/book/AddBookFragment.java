@@ -18,14 +18,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 import com.team41.boromi.R;
 
 /**
@@ -38,10 +34,6 @@ public class AddBookFragment extends DialogFragment {
   private EditText editTextAuthor;
   private EditText editTextTitle;
   private EditText editTextIsbn;
-  private ImageButton addISBNButton;
-  private ImageButton addImage;
-  private Bitmap imageBitmap;
-
   /**
    * Used to validate input fields
    */
@@ -71,12 +63,15 @@ public class AddBookFragment extends DialogFragment {
       // Empty method, required for text watcher
     }
   };
+  private ImageButton addImage;
+  private Bitmap imageBitmap;
 
   public AddBookFragment() {
   }
 
   /**
    * Factory method to create model
+   * @return
    */
   public static AddBookFragment newInstance() {
     AddBookFragment addBookFragment = new AddBookFragment();
@@ -87,6 +82,10 @@ public class AddBookFragment extends DialogFragment {
 
   /**
    * onCreateView to initialize any values
+   * @param inflater
+   * @param container
+   * @param savedInstanceState
+   * @return
    */
   @Nullable
   @Override
@@ -102,6 +101,8 @@ public class AddBookFragment extends DialogFragment {
 
   /**
    * onViewCreated to bind any listeners or values
+   * @param view
+   * @param savedInstanceState
    */
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -111,7 +112,6 @@ public class AddBookFragment extends DialogFragment {
     editTextTitle = (EditText) view.findViewById(R.id.add_book_title);
     editTextIsbn = (EditText) view.findViewById(R.id.add_book_isbn);
     addImage = (ImageButton) view.findViewById(R.id.add_book_image);
-    addISBNButton = (ImageButton) view.findViewById(R.id.add_isbn_img);
 
     // Disables the button to start since the fields are all empty
     buttonAddBook.setEnabled(false);
@@ -139,13 +139,6 @@ public class AddBookFragment extends DialogFragment {
         dismiss();
       }
     });
-    addISBNButton.setOnClickListener(new OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        dispatchTakeBarcodeIntent();
-      }
-    });
-
     addImage.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -156,6 +149,9 @@ public class AddBookFragment extends DialogFragment {
 
   /**
    * Returns from Camera Activity to attach a image to the book
+   * @param requestCode
+   * @param resultCode
+   * @param data
    */
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -165,18 +161,6 @@ public class AddBookFragment extends DialogFragment {
       addImage.setImageBitmap(imageBitmap);
       addImage.setScaleType(ImageView.ScaleType.FIT_XY);
       this.imageBitmap = imageBitmap;
-    } else { // else this was a barcode scan (ps this is lazy, shouldnt do an else but idk result code)
-      IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-      if(result != null) {
-        if(result.getContents() == null) {
-          Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_LONG).show();
-        } else {
-          editTextIsbn.setText(result.getContents());
-          Toast.makeText(getActivity(), "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
-        }
-      } else {
-        super.onActivityResult(requestCode, resultCode, data);
-      }
     }
   }
 
@@ -192,14 +176,12 @@ public class AddBookFragment extends DialogFragment {
     }
   }
 
-  private void dispatchTakeBarcodeIntent() {
-    IntentIntegrator.forSupportFragment(this).initiateScan();
-  }
-
   /**
    * returns true if isbn is length 10 or 13.
+   * @param isbn
+   * @return
    */
-  public boolean returnIfISBNGood(String isbn) {
+  public boolean returnIfISBNGood(String isbn){
     return isbn.length() == 13 || isbn.length() == 10;
   }
 
@@ -210,11 +192,10 @@ public class AddBookFragment extends DialogFragment {
 
     /**
      * onComplete called when addBook Button is clicked
-     *
      * @param author author of the book
-     * @param title  title of the book
-     * @param isbn   isbn of the book
-     * @param image  image of the book
+     * @param title title of the book
+     * @param isbn isbn of the book
+     * @param image image of the book
      */
     void onComplete(String author, String title, String isbn, Bitmap image);
   }
