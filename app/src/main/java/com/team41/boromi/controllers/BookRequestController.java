@@ -54,7 +54,7 @@ public class BookRequestController {
   public void makeRequestOnBook(Book book) {
     BookRequest request = new BookRequest(user.getUsername(), user.getUUID(), book.getBookId(),
         book.getOwner());
-    book.setStatus(CommonConstants.BookStatus.REQUESTED);
+//    book.setStatus(CommonConstants.BookStatus.REQUESTED);
     executor.execute(() -> {
       bookDB.pushBook(book);    // update the books status
       brDB.pushBookRequest(request);
@@ -63,6 +63,7 @@ public class BookRequestController {
 
   /**
    * Gets books that owner owns that are accepted
+   *
    * @param bookRequestCallback
    */
   public void getRequestOnOwnedBooks(final BookRequestCallback bookRequestCallback) {
@@ -75,9 +76,11 @@ public class BookRequestController {
   }
 
   // TODO : NEED TO NOTIFY USERS THAT BOOK IS CANCELLED OR ACCEPTED
+
   /**
-   * Accepts a book request and remove all requests on the book
-   * and set the book to your current borrowed
+   * Accepts a book request and remove all requests on the book and set the book to your current
+   * borrowed
+   *
    * @param bookRequest
    * @param bookRequestCallback
    */
@@ -89,14 +92,16 @@ public class BookRequestController {
       acceptedBook.setWorkflow(BookWorkflowStage.PENDINGBORROW);
       acceptedBook.setBorrower(bookRequest.getRequestor());
       acceptedBook.setBorrowerName(bookRequest.getRequestorName());
+      acceptedBook.setLocationLat(bookRequest.getLocation().latitude);
+      acceptedBook.setLocationLon(bookRequest.getLocation().longitude);
       bookDB.pushBook(acceptedBook);
       bookRequestCallback.onComplete(null);
     });
   }
 
-  // TODO : NOTIFY USER THEIR BOOK REQUEST WAS CANCELLED
   /**
    * Declines a book request or cancel a book request
+   *
    * @param bookRequest BookRequest to cancel/decline
    */
   public void declineBookRequest(BookRequest bookRequest) {

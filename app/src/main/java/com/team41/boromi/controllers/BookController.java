@@ -1,27 +1,34 @@
 package com.team41.boromi.controllers;
 
-import static com.team41.boromi.constants.CommonConstants.BookStatus;
-import static com.team41.boromi.utility.Utility.isNotNullOrEmpty;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
+
+import com.google.gson.Gson;
 import com.team41.boromi.callbacks.BookCallback;
 import com.team41.boromi.constants.CommonConstants.BookWorkflowStage;
 import com.team41.boromi.constants.CommonConstants.ExchangeStage;
 import com.team41.boromi.dbs.BookDB;
 import com.team41.boromi.models.Book;
 import com.team41.boromi.models.User;
+
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import org.apache.commons.lang3.StringUtils;
+
+import static com.team41.boromi.constants.CommonConstants.BookStatus;
+import static com.team41.boromi.utility.Utility.isNotNullOrEmpty;
+
 
 /**
  * Class that handles requests that involves the book collection
@@ -33,7 +40,7 @@ public class BookController {
   protected BookStatus status;
   protected BookWorkflowStage workflow;
   protected Executor executor;
-
+  Gson gson = new Gson();
   BookDB bookDB;
   User user;
 
@@ -48,13 +55,13 @@ public class BookController {
    * Adds Book to DB asynchronously. On Success or Failure, it will have a callback to let the ui
    * know
    *
-   * @param owner owner of the book
+   * @param owner  owner of the book
    * @param author author of the book
-   * @param ISBN isbn of the book
-   * @param title title of the book
+   * @param ISBN   isbn of the book
+   * @param title  title of the book
    */
   public void addBook(String owner, String author, String ISBN, String title, String image,
-      final BookCallback bookCallback) {
+                      final BookCallback bookCallback) {
     if (isNotNullOrEmpty(author) && isNotNullOrEmpty(ISBN) && isNotNullOrEmpty(title)) {
       Book addingBook = new Book(owner, title, author, ISBN);
       addingBook.setStatus(status.AVAILABLE);
@@ -80,14 +87,15 @@ public class BookController {
   /**
    * Adds Book to DB asynchronously. On Success or Failure, it will have a callback to let the ui
    * know
-   * @param author author of the book
-   * @param ISBN isbn of the book
-   * @param title title of the book
-   * @param image book image
+   *
+   * @param author       author of the book
+   * @param ISBN         isbn of the book
+   * @param title        title of the book
+   * @param image        book image
    * @param bookCallback callback to execute success or failure
    */
   public void addBook(String author, String ISBN, String title, Bitmap image,
-      final BookCallback bookCallback) {
+                      final BookCallback bookCallback) {
     if (isNotNullOrEmpty(author) && isNotNullOrEmpty(ISBN) && isNotNullOrEmpty(title)) {
       Book addingBook = new Book(user.getUUID(), title, author, ISBN);
       addingBook.setOwnerName(user.getUsername());
@@ -118,7 +126,7 @@ public class BookController {
    * Just some polymorphism to have less UI handling logic
    */
   public void addBook(String author, String ISBN, String title, String image,
-      final BookCallback bookCallback) {
+                      final BookCallback bookCallback) {
     if (isNotNullOrEmpty(author) && isNotNullOrEmpty(ISBN) && isNotNullOrEmpty(title)) {
       Book addingBook = new Book(user.getUUID(), title, author, ISBN);
       addingBook.setOwnerName(user.getUsername());
@@ -146,15 +154,16 @@ public class BookController {
 
   /**
    * Edits book description by getting book from BookDB
-   * @param bookID id of the book
-   * @param author author of the book
-   * @param ISBN isbn of the book
-   * @param title title of the book
-   * @param image image of the book
+   *
+   * @param bookID       id of the book
+   * @param author       author of the book
+   * @param ISBN         isbn of the book
+   * @param title        title of the book
+   * @param image        image of the book
    * @param bookCallback callback to execute success or failure
    */
   public void editBook(String bookID, String author, String ISBN, String title, Bitmap image,
-      final BookCallback bookCallback) {
+                       final BookCallback bookCallback) {
     if (isNotNullOrEmpty(author) && isNotNullOrEmpty(ISBN) && isNotNullOrEmpty(title)) {
       executor.execute(() -> {
         ArrayList<Book> edited = new ArrayList<>();
@@ -182,7 +191,8 @@ public class BookController {
 
   /**
    * Used to get the owner books
-   * @param owner user id
+   *
+   * @param owner        user id
    * @param bookCallback callback to execute success or failure
    */
   public void getOwnedBooks(String owner, final BookCallback bookCallback) {
@@ -221,7 +231,8 @@ public class BookController {
 
   /**
    * Deletes book using bookID
-   * @param bookID id of the book
+   *
+   * @param bookID       id of the book
    * @param bookCallback callback to execute success or failure
    */
   public void deleteBook(String bookID, final BookCallback bookCallback) {
@@ -244,7 +255,8 @@ public class BookController {
 
   /**
    * Gets all the books from book DB and searches by comparing title and keyword
-   * @param keywords keyword to search for
+   *
+   * @param keywords     keyword to search for
    * @param bookCallback callback to execute success or failure
    */
   public void findBooks(String keywords, final BookCallback bookCallback) {
@@ -259,18 +271,16 @@ public class BookController {
             String isbn = eachBook.getISBN();
             BookStatus status = eachBook.getStatus();
             boolean added = false;
-            if(status == BookStatus.ACCEPTED || status == BookStatus.BORROWED){
+            if (status == BookStatus.ACCEPTED || status == BookStatus.BORROWED) {
               continue;
             }
             if (StringUtils.containsIgnoreCase(title, keywords) && !added) {
               searchedBooks.add(eachBook);
               added = true;
-            }
-            else if(StringUtils.containsIgnoreCase(author, keywords) && !added){
+            } else if (StringUtils.containsIgnoreCase(author, keywords) && !added) {
               searchedBooks.add(eachBook);
               added = true;
-            }
-            else if(StringUtils.containsIgnoreCase(isbn, keywords) && !added){
+            } else if (StringUtils.containsIgnoreCase(isbn, keywords) && !added) {
               searchedBooks.add(eachBook);
               added = true;
             }
@@ -293,7 +303,8 @@ public class BookController {
 
   /**
    * Gets all the owner books that are requested
-   * @param owner user id of the owner
+   *
+   * @param owner        user id of the owner
    * @param bookCallback callback to execute success or failure
    */
   public void getOwnerRequestedBooks(String owner, final BookCallback bookCallback) {
@@ -316,7 +327,8 @@ public class BookController {
 
   /**
    * Gets all the owner books that are borrowed
-   * @param owner user id of the owner
+   *
+   * @param owner        user id of the owner
    * @param bookCallback callback to execute success or failure
    */
   public void getOwnerBorrowedBooks(String owner, final BookCallback bookCallback) {
@@ -339,7 +351,8 @@ public class BookController {
 
   /**
    * Gets all the owner books that are accepted
-   * @param owner user id of the owner
+   *
+   * @param owner        user id of the owner
    * @param bookCallback callback to execute success or failure
    */
   public void getOwnerAcceptedBooks(String owner, final BookCallback bookCallback) {
@@ -362,7 +375,8 @@ public class BookController {
 
   /**
    * Gets all the owner books that are available
-   * @param owner user id of the owner
+   *
+   * @param owner        user id of the owner
    * @param bookCallback callback to execute success or failure
    */
   public void getOwnerAvailableBooks(String owner, final BookCallback bookCallback) {
@@ -386,6 +400,7 @@ public class BookController {
   /**
    * A function that confirms a book has been borrowed and not just "accepted" dont pass a null book
    * here
+   *
    * @param book Book object
    */
   public void confirmBookReceived(@NonNull Book book) {
@@ -401,6 +416,7 @@ public class BookController {
 
   /**
    * Gets the books that the user has been accepted to borrow
+   *
    * @param bookCallback callback to execute success or failure
    */
   public void getBooksOthersAccepted(BookCallback bookCallback) {
@@ -411,9 +427,8 @@ public class BookController {
   }
 
   /**
-   * This function adds a photo to a book
-   * this is a synchronous task except for the pushing to db portion This might take a while, so it
-   * may be worth to show user a spinny circly
+   * This function adds a photo to a book this is a synchronous task except for the pushing to db
+   * portion This might take a while, so it may be worth to show user a spinny circly
    *
    * @param bmap Bitmap of the image
    * @param book Book to be added
@@ -432,6 +447,7 @@ public class BookController {
 
   /**
    * Encodes a Bitmap image to base64
+   *
    * @param bmap Bitmap image
    * @return String representation of the image
    */
@@ -464,6 +480,7 @@ public class BookController {
 
   /**
    * Decodes the book image
+   *
    * @param book Book object with image to decode
    * @return
    */
@@ -489,7 +506,8 @@ public class BookController {
 
   /**
    * This method returns a list of books that the user is borrowing from other owners.
-   * @param username user id of the owner
+   *
+   * @param username     user id of the owner
    * @param bookCallback callback to execute success or failure
    */
   public void getOwnerBorrowingBooks(String username, final BookCallback bookCallback) {
@@ -511,8 +529,9 @@ public class BookController {
 
   /**
    * This function is used to update the exchange process of a book
-   * @param username user id
-   * @param book Book to be updated
+   *
+   * @param username     user id
+   * @param book         Book to be updated
    * @param bookCallback callback to execute success or failure
    */
   public void updateBookExchange(String username, Book book, final BookCallback bookCallback) {
@@ -547,6 +566,23 @@ public class BookController {
       } else {
         bookCallback.onFailure(new IllegalArgumentException());
       }
+    });
+  }
+
+  /**
+   * Gets locations where user is owner of a book being borrowed or user is the borrower
+   * @param bookCallback callback when async call finishes
+   */
+  public void getOwnerBorrowerLocations(final BookCallback bookCallback) {
+    executor.execute(() -> {
+      List<Book> bookList = bookDB.getAcceptedWithBorrower(user.getUUID());
+      ArrayList<Book> acceptedBooks = bookDB.getOwnerAcceptedBooks(user.getUUID());
+      if (bookList == null) {
+        bookCallback.onSuccess((ArrayList<Book>) acceptedBooks);
+        return;
+      }
+      bookList.addAll(acceptedBooks);
+      bookCallback.onSuccess((ArrayList<Book>) bookList);
     });
   }
 }

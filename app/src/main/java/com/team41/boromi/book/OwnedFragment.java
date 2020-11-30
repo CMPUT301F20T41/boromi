@@ -6,25 +6,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
 import com.google.android.material.tabs.TabLayout.Tab;
 import com.team41.boromi.BookActivity;
+import com.team41.boromi.BookViewModel;
 import com.team41.boromi.R;
 import com.team41.boromi.adapters.PagerAdapter;
-import com.team41.boromi.callbacks.BookCallback;
-import com.team41.boromi.callbacks.BookRequestCallback;
-import com.team41.boromi.models.Book;
-import com.team41.boromi.models.BookRequest;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
- * This Fragment manages the user Owned books tab. It will create 4 GenericListFragments for
- * each of its 4 tabs.
+ * This Fragment manages the user Owned books tab. It will create 4 GenericListFragments for each of
+ * its 4 tabs.
  */
 public class OwnedFragment extends Fragment {
 
@@ -34,6 +30,7 @@ public class OwnedFragment extends Fragment {
   private BookActivity bookActivity;
   private String parent = "Owned";
   private String TAG = "OwnedFrag";
+  private BookViewModel bookViewModel;
 
   public OwnedFragment() {
     // Required empty public constructor
@@ -45,7 +42,6 @@ public class OwnedFragment extends Fragment {
    *
    * @return A new instance of fragment BookFragment.
    */
-  // TODO: Rename and change types and number of parameters
   public static OwnedFragment newInstance() {
     OwnedFragment fragment = new OwnedFragment();
     Bundle args = new Bundle();
@@ -55,12 +51,14 @@ public class OwnedFragment extends Fragment {
 
   /**
    * Create the GenericListFragments that will populate each of the 4 tabs.
+   *
    * @param savedInstanceState
    */
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     bookActivity = (BookActivity) getActivity();
+    bookViewModel = new ViewModelProvider(requireActivity()).get(BookViewModel.class);
     pagerAdapter = new PagerAdapter(getChildFragmentManager(), getLifecycle());
     // add fragments to tabs
     Bundle bundle;
@@ -89,6 +87,7 @@ public class OwnedFragment extends Fragment {
 
   /**
    * Bind any listeners and values, also set up viewpager to change between subtabs
+   *
    * @param inflater
    * @param container
    * @param savedInstanceState
@@ -131,97 +130,5 @@ public class OwnedFragment extends Fragment {
       }
     });
     return view;
-  }
-
-
-  /**
-   * Backend call to get the books that the user owns that are available
-   * @param fragment GenericListFragment that will be updated with this data
-   */
-  public void getOwnerAvailable(GenericListFragment fragment) {
-    bookActivity.getBookController()
-        .getOwnerAvailableBooks(bookActivity.getUser().getUUID(), new BookCallback() {
-          @Override
-          public void onSuccess(ArrayList<Book> books) {
-            bookActivity.getCollections().put("OwnerAvailable", books);
-            fragment.updateData(books);
-          }
-
-          @Override
-          public void onFailure(Exception e) {
-
-          }
-        });
-  }
-
-  /**
-   * Backend call to get the books that the user owns that have been requested.
-   * @param fragment GenericListFragment that will be updated with this data
-   */
-  public void getOwnerRequests(GenericListFragment fragment) {
-    bookActivity.getBookRequestController().getRequestOnOwnedBooks(new BookRequestCallback() {
-      @Override
-      public void onComplete(Map<Book, List<BookRequest>> bookWithRequests) {
-        bookActivity.setRequestsCollections(bookWithRequests);
-        fragment.updateData(bookWithRequests);
-      }
-    });
-  }
-
-  /**
-   * Backend call to get the books that the owner has accepted to be borrowed
-   * @param fragment GenericListFragment that will be updated with this data
-   */
-  public void getOwnerAccepted(GenericListFragment fragment) {
-    bookActivity.getBookController()
-        .getOwnerAcceptedBooks(bookActivity.getUser().getUUID(), new BookCallback() {
-          @Override
-          public void onSuccess(ArrayList<Book> books) {
-            bookActivity.getCollections().put("OwnerAccepted", books);
-            fragment.updateData(books);
-          }
-
-          @Override
-          public void onFailure(Exception e) {
-
-          }
-        });
-  }
-
-  /**
-   * Backend call to get the books that the owner owns that are being lent
-   * @param fragment GenericListFragment that will be updated with this data
-   */
-  public void getOwnerLent(GenericListFragment fragment) {
-    bookActivity.getBookController().getOwnerBorrowedBooks(bookActivity.getUser().getUUID(),
-        new BookCallback() {
-          @Override
-          public void onSuccess(ArrayList<Book> books) {
-            bookActivity.getCollections().put("OwnerLent", books);
-            fragment.updateData(books);
-          }
-
-          @Override
-          public void onFailure(Exception e) {
-
-          }
-        });
-  }
-
-  /**
-   * Calls the corresponding backend function to fetch the data depending on which subtab
-   * @param tag Subtab tag
-   * @param fragment GenericListFragment that will hold this data
-   */
-  public void getData(String tag, GenericListFragment fragment) {
-    if (tag.equals("Available")) {
-      getOwnerAvailable(fragment);
-    } else if (tag.equals("Requested")) {
-      getOwnerRequests(fragment);
-    } else if (tag.equals("Accepted")) {
-      getOwnerAccepted(fragment);
-    } else if (tag.equals("Lent")) {
-      getOwnerLent(fragment);
-    }
   }
 }

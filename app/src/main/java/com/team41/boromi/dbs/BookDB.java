@@ -11,10 +11,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.gson.Gson;
 import com.team41.boromi.constants.CommonConstants.BookStatus;
-import com.team41.boromi.constants.CommonConstants.ExchangeStage;
 import com.team41.boromi.models.Book;
 import com.team41.boromi.models.BookRequest;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -217,6 +215,7 @@ public class BookDB {
 
   /**
    * Get owner requested books
+   *
    * @param owner id of the owner
    * @return list of books owned by the owner
    */
@@ -246,6 +245,7 @@ public class BookDB {
 
   /**
    * Gets books that are owned by the owner and are borrowed
+   *
    * @param owner id of the owner
    * @return list of books
    */
@@ -275,6 +275,7 @@ public class BookDB {
 
   /**
    * Get books that owner owns that are accepted to borrow
+   *
    * @param owner id of the owner
    * @return list of books
    */
@@ -304,6 +305,7 @@ public class BookDB {
 
   /**
    * Get books that owner owns and are available
+   *
    * @param owner id of the owner
    * @return list of books
    */
@@ -333,6 +335,7 @@ public class BookDB {
 
   /**
    * Get book by id
+   *
    * @param bid id of the book
    * @return book
    */
@@ -383,6 +386,7 @@ public class BookDB {
 
   /**
    * This method returns a list of books that user is borrowing from other owners.
+   *
    * @param username id of the user
    * @return list of books
    */
@@ -409,8 +413,4 @@ public class BookDB {
 
     return borrowingBooks;
   }
-
-  // TODO:
-  // Add a method to query for all the books a user has
-  // requested, borrowed, or been accepted to be borrowed
 }

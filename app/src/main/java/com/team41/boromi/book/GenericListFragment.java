@@ -1,30 +1,45 @@
 package com.team41.boromi.book;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.team41.boromi.BookActivity;
+import com.team41.boromi.BookViewModel;
 import com.team41.boromi.R;
 import com.team41.boromi.adapters.GenericListAdapter;
 import com.team41.boromi.callbacks.BookCallback;
+import com.team41.boromi.callbacks.ReturnCallback;
+import com.team41.boromi.constants.CommonConstants;
 import com.team41.boromi.constants.CommonConstants.BookStatus;
-import com.team41.boromi.constants.CommonConstants.ExchangeStage;
 import com.team41.boromi.models.Book;
 import com.team41.boromi.models.BookRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.team41.boromi.constants.CommonConstants.REQUEST_IMAGE_CAPTURE;
+
 /**
  * GenericListFragment is used for each of the subtabs and the search. It will inflate the model
  * that it has been provided with
  */
 public class GenericListFragment extends Fragment {
+
   // Bundle tags
   private static final String LAYOUT_PARAM1 = "LayoutID";
   private static final String DATA_PARAM2 = "Data";
@@ -34,6 +49,7 @@ public class GenericListFragment extends Fragment {
   private static final String TAG = "GenericListFrag";
 
   public String tag;
+  public boolean cancelled_scan;
   RecyclerView recyclerView;
   GenericListAdapter listAdapter;
   private ArrayList<Book> bookDataList = new ArrayList<>();
@@ -41,6 +57,8 @@ public class GenericListFragment extends Fragment {
   private String tempMsg;
   private String parent;
   private Map<Book, List<BookRequest>> bookWithRequests;
+  private BookViewModel bookViewModel;
+  private Book bookToExchange;
 
   public GenericListFragment() {
     // Required empty public constructor
@@ -61,11 +79,13 @@ public class GenericListFragment extends Fragment {
 
   /**
    * Initialize any values/unpack bundle
+   *
    * @param savedInstanceState
    */
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    bookViewModel = new ViewModelProvider(requireActivity()).get(BookViewModel.class);
     if (getArguments() != null) {
       layoutID = getArguments().getInt(LAYOUT_PARAM1);
       bookDataList = (ArrayList<Book>) getArguments().getSerializable(DATA_PARAM2);
@@ -78,6 +98,7 @@ public class GenericListFragment extends Fragment {
   /**
    * Gets the parent tag. Example if this instance of GenericListFragment is the sub tab of Owner
    * books, then the parent would be "Owner"
+   *
    * @return String tag of the parent fragment
    */
   public String getParent() {
@@ -86,6 +107,7 @@ public class GenericListFragment extends Fragment {
 
   /**
    * Bind any listeners and initialize any values. This will also set up the GenericListAdapter
+   *
    * @param inflater
    * @param container
    * @param savedInstanceState
@@ -103,51 +125,49 @@ public class GenericListFragment extends Fragment {
     recyclerView.setAdapter(listAdapter);
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     tempMsgView.setText(tempMsg);
-    if (parent.equals("Owned")) {
-      ((OwnedFragment) getParentFragment()).getData(tag, this);
-    } else if (parent.equals("Borrowed")) {
-      ((BorrowedFragment) getParentFragment()).getData(tag, this);
+
+    final Observer<ArrayList<Book>> bookDataObserver = new Observer<ArrayList<Book>>() {
+      @Override
+      public void onChanged(ArrayList<Book> books) {
+        if (books == null) {
+          books = new ArrayList<>();
+        }
+        bookDataList.clear();
+        bookDataList.addAll(books);
+        listAdapter.notifyDataSetChanged();
+      }
+    };
+    final Observer<Map<Book, List<BookRequest>>> bookRequestDataObserver = new Observer<Map<Book, List<BookRequest>>>() {
+      @Override
+      public void onChanged(Map<Book, List<BookRequest>> bookListMap) {
+        bookDataList.clear();
+        bookDataList.addAll(bookListMap.keySet());
+        bookWithRequests = bookListMap;
+        listAdapter.setBookWithRequests(bookWithRequests);
+        listAdapter.notifyDataSetChanged();
+        listAdapter.notifySubAdapters();
+      }
+    };
+    if (tag.equals("Requested")) {
+      bookViewModel.getRequested(this).observe(getViewLifecycleOwner(), bookRequestDataObserver);
+    } else {
+      bookViewModel.getData(this).observe(getViewLifecycleOwner(), bookDataObserver);
     }
     return view;
   }
 
   /**
-   * This function will be called from the parent fragment to update the data of this
-   * GenericListFragment by updating the adapter list
-   * @param books books to update
+   * Returns instance of BookViewModel
+   * @return BookViewModel
    */
-  public void updateData(ArrayList<Book> books) {
-    this.bookDataList.clear();
-    this.bookDataList.addAll(books);
-    getActivity().runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        listAdapter.notifyDataSetChanged();
-      }
-    });
+  public BookViewModel getBookViewModel() {
+    return bookViewModel;
   }
 
   /**
-   * Polymorphism to accept a map. Request tabs use a map of Book and BookRequest.
-   * @param bookWithRequests Map of Book and List of BookRequests
-   */
-  public void updateData(Map<Book, List<BookRequest>> bookWithRequests) {
-    this.bookDataList.clear();
-    this.bookDataList.addAll(bookWithRequests.keySet());
-    this.bookWithRequests = bookWithRequests;
-    listAdapter.setBookWithRequests(bookWithRequests);
-    getActivity().runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        listAdapter.notifyDataSetChanged();
-        listAdapter.notifySubAdapters();
-      }
-    });
-  }
-
-  /**
-   * Used in the Accepted tabs to process the exchanging of the book. It will also refresh the
-   * lent, accepted, borrowed, requested subtabs
+   * Used in the Accepted tabs to process the exchanging of the book. It will also refresh the lent,
+   * accepted, borrowed, requested subtabs
+   *
    * @param book Book to be exchanged
    */
   public void bookExchangeRequest(Book book) {
@@ -157,11 +177,10 @@ public class GenericListFragment extends Fragment {
           @Override
           public void onSuccess(ArrayList<Book> books) {
             if (books.get(0).getStatus() == BookStatus.BORROWED) {
-              bookActivity.updateFragment("OwnedFragment", "Lent");
-              bookActivity.updateFragment("OwnedFragment", "Accepted");
-              bookActivity.updateFragment("BorrowedFragment", "Borrowed");
-              bookActivity.updateFragment("BorrowedFragment", "Requested");
-
+              bookViewModel.getOwnerLent();
+              bookViewModel.getOwnerAccepted();
+              bookViewModel.getBorrowedBorrowed();
+              bookViewModel.getBorrowedRequested();
             }
           }
 
@@ -170,5 +189,96 @@ public class GenericListFragment extends Fragment {
 
           }
         });
+  }
+
+  /**
+   * Accepts return request
+   * @param book Book to be returned
+   */
+  public void bookReturnRequest(Book book) {
+    BookActivity bookActivity = (BookActivity) getActivity();
+    bookActivity.getBookReturnController().acceptReturnRequest(book.getBookId(), new ReturnCallback() {
+      @Override
+      public void onSuccess(Book book) {
+        if (book.getStatus()== BookStatus.AVAILABLE) {
+          bookViewModel.getOwnerAvailable();
+          bookViewModel.getOwnerLent();
+          bookViewModel.getOwnerAccepted();
+          bookViewModel.getBorrowedBorrowed();
+          bookViewModel.getBorrowedRequested();
+        }
+      }
+      @Override
+      public void onFailure() {
+      }
+    });
+  }
+
+  /**
+   * Verifies barcode on book
+   * @param book Book object to be verified
+   */
+  public void verifyBarcode(Book book) {
+    bookToExchange = book;
+    dispatchTakeBarcodeIntent();
+  }
+
+  /**
+   * Starts barcode scanning
+   */
+  private void dispatchTakeBarcodeIntent() {
+    IntentIntegrator.forSupportFragment(this).initiateScan();
+  }
+
+  /**
+   * Return from barcode scanning
+   * @param requestCode
+   * @param resultCode
+   * @param data
+   */
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+      IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+      if(result != null) {
+        if(result.getContents() == null) {
+          Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_LONG).show();
+          bookViewModel.getBorrowedBorrowed();
+        } else {
+          Toast.makeText(getActivity(), "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+          completeBookExchange(result.getContents());
+        }
+      } else {
+        super.onActivityResult(requestCode, resultCode, data);
+      }
+  }
+
+  /**
+   * Completes book exchange by comparing the isbn and status
+   * @param scannedISBN scanned isbn
+   */
+  public void completeBookExchange(String scannedISBN) {
+    BookActivity bookActivity = (BookActivity) getActivity();
+    if(scannedISBN.compareTo(bookToExchange.getISBN()) != 0) {
+      Toast.makeText(this.getContext(), "Verification Failed, this isn't the proper book!", Toast.LENGTH_LONG).show();
+      return;
+    }
+    if(bookToExchange.getStatus() == BookStatus.ACCEPTED) {
+      bookExchangeRequest(bookToExchange);
+    }
+    else if (bookToExchange.getStatus() == BookStatus.BORROWED && bookToExchange.getWorkflow() == CommonConstants.BookWorkflowStage.BORROWED){
+      bookActivity.getBookReturnController().addReturnRequest(bookToExchange, new ReturnCallback() {
+        @Override
+        public void onSuccess(Book books) {
+          bookViewModel.getReturnButton().setBackgroundResource(R.drawable.cancel_circle);
+          bookViewModel.getBorrowedBorrowed();
+        }
+        @Override
+        public void onFailure() {
+        }
+      });
+    }
+    else if(bookToExchange.getStatus() == BookStatus.BORROWED && bookToExchange.getWorkflow() == CommonConstants.BookWorkflowStage.PENDINGRETURN){
+      bookReturnRequest(bookToExchange);
+    }
   }
 }

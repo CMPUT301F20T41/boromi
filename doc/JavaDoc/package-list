@@ -1,0 +1,11 @@
+com.team41.boromi
+com.team41.boromi.adapters
+com.team41.boromi.auth
+com.team41.boromi.book
+com.team41.boromi.callbacks
+com.team41.boromi.constants
+com.team41.boromi.controllers
+com.team41.boromi.dagger
+com.team41.boromi.dbs
+com.team41.boromi.models
+com.team41.boromi.utility
